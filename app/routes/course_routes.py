@@ -10,15 +10,32 @@ from flask import Blueprint, jsonify, current_app
 
 # Create a Blueprint named 'course_bp'
 course_bp = Blueprint('course_bp', __name__)
+ 
+# API endpoint: create a course
+@course_bp.route('/courses', methods=['POST'])
+def create_course():
+    return jsonify({"message": "create a course"}), 200
+    
 
-# Define a simple route as an example
+# API endpoint: get all courses
 @course_bp.route('/courses', methods=['GET'])
 def list_courses():
-    # This is a placeholder for the actual implementation
-    try:
-        # This is a placeholder for the actual implementation
-        current_app.logger.info('Retrieving list of courses')
-        return jsonify({"message": "List of courses"}), 200
-    except Exception as e:
-        current_app.logger.error(f'Error retrieving courses: {str(e)}')
-        return jsonify({'error': str(e)}), 500
+    return jsonify({"message": "get all course"}), 200
+   
+# API endpoint: get a specific course.
+@course_bp.route('/courses/<int:course_id>', methods=['GET'])
+def get_course(course_id):
+    return jsonify({"message": "get a specific course"}), 200
+    
+# API endpoint: update a specific course
+@course_bp.route('/courses/<int:course_id>', methods=['PUT'])
+def update_course(course_id):
+    return jsonify({"message": "update a specific course"}), 200
+    
+
+# API endpoint: update a specific course
+@course_bp.route('/courses/<int:course_id>', methods=['DELETE']) 
+def delete_course(course_id):
+    return jsonify({"message": "delete a specific course"}), 200
+    
+
