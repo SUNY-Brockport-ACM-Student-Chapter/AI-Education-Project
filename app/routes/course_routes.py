@@ -14,28 +14,28 @@ course_bp = Blueprint('course_bp', __name__)
 # API endpoint: create a course
 @course_bp.route('/courses', methods=['POST'])
 def create_course():
-    return jsonify({"message": "create a course"}), 200
+    return jsonify({"message": "create a course"}), 400
     
 
 # API endpoint: get all courses
 @course_bp.route('/courses', methods=['GET'])
 def list_courses():
-    return jsonify({"message": "get all course"}), 200
+    return jsonify({"message": "get all course"}), 404
    
 # API endpoint: get a specific course.
 @course_bp.route('/courses/<int:course_id>', methods=['GET'])
 def get_course(course_id):
-    return jsonify({"message": "get a specific course"}), 200
+    return jsonify({"message": "get a specific course"}), 404
     
 # API endpoint: update a specific course
 @course_bp.route('/courses/<int:course_id>', methods=['PUT'])
 def update_course(course_id):
-    return jsonify({"message": "update a specific course"}), 200
+    return jsonify({"message": "update a specific course"}), 404
     
 
 # API endpoint: update a specific course
 @course_bp.route('/courses/<int:course_id>', methods=['DELETE']) 
 def delete_course(course_id):
-    return jsonify({"message": "delete a specific course"}), 200
+    return jsonify({"message": "delete a specific course"}), 400
     
 
