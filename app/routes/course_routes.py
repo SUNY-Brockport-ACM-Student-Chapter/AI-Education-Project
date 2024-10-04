@@ -1,41 +1,86 @@
-"""
-This module contains routes and functions related to course management in the application.
+from flask import Blueprint, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+from app.models import Course,db
 
-It defines a Flask Blueprint for course-related routes and includes functions for
-handling course operations such as listing courses, creating courses, and managing
-course details.
-"""
+# Create a blueprint for the course API
+course_bp = Blueprint('course_api', __name__)
 
-from flask import Blueprint, jsonify, current_app
-
-# Create a Blueprint named 'course_bp'
-course_bp = Blueprint('course_bp', __name__)
- 
-# API endpoint: create a course
 @course_bp.route('/courses', methods=['POST'])
 def create_course():
-    return jsonify({"message": "create a course"}), 400
-    
+    data = request.get_json()
+    new_course = Course(
+        course_id=data['course_id'],
+        course_name=data['course_name'],
+        course_code=data['course_code'],
+        course_description=data.get('course_description'),
+        capacity=data['capacity'],
+        teacher_id=data['teacher_id'],
+        is_active=data.get('is_active', False),
+        start_date=data['start_date'],
+        end_date=data['end_date'],
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow()
+    )
+    db.session.add(new_course)
+    db.session.commit()
+    return jsonify({'message': 'Course created successfully.'}), 201
 
-# API endpoint: get all courses
 @course_bp.route('/courses', methods=['GET'])
-def list_courses():
-    return jsonify({"message": "get all course"}), 404
-   
-# API endpoint: get a specific course.
-@course_bp.route('/courses/<int:course_id>', methods=['GET'])
+def get_courses():
+    courses = Course.query.all()
+    return jsonify([{
+        'course_id': course.course_id,
+        'course_name': course.course_name,
+        'course_code': course.course_code,
+        'course_description': course.course_description,
+        'capacity': course.capacity,
+        'teacher_id': course.teacher_id,
+        'is_active': course.is_active,
+        'start_date': course.start_date,
+        'end_date': course.end_date,
+        'created_at': course.created_at,
+        'updated_at': course.updated_at
+    } for course in courses]), 200
+
+@course_bp.route('/courses/<string:course_id>', methods=['GET'])
 def get_course(course_id):
-    return jsonify({"message": "get a specific course"}), 404
-    
-# API endpoint: update a specific course
-@course_bp.route('/courses/<int:course_id>', methods=['PUT'])
+    course = Course.query.get_or_404(course_id)
+    return jsonify({
+        'course_id': course.course_id,
+        'course_name': course.course_name,
+        'course_code': course.course_code,
+        'course_description': course.course_description,
+        'capacity': course.capacity,
+        'teacher_id': course.teacher_id,
+        'is_active': course.is_active,
+        'start_date': course.start_date,
+        'end_date': course.end_date,
+        'created_at': course.created_at,
+        'updated_at': course.updated_at
+    }), 200
+
+@course_bp.route('/courses/<string:course_id>', methods=['PUT'])
 def update_course(course_id):
-    return jsonify({"message": "update a specific course"}), 404
-    
+    data = request.get_json()
+    course = Course.query.get_or_404(course_id)
 
-# API endpoint: update a specific course
-@course_bp.route('/courses/<int:course_id>', methods=['DELETE']) 
+    course.course_name = data.get('course_name', course.course_name)
+    course.course_code = data.get('course_code', course.course_code)
+    course.course_description = data.get('course_description', course.course_description)
+    course.capacity = data.get('capacity', course.capacity)
+    course.teacher_id = data.get('teacher_id', course.teacher_id)
+    course.is_active = data.get('is_active', course.is_active)
+    course.start_date = data.get('start_date', course.start_date)
+    course.end_date = data.get('end_date', course.end_date)
+    course.updated_at = datetime.utcnow()
+
+    db.session.commit()
+    return jsonify({'message': 'Course updated successfully.'}), 200
+
+@course_bp.route('/courses/<string:course_id>', methods=['DELETE'])
 def delete_course(course_id):
-    return jsonify({"message": "delete a specific course"}), 400
-    
-
+    course = Course.query.get_or_404(course_id)
+    db.session.delete(course)
+    db.session.commit()
+    return jsonify({'message': 'Course deleted successfully.'}), 204

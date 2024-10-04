@@ -6,7 +6,7 @@ handling user operations such as registration.
 """
 
 from flask import Blueprint, request, jsonify, current_app
-from ..models import User, db
+from ..models import Teacher, db
 from werkzeug.security import generate_password_hash
 
 user_bp = Blueprint('user_bp', __name__)
@@ -32,7 +32,7 @@ def register_user():
             current_app.logger.warning(f'Registration attempt with invalid role: {data["role"]}')
             return jsonify({'error': 'Invalid role'}), 400
         
-        new_user = User(
+        new_user = Teacher(
             username=data['username'],
             password_hash=generate_password_hash(data['password']),
             role=data['role']

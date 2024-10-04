@@ -1,21 +1,61 @@
 #Contains all the database models (tables) using SQLAlchemy.
 
 from . import db
+from enum import Enum as PyEnum
 
-class User(db.Model):
+import uuid
+from datetime import datetime
+
+
+class Role(PyEnum):
+    TEACHER = 'teacher'
+    ADMIN = 'admin'
+class EnrollmentStatus(PyEnum):
+    PENDING = 'pending'
+    ENROLLED = 'enrolled'
+    CANCELLED = 'cancelled'
+class Student(db.Model):
     """
     Represents a user in the system.
 
     Attributes:
-        id (int): The unique identifier for the user.
-        username (str): The user's username (unique).
+        id (str): The unique identifier for the user.
+        user_name (str): The user's username (unique).
+        first_name (str): The user's first name.
+        last_name (str): The user's last name.
+        email (str): The user's email (unique).
         password_hash (str): The hashed password for the user.
-        role (str): The role of the user ('student' or 'teacher').
+        role (str): The role of the user ('student', 'teacher' or 'admin').
+        last_login (DateTime): The last time user logged in.
+        created_at (DateTime): when the user account was created.
+        updated_at (DateTime): The last time the user’s information was updated.
     """
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
+    user_name = db.Column(db.String(80), unique=True, nullable=False)
+    first_name = db.Column(db.String(80), nullable=False)
+    last_name = db.Column(db.String(80), nullable=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)
-    role = db.Column(db.String(10))  # 'student' or 'teacher'
+    last_login = db.Column(db.DateTime, nullable = True)
+    is_active = db.Column(db.Boolean, default=False, nullable=False)
+    created_at = db.Column(db.DateTime, nullable = False, default=datetime.now)
+    updated_at =  db.Column(db.DateTime, nullable = True)
+
+    def __repr__(self) -> str:
+        return f"<Username: {self.user_name}>"
+
+class Teacher(db.Model):
+    id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
+    user_name = db.Column(db.String(80), unique=True, nullable=False)
+    first_name = db.Column(db.String(80), nullable=False)
+    last_name = db.Column(db.String(80), nullable=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(120), nullable=False)
+    last_login = db.Column(db.DateTime, nullable = True)
+    role = db.Column(db.Enum(Role), nullable=False, default='admin')
+    is_active = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, nullable = False, default=datetime.now)
+    updated_at =  db.Column(db.DateTime, nullable = True)
 
 class Course(db.Model):
     """
@@ -29,9 +69,42 @@ class Course(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     course_name = db.Column(db.String(120), nullable=False)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    teacher = db.relationship('User', backref='courses')
+    course_code = db.Column(db.String(12), nullable=False)
+    course_description = db.Column(db.String(255))
+    capacity = db.Column(db.Integer, default=10, nullable=False)
+    is_active = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, nullable = False, default=datetime.now)
+    updated_at =  db.Column(db.DateTime, nullable = True)
 
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
+    teacher = db.relationship('Teacher', backref='courses')
+
+class Enrollment(db.Model):
+    """
+    Represents a course in the system.
+
+    Attributes:
+        id (int): The unique identifier for the enrollment.
+        student_id (int): The ID of the student.
+        course_id (int): The ID of the course.
+        status (str) : The status of current enrollment ('enrolled', 'cancelled', 'pending')        
+        enrollment_date (DateTime): When enrollment was made.
+        student (User): The relationship to the User model for the student.
+        course (Course): The relationship to the Course model for the course.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    status = db.Column(db.Enum(EnrollmentStatus), default=EnrollmentStatus.PENDING, nullable=False)
+    enrollment_date = db.Column(db.DateTime,default=datetime.now)
+    updated_at =  db.Column(db.DateTime, nullable = True)
+    
+    student = db.relationship('Student', backref='enrollments')
+    course = db.relationship('Course', backref='enrollments')
+    
+    def __repr__(self) -> str:
+        return f"Enrollment date: {self.enrollment_date}\nStatus: {self.coursestatus}"     
+    
 class Exam(db.Model):
     """
     Represents an exam in the system.
@@ -44,9 +117,20 @@ class Exam(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+
     exam_title = db.Column(db.String(120), nullable=False)
+    exam_description = db.Column(db.String(255), nullable=True)
+    start_date = db.Column(db.DateTime,default=datetime.now)
+    end_date = db.Column(db.DateTime,default=datetime.now)
+    assessment =  db.Column(db.String(50))
+    created_at = db.Column(db.DateTime, nullable = False, default=datetime.now)
+    updated_at =  db.Column(db.DateTime, nullable = True)
+
     course = db.relationship('Course', backref='exams')
 
+    def __repr__(self) -> str:
+        return f"<Exam Title: {self.exam_title}>"
+    
 class Question(db.Model):
     """
     Represents a question in an exam.
@@ -58,9 +142,15 @@ class Question(db.Model):
         exam (Exam): The relationship to the Exam model.
     """
     id = db.Column(db.Integer, primary_key=True)
-    exam_id = db.Column(db.Integer, db.ForeignKey('exam.id'))
-    question_text = db.Column(db.Text, nullable=False)
-    exam = db.relationship('Exam', backref='questions')
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    question_text = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, nullable = False, default=datetime.now)
+    updated_at =  db.Column(db.DateTime, nullable = True)
+
+    course = db.relationship('Course', backref='questions')
+
+    def __repr__(self) -> str:
+        return f"<Question: {self.question_text}>"
 
 class Answer(db.Model):
     """
@@ -76,12 +166,16 @@ class Answer(db.Model):
     """
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
-    student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    answer_text = db.Column(db.Text, nullable=False)
-    question = db.relationship('Question', backref='answers')
-    student = db.relationship('User', backref='answers')
+    answer_text = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, nullable = False, default=datetime.now)
 
-class AIEvaluation(db.Model):
+    question = db.relationship('Question', backref='answers')
+
+    
+    def __repr__(self) -> str:
+        return f"<Answer: {self.answer_text}>"
+    
+class StudentAnswer(db.Model):
     """
     Represents an AI-generated evaluation of a student's answer.
 
@@ -93,7 +187,12 @@ class AIEvaluation(db.Model):
         answer (Answer): The relationship to the Answer model.
     """
     id = db.Column(db.Integer, primary_key=True)
-    answer_id = db.Column(db.Integer, db.ForeignKey('answer.id'))
-    score = db.Column(db.Integer)  # 0, 1, or 2
-    feedback = db.Column(db.Text)
-    answer = db.relationship('Answer', backref='evaluations')
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
+    answer_text = db.Column(db.String(255), nullable=True)
+        
+    student = db.relationship('Student', backref='student_answers')
+    question = db.relationship('Question', backref='student_answers')
+
+    def __repr__(self) -> str:
+        return f"<Student Answer: {self.answer_text}>"
