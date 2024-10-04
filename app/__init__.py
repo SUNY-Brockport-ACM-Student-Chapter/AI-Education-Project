@@ -54,7 +54,7 @@ def create_app():
     from .routes import all_blueprints
 
     for bp in all_blueprints:
-        app.register_blueprint(bp, url_prefix='/api' if bp.name != 'main_bp' else '/')
+        app.register_blueprint(bp, url_prefix='/api/v1' if bp.name != 'main_bp' else '/')
 
 
     # Create all database tables
