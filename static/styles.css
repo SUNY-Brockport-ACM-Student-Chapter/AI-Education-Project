@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+:root {
+  --bport-green-l: rgb(120, 157, 74);
+  --bport-green-d: rgb(87, 121, 53);
+  --bport-gold: rgb(255, 164, 0);
+  ;
+  font-size: 20px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Josefin Sans", sans-serif;
+  background-color: var(--bport-green-d);
+  color: white;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  padding: 25px;
+  gap: 15px;
+}
+
+.container-L {
+  background-color: var(--bport-green-l);
+  text-align: center;
+  width: 50vw;
+  min-width: 600px;
+  max-width: 1000px;
+  padding: 25px 50px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 50px 0px 0px 50px;
+}
+
+.container-R {
+  background-color: var(--bport-green-l);
+  text-align: center;
+  width: 20vw;
+  min-width: 300px;
+  max-width: 1000px;
+  padding: 25px 15px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 0px 50px 50px 0px;
+}
+
+.officer-box p {
+  line-height: 0px;
+  margin: 15px;
+}
+
+.bio-box {
+  border: 2px solid white;
+  padding: 10px 20px 20px 20px;
+  margin-bottom: 20px;
+  border-radius: 25px;
+}
+
+h1 {
+  font-size: 48px;
+  color: var(--bport-gold);
+  margin-bottom: 20px;
+  text-shadow: 0px 3px 5px rgba(0, 0, 0, 0.5);
+}
+
+
+hr {
+  border: none;
+  border-top: 2px dotted white;
+  margin: 20px 0;
+}
+
+table {
+  width: 100%;
+  border-spacing: 0 20px;
+  text-align: center;
+}
+
+h3 {
+  font-style: italic;
+}
+
+p {
+  margin-top: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.discord-button {
+  background-color: var(--bport-green-d);
+  color: white;
+  padding: 15px 25px 12px 25px;
+  border: none;
+  text-decoration: none;
+  font-size: 30px;
+  display: inline-block;
+  transition: 0.3s;
+  border-radius: 25px;
+}
+
+.discord-button:hover {
+  scale: 110%;
+  background-color: var(--bport-gold);
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.2);
+}
+
+.github-button {
+  background-color: var(--bport-green-d);
+  color: white;
+  padding: 15px;
+  margin-top: 15px;
+  border: none;
+  text-decoration: none;
+  font-size: 20px;
+  display: inline-block;
+  transition: 0.3s;
+  border-radius: 25px;
+}
+
+.github-button:hover {
+  background-color: var(--bport-gold);
+  box-shadow: 0 5px 7px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Media Queries */
+@media screen and (max-width: 960px) {
+  body {
+    flex-direction: column;
+    justify-content: center;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .container-L,
+  .container-R {
+    width: 100%;
+    min-width: 0px;
+    max-width: 1250px;
+    margin: 0;
+  }
+
+  .container-L {
+    border-radius: 30px 30px 0px 0px;
+  }
+
+  .container-R {
+    border-radius: 0px 0px 30px 30px;
+  }
+}
