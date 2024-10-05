@@ -29,7 +29,10 @@ def create_app():
     Returns:
         Flask: A configured Flask application instance.
     """
-    app = Flask(__name__)
+    app = Flask(__name__,
+                 static_url_path='',
+                 template_folder='../templates',
+                 static_folder='../static')
 
     # Load configuration
     app.config.from_object('app.config')
