@@ -1,6 +1,8 @@
+from datetime import datetime
+
 from flask import Blueprint, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+
 from app.models import Teacher, db
 
 # Create a blueprint for the teacher API

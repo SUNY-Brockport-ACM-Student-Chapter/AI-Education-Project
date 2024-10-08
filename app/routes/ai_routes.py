@@ -5,7 +5,7 @@ It defines a Flask Blueprint for AI-related routes and includes functions for
 AI data processing.
 """
 
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, current_app, jsonify, request
 
 # import related ai models here
 # example..... from ..models import AIModel, db

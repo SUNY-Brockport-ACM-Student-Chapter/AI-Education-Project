@@ -1,10 +1,10 @@
 # Contains all the database models (tables) using SQLAlchemy.
 
-from . import db
-from enum import Enum as PyEnum
-
 import uuid
 from datetime import datetime
+from enum import Enum as PyEnum
+
+from . import db
 
 
 class Role(PyEnum):

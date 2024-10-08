@@ -1,8 +1,9 @@
+from datetime import datetime
+
 from flask import Blueprint, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-from app.models import Exam, db
 
+from app.models import Exam, db
 
 # Create a blueprint for the exam API
 exam_bp = Blueprint("exam_api", __name__)

@@ -4,14 +4,15 @@ Initializes the Flask app and sets up the database with SQLAlchemy.
 This module is responsible for creating and configuring the Flask application,
 initializing the database, and registering all the necessary blueprints.
 """
-
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-import os
-from dotenv import load_dotenv
 import logging
+import os
 from logging.handlers import RotatingFileHandler
 
+from dotenv import load_dotenv
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+from .routes import all_blueprints
 
 # Load environment variables from .env file
 load_dotenv()
@@ -56,7 +57,6 @@ def create_app():
         app.logger.info("ACM Education startup")
 
     # Import and register blueprints
-    from .routes import all_blueprints
 
     for bp in all_blueprints:
         app.register_blueprint(bp, url_prefix="/api" if bp.name != "main_bp" else "/")

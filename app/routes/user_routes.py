@@ -5,9 +5,10 @@ It defines a Flask Blueprint for user-related routes and includes functions for
 handling user operations such as registration.
 """
 
-from flask import Blueprint, request, jsonify, current_app
-from ..models import Teacher, db
+from flask import Blueprint, current_app, jsonify, request
 from werkzeug.security import generate_password_hash
+
+from ..models import Teacher, db
 
 user_bp = Blueprint("user_bp", __name__)
 

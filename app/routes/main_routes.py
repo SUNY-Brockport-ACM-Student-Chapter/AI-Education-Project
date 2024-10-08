@@ -5,7 +5,7 @@ It defines a Flask Blueprint for the main routes and includes functions for
 handling the home page and other general-purpose routes.
 """
 
-from flask import Blueprint, jsonify, current_app
+from flask import Blueprint, current_app, jsonify
 
 main_bp = Blueprint("main_bp", __name__)
 
