@@ -12,6 +12,6 @@ app = create_app()
 print("Flask app created successfully!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("Starting Flask server...")
     app.run(debug=True)

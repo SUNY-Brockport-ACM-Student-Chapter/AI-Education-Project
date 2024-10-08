@@ -18,4 +18,16 @@ from .teacher_routes import teacher_bp
 from .answer_routes import answer_bp
 
 # Define a list of all blueprints for easy registration
-all_blueprints = [student_bp, ai_bp, course_bp, exam_bp, main_bp, user_bp, enrollment_bp, question_bp, student_answer_bp, teacher_bp, answer_bp]
+all_blueprints = [
+    student_bp,
+    ai_bp,
+    course_bp,
+    exam_bp,
+    main_bp,
+    user_bp,
+    enrollment_bp,
+    question_bp,
+    student_answer_bp,
+    teacher_bp,
+    answer_bp,
+]
