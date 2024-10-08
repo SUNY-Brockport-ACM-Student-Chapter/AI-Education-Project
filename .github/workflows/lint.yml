@@ -26,4 +26,3 @@ jobs:
 
       - name: Run Pylint
         run: pylint **/*.py --disable=too-few-public-methods,trailing-whitespace,missing-final-newline,W0611
-
