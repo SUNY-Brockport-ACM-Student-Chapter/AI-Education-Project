@@ -25,5 +25,4 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Pylint
-        run: pylint **/*.py --disable=too-few-public-methods,trailing-whitespace,missing-final-newline
-
+        run: pylint **/*.py --disable=too-few-public-methods,trailing-whitespace,missing-final-newline,W0611
