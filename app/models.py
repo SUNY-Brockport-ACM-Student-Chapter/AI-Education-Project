@@ -1,5 +1,6 @@
-# Contains all the database models (tables) using SQLAlchemy.
-
+"""
+ Contains all the database models (tables) using SQLAlchemy.
+"""
 import uuid
 from datetime import datetime
 from enum import Enum as PyEnum
@@ -8,11 +9,26 @@ from . import db
 
 
 class Role(PyEnum):
+    """
+    Enum representing user roles in the system.
+
+    Attributes:
+        TEACHER (str): Represents a teacher role.
+        ADMIN (str): Represents an admin role.
+    """
     TEACHER = "teacher"
     ADMIN = "admin"
 
 
 class EnrollmentStatus(PyEnum):
+    """
+    Enum representing the enrollment status of a student.
+
+    Attributes:
+        PENDING (str): The student has requested enrollment but it has not been confirmed.
+        ENROLLED (str): The student is enrolled in the course.
+        CANCELLED (str): The enrollment has been cancelled.
+    """
     PENDING = "pending"
     ENROLLED = "enrolled"
     CANCELLED = "cancelled"
@@ -51,6 +67,22 @@ class Student(db.Model):
 
 
 class Teacher(db.Model):
+    """
+    Represents a teacher in the system.
+
+    Attributes:
+        id (int): The unique identifier for the teacher.
+        user_name (str): The teacher's username (unique).
+        first_name (str): The teacher's first name.
+        last_name (str): The teacher's last name.
+        email (str): The teacher's email (unique).
+        password_hash (str): The hashed password for the teacher.
+        last_login (DateTime): The last time the teacher logged in.
+        role (str): The role of the teacher ('admin' or 'teacher').
+        is_active (bool): Whether the teacher's account is active.
+        created_at (DateTime): The timestamp of when the teacher was added.
+        updated_at (DateTime): The timestamp of the last update to the teacher's information.
+    """
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
     user_name = db.Column(db.String(80), unique=True, nullable=False)
     first_name = db.Column(db.String(80), nullable=False)
