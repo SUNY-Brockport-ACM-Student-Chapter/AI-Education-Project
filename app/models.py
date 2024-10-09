@@ -9,7 +9,13 @@ from . import db
 
 
 class Role(PyEnum):
-  
+    """
+    Enum representing user roles in the system.
+
+    Attributes:
+        TEACHER (str): Represents a teacher role.
+        ADMIN (str): Represents an admin role.
+    """
     TEACHER = "teacher"
     ADMIN = "admin"
 
