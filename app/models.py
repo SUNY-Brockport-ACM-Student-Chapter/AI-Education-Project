@@ -1,4 +1,6 @@
-
+"""
+ Contains all the database models (tables) using SQLAlchemy.
+"""
 import uuid
 from datetime import datetime
 from enum import Enum as PyEnum
