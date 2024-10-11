@@ -247,3 +247,25 @@ class StudentAnswer(db.Model):
 
     def __repr__(self) -> str:
         return f"<Student Answer: {self.answer_text}>"
+
+class AI_Assessment(db.Model):
+    """
+    Represents an AI-generated evaluation of a student's answer.
+
+    Attributes:
+        id (int): The unique identifier for the Assessment.
+        assessment_text (String): The text-evaluation provided by the AI.
+        student_answer_id(int): The ID of the student answer being evaluated.
+        score (String): The score given by the AI (0, 1, or 2).
+
+        student_answer (StudentAnswer): The relationship to the Answer model.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    assessment_text = db.Colum(db.String(255), nullable=False)
+    student_answer_id = db.Column(db.Integer, db.ForeignKey("student_answer.id"))
+    score = db.Column(db.String(1), nullable=False)
+    
+    student_answer = db.relationship("StudentAnswer", backref="student_answers")
+
+    def __repr__(self) -> str:
+        return f"<AI Assessment: {self.assessment_text}>"
