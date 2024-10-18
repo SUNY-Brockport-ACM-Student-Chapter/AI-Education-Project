@@ -1,9 +1,4 @@
-"""
-This module contains the main routes for the application.
 
-It defines a Flask Blueprint for the main routes and includes functions for
-handling the home page and other general-purpose routes.
-"""
 
 from flask import Blueprint, current_app, jsonify
 
