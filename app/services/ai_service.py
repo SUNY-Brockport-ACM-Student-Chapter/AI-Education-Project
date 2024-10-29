@@ -1,11 +1,15 @@
 # services/ai_service.py
 
-from models.ai_model import Ai
-from repositories.ai_repository import AiRepository
+"""
+This module contains the service for the AI model.
+"""
+
+from app.models.ai_model import Ai
+from app.repositories.ai_repository import AIRepository
 
 
 class AiService:
-    def __init__(self, ai_repo: AiRepository):
+    def __init__(self, ai_repo: AIRepository):
         self.ai_repo = ai_repo
 
     def get_ai_by_id(self, ai_id: int):

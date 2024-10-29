@@ -7,10 +7,10 @@ question data processing.
 
 from flask import Blueprint, current_app, jsonify, request
 
-from database import get_db_session
-from models.question_model import Question
-from repositories.question_repository import QuestionRepository
-from services.question_service import QuestionService
+from app.database import get_db_session
+from app.models.question_model import Question
+from app.repositories.question_repository import QuestionRepository
+from app.services.question_service import QuestionService
 
 # Create the blueprint
 question_bp = Blueprint("question_bp", __name__)

@@ -1,7 +1,7 @@
 # services/teacher_service.py
 
-from models.teacher_model import Teacher
-from repositories.teacher_repository import TeacherRepository
+from app.models.teacher_model import Teacher
+from app.repositories.teacher_repository import TeacherRepository
 
 
 class TeacherService:

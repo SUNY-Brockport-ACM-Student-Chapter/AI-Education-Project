@@ -1,8 +1,12 @@
 # repositories/ai_repository.py
 
+"""
+This module contains the repository for the AI model.
+"""
+
 from sqlalchemy.orm import Session
 
-from models.ai_model import Ai
+from app.models.ai_model import Ai
 
 
 class AIRepository:

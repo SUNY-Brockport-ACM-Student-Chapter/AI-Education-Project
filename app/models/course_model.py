@@ -1,10 +1,11 @@
 # models/course_model.py
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
-from database import Base
+from app.database import Base
 
 
 class Course(Base):
@@ -25,7 +26,7 @@ class Course(Base):
         updated_at (datetime): Timestamp of when the record was last updated
     """
 
-    __tablename__ = "courses"
+    __tablename__ = "course"
 
     course_id = Column(String(8), primary_key=True)
     course_name = Column(String(50), nullable=False)
@@ -36,9 +37,9 @@ class Course(Base):
     is_active = Column(Boolean, default=False)
     start_date = Column(DateTime, nullable=False)
     end_date = Column(DateTime, nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.now(UTC))
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
-        DateTime, nullable=False, default=datetime.now(UTC), onupdate=datetime.now(UTC)
+        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
     )
 
     def __repr__(self):

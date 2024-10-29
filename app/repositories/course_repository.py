@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from models import Course
+from app.models.course_model import Course
 
 
 class CourseRepository:

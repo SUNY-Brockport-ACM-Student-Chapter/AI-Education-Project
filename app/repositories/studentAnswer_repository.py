@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from models import StudentAnswer
+from app.models.studentAnswer_model import StudentAnswer
 
 
 class StudentAnswerRepository:

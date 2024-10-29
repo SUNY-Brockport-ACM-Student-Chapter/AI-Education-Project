@@ -1,8 +1,10 @@
 # models/studentAnswer_model.py
 
-from sqlalchemy import Column, Integer, String, ForeignKey
+from datetime import datetime, timezone
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy.orm import relationship
 
-from ..database import Base
+from app.database import Base
 
 
 class StudentAnswer(Base):
@@ -18,9 +20,11 @@ class StudentAnswer(Base):
         answer_grade (str): Grade for first attempt (single character)
         second_attempt_grade (str): Grade for second attempt, defaults to first grade
         answer_stage (int): Indicates the current attempt stage (1 or 2)
+        created_at (datetime): Timestamp when the answer was created
+        updated_at (datetime): Timestamp when the answer was last updated
     """
 
-    __tablename__ = "student answer"
+    __tablename__ = "student_answer"
 
     student_answer_id = Column(Integer, primary_key=True, autoincrement=True)
     student_id = Column(Integer, ForeignKey("students.student_id"), nullable=False)
@@ -30,6 +34,11 @@ class StudentAnswer(Base):
     answer_grade = Column(String(1), nullable=False)
     second_attempt_grade = Column(String(1), default=answer_grade)
     answer_stage = Column(Integer, nullable=False)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+
+    # Add the relationship to Ai
+    ai_assessment = relationship("Ai", back_populates="student_answer", uselist=False)
 
     def __repr__(self):
         return f"<StudentAnswer(student_id = {self.student_id}, question_id = {self.question_id})>"

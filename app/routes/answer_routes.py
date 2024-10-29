@@ -4,10 +4,10 @@ This module contains routes for the answer model.
 
 from flask import Blueprint, current_app, jsonify, request
 
-from database import get_db_session
-from models.answer_model import Answer
-from repositories.answer_repository import AnswerRepository
-from services.answer_service import AnswerService
+from app.database import get_db_session
+from app.models.answer_model import Answer
+from app.repositories.answer_repository import AnswerRepository
+from app.services.answer_service import AnswerService
 
 # Create the blueprint
 answer_bp = Blueprint("answer_bp", __name__)

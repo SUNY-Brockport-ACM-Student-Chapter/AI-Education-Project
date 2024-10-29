@@ -1,11 +1,10 @@
 # models/student_model.py
 
-import datetime
-from datetime import UTC, datetime
-
+from datetime import datetime, timezone
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
-from database import Base
+from app.database import Base
 
 
 class Student(Base):
@@ -25,7 +24,7 @@ class Student(Base):
         updated_at (datetime): Timestamp of when the record was last updated
     """
 
-    __tablename__ = "students"
+    __tablename__ = "student"
 
     student_id = Column(Integer, primary_key=True, autoincrement=True)
     user_name = Column(String(50), unique=True, nullable=False)
@@ -34,10 +33,10 @@ class Student(Base):
     email = Column(String(120), unique=True, nullable=False)
     clerk_user_id = Column(String(255), nullable=False)
     is_active = Column(Boolean, default=False)
-    last_login = Column(DateTime, nullable=False, default=datetime.now(UTC))
-    created_at = Column(DateTime, nullable=False, default=datetime.now(UTC))
+    last_login = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
-        DateTime, nullable=False, default=datetime.now(UTC), onupdate=datetime.now(UTC)
+        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
     )
 
     def __repr__(self):

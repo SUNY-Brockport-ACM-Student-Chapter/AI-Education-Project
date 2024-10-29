@@ -7,10 +7,10 @@ enrollment data processing.
 
 from flask import Blueprint, current_app, jsonify, request
 
-from database import get_db_session
-from models.enrollment_model import Enrollment
-from repositories.enrollment_repository import EnrollmentRepository
-from services.enrollment_service import EnrollmentService
+from app.database import get_db_session
+from app.models.enrollment_model import Enrollment
+from app.repositories.enrollment_repository import EnrollmentRepository
+from app.services.enrollment_service import EnrollmentService
 
 # Create the blueprint
 enrollment_bp = Blueprint("enrollment_bp", __name__)

@@ -1,7 +1,7 @@
 # services/enrollment_service.py
 
-from models.enrollment_model import Enrollment
-from repositories.enrollment_repository import EnrollmentRepository
+from app.models.enrollment_model import Enrollment
+from app.repositories.enrollment_repository import EnrollmentRepository
 
 
 class EnrollmentService:

@@ -7,10 +7,10 @@ course data processing.
 
 from flask import Blueprint, current_app, jsonify, request
 
-from database import get_db_session
-from models.course_model import Course
-from repositories.course_repository import CourseRepository
-from services.course_service import CourseService
+from app.database import get_db_session
+from app.models.course_model import Course
+from app.repositories.course_repository import CourseRepository
+from app.services.course_service import CourseService
 
 # Create the blueprint
 course_bp = Blueprint("course_bp", __name__)

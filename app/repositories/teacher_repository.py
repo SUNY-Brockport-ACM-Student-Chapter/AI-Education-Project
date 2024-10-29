@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from models import Teacher
+from app.models.teacher_model import Teacher
 
 
 class TeacherRepository:

@@ -7,10 +7,10 @@ exam data processing.
 
 from flask import Blueprint, current_app, jsonify, request
 
-from database import get_db_session
-from models.exam_model import Exam
-from repositories.exam_repository import ExamRepository
-from services.exam_service import ExamService
+from app.database import get_db_session
+from app.models.exam_model import Exam
+from app.repositories.exam_repository import ExamRepository
+from app.services.exam_service import ExamService
 
 # Create the blueprint
 exam_bp = Blueprint("exam_bp", __name__)

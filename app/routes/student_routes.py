@@ -7,10 +7,10 @@ handling the student routes.
 
 from flask import Blueprint, current_app, jsonify, request
 
-from database import get_db_session
-from models.student_model import Student
-from repositories.student_repository import StudentRepository
-from services.student_service import StudentService
+from app.database import get_db_session
+from app.models.student_model import Student
+from app.repositories.student_repository import StudentRepository
+from app.services.student_service import StudentService
 
 # Create the blueprint
 student_bp = Blueprint("student_bp", __name__)

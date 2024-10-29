@@ -7,9 +7,10 @@ handling the student answer routes.
 
 from flask import Blueprint, current_app, jsonify, request
 
-from database import get_db_session
-from repositories.studentAnswer_repository import StudentAnswerRepository
-from services.studentAnswer_service import StudentAnswerService
+from app.database import get_db_session
+from app.models.studentAnswer_model import StudentAnswer
+from app.repositories.studentAnswer_repository import StudentAnswerRepository
+from app.services.studentAnswer_service import StudentAnswerService
 
 # Create the blueprint
 student_answer_bp = Blueprint("student_answer_bp", __name__)

@@ -1,7 +1,7 @@
 # services/answer_service.py
 
-from models.answer_model import Answer
-from repositories.answer_repository import AnswerRepository
+from app.models.answer_model import Answer
+from app.repositories.answer_repository import AnswerRepository
 
 
 class AnswerService:

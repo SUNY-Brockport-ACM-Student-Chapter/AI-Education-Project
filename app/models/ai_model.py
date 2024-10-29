@@ -1,9 +1,13 @@
 # models/ai_model.py
 
+"""
+This module contains the AI model.
+"""
+
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from database import Base
+from app.database import Base
 
 
 class Ai(Base):

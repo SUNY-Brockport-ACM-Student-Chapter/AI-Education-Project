@@ -7,9 +7,10 @@ handling the teacher routes.
 
 from flask import Blueprint, current_app, jsonify, request
 
-from database import get_db_session
-from repositories.teacher_repository import TeacherRepository
-from services.teacher_service import TeacherService
+from app.database import get_db_session
+from app.models.teacher_model import Teacher
+from app.repositories.teacher_repository import TeacherRepository
+from app.services.teacher_service import TeacherService
 
 # Create the blueprint
 teacher_bp = Blueprint("teacher_bp", __name__)

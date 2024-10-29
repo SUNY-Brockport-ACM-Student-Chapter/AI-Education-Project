@@ -1,7 +1,7 @@
 # services/course_service.py
 
-from models.course_model import Course
-from repositories.course_repository import CourseRepository
+from app.models.course_model import Course
+from app.repositories.course_repository import CourseRepository
 
 
 class CourseService:

@@ -1,11 +1,12 @@
 # models/teacher_model.py
 
 import datetime
-from datetime import UTC, datetime
+from datetime import timezone
 
 from sqlalchemy import Boolean, Column, DateTime, Enum, Integer, String
+from sqlalchemy.orm import relationship
 
-from database import Base
+from app.database import Base
 
 
 class Teacher(Base):
@@ -36,9 +37,9 @@ class Teacher(Base):
     clerk_user_id = Column(String(255), nullable=False)
     role = Column(Enum("admin", "teacher"), default="teacher", nullable=False)
     is_active = Column(Boolean, default=False)
-    last_login = Column(DateTime, nullable=False, default=datetime.now(UTC))
-    created_at = Column(DateTime, nullable=False, default=datetime.now(UTC))
-    updated_at = Column(DateTime, nullabel=False, defualt=datetime.now(UTC))
+    last_login = Column(DateTime, nullable=False, default=datetime.datetime.now(timezone.utc))
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc), onupdate=lambda: datetime.datetime.now(timezone.utc))
 
     def __repr__(self):
         return f"<Teacher(user_name = {self.user_name}, email = {self.email})>"

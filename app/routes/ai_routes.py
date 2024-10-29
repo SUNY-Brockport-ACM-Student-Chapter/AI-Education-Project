@@ -7,10 +7,10 @@ AI data processing.
 
 from flask import Blueprint, current_app, jsonify, request
 
-from database import get_db_session
-from models.ai_model import Ai
-from repositories.ai_repository import AIRepository
-from services.ai_service import AiService
+from app.database import get_db_session
+from app.models.ai_model import Ai
+from app.repositories.ai_repository import AIRepository
+from app.services.ai_service import AiService
 
 # Create the blueprint
 ai_bp = Blueprint("ai_bp", __name__)

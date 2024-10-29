@@ -1,8 +1,9 @@
 # models/enrollment_model.py
 
 from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
-from database import Base
+from app.database import Base
 
 
 class Enrollment(Base):
@@ -17,7 +18,7 @@ class Enrollment(Base):
         enrollment_date (datetime): When the enrollment occurred
     """
 
-    __tablename__ = "enrollments"
+    __tablename__ = "enrollment"
 
     enrollment_id = Column(Integer, primary_key=True, autoincrement=True)
     student_id = Column(Integer, ForeignKey("students.student_id"), nullable=False)

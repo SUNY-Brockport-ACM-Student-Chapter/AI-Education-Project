@@ -1,10 +1,11 @@
 # models/question_model.py
 
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
-from database import Base
+from app.database import Base
 
 
 class Question(Base):
@@ -19,14 +20,14 @@ class Question(Base):
         updated_at (datetime): Timestamp of when the record was last updated
     """
 
-    __tablename__ = "questions"
+    __tablename__ = "question"
 
     question_id = Column(Integer, primary_key=True, autoincrement=True)
-    exam_id = Column(Integer, ForeignKey("exams.exam_id"), nullable=False)
+    exam_id = Column(Integer, ForeignKey("exam.exam_id"), nullable=False)
     question_text = Column(String(255), nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.now(UTC))
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
-        DateTime, nullable=False, default=datetime.now(UTC), onupdate=datetime.now(UTC)
+        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
     )
 
     def __repr__(self):

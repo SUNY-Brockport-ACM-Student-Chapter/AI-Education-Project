@@ -1,11 +1,12 @@
-from .ai_service import AiService
-from .answer_service import AnswerService
-from .course_service import CourseService
-from .enrollment_service import EnrollmentService
-from .exam_service import ExamService
-from .question_service import QuestionService
-from .student_service import StudentService
-from .studentAnswer_service import StudentAnswerService
+from app.services.ai_service import AiService
+from app.services.answer_service import AnswerService
+from app.services.course_service import CourseService
+from app.services.enrollment_service import EnrollmentService
+from app.services.exam_service import ExamService
+from app.services.question_service import QuestionService
+from app.services.student_service import StudentService
+from app.services.studentAnswer_service import StudentAnswerService
+from app.services.teacher_service import TeacherService
 
 __all__ = [
     "AiService",
@@ -16,4 +17,5 @@ __all__ = [
     "QuestionService",
     "StudentService",
     "StudentAnswerService",
+    "TeacherService",
 ]

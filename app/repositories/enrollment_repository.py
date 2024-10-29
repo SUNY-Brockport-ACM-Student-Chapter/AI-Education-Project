@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from models import Enrollment
+from app.models.enrollment_model import Enrollment
 
 
 class EnrollmentRepository:

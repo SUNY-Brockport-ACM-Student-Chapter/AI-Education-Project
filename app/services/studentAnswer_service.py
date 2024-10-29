@@ -1,7 +1,7 @@
 # services/studentAnswer_service.py
 
-from models.studentAnswer_model import StudentAnswer
-from repositories.studentAnswer_repository import StudentAnswerRepository
+from app.models.studentAnswer_model import StudentAnswer
+from app.repositories.studentAnswer_repository import StudentAnswerRepository
 
 
 class StudentAnswerService:

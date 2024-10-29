@@ -1,7 +1,7 @@
 # services/exam_service.py
 
-from models.exam_model import Exam
-from repositories.exam_repository import ExamRepository
+from app.models.exam_model import Exam
+from app.repositories.exam_repository import ExamRepository
 
 
 class ExamService:

@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from models import Exam
+from app.models.exam_model import Exam
 
 
 class ExamRepository:

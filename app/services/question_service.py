@@ -1,7 +1,7 @@
 # services/question_service.py
 
-from models.question_model import Question
-from repositories.question_repository import QuestionRepository
+from app.models.question_model import Question
+from app.repositories.question_repository import QuestionRepository
 
 
 class QuestionService:
