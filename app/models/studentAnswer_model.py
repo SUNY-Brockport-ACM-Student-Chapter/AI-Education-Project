@@ -23,8 +23,8 @@ class StudentAnswer(Base):
     __tablename__ = "student answer"
 
     student_answer_id = Column(Integer, primary_key=True, autoincrement=True)
-    student_id = Column(Integer, ForeignKey=("students.student_id"), nullable=False)
-    question_id = Column(Integer, ForeignKey=("questions.question_id"), nullable=False)
+    student_id = Column(Integer, ForeignKey("students.student_id"), nullable=False)
+    question_id = Column(Integer, ForeignKey("questions.question_id"), nullable=False)
     answer_text = Column(String(255))
     second_attempt_answer = Column(String(255), default=answer_text)
     answer_grade = Column(String(1), nullable=False)
