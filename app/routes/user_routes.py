@@ -8,10 +8,17 @@ handling user operations such as registration.
 from flask import Blueprint, current_app, jsonify, request
 from werkzeug.security import generate_password_hash
 
-from ..models import Teacher, db
+from app.database import get_db_session
+from app.models.teacher_model import Teacher
+from app.services.teacher_service import TeacherService
+from app.repositories.teacher_repository import TeacherRepository
 
 user_bp = Blueprint("user_bp", __name__)
 
+# Initialize services
+db_session = get_db_session()
+teacher_repository = TeacherRepository(db_session)
+teacher_service = TeacherService(teacher_repository)
 
 @user_bp.route("/register", methods=["POST"])
 def register_user():
@@ -41,11 +48,11 @@ def register_user():
             password_hash=generate_password_hash(data["password"]),
             role=data["role"],
         )
-        db.session.add(new_user)
-        db.session.commit()
+        db_session.add(new_user)
+        db_session.commit()
         current_app.logger.info(f"New user registered: {new_user.username}")
         return jsonify({"message": "User registered successfully!"}), 201
     except Exception as e:
-        db.session.rollback()
+        db_session.rollback()
         current_app.logger.error(f"Error during user registration: {str(e)}")
         return jsonify({"error": str(e)}), 500

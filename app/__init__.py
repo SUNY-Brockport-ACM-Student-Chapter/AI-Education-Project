@@ -4,6 +4,7 @@ Initializes the Flask app and sets up the database with SQLAlchemy.
 This module is responsible for creating and configuring the Flask application,
 initializing the database, and registering all the necessary blueprints.
 """
+
 import logging
 import os
 from logging.handlers import RotatingFileHandler

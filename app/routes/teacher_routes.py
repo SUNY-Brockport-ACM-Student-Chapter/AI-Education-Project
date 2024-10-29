@@ -1,105 +1,122 @@
-from datetime import datetime
+"""
+This module contains the routes for the teacher.
 
-from flask import Blueprint, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
+It defines a Flask Blueprint for the teacher routes and includes functions for
+handling the teacher routes.
+"""
 
-from app.models import Teacher, db
+from flask import Blueprint, current_app, jsonify, request
 
-# Create a blueprint for the teacher API
-teacher_bp = Blueprint("teacher_api", __name__)
+from app.database import get_db_session
+from app.models.teacher_model import Teacher
+from app.repositories.teacher_repository import TeacherRepository
+from app.services.teacher_service import TeacherService
 
+# Create the blueprint
+teacher_bp = Blueprint("teacher_bp", __name__)
 
-@teacher_bp.route("/teachers", methods=["POST"])
-def create_teacher():
-    data = request.get_json()
-    new_teacher = Teacher(
-        user_name=data["user_name"],
-        first_name=data["first_name"],
-        last_name=data.get("last_name"),
-        email=data["email"],
-        clerk_user_id=data["clerk_user_id"],
-        role=data["role"],
-        is_active=data.get("is_active", False),
-        last_login=data["last_login"],
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow(),
-    )
-    db.session.add(new_teacher)
-    db.session.commit()
-    return jsonify({"message": "Teacher created successfully."}), 201
+# Initialize service with repository
+db_session = get_db_session()
+teacher_repository = TeacherRepository(db_session)
+teacher_service = TeacherService(teacher_repository)
 
 
 @teacher_bp.route("/teachers", methods=["GET"])
-def get_teachers():
-    teachers = Teacher.query.all()
-    return (
-        jsonify(
-            [
-                {
-                    "teacher_id": teacher.teacher_id,
-                    "user_name": teacher.user_name,
-                    "first_name": teacher.first_name,
-                    "last_name": teacher.last_name,
-                    "email": teacher.email,
-                    "clerk_user_id": teacher.clerk_user_id,
-                    "role": teacher.role,
-                    "is_active": teacher.is_active,
-                    "last_login": teacher.last_login,
-                    "created_at": teacher.created_at,
-                    "updated_at": teacher.updated_at,
-                }
-                for teacher in teachers
-            ]
-        ),
-        200,
-    )
+def get_all_teachers():
+    """Get all teachers"""
+    try:
+        teachers = teacher_service.get_all_teachers()
+        return (
+            jsonify(
+                [
+                    {
+                        "teacher_id": teacher.teacher_id,
+                        "teacher_name": teacher.teacher_name,
+                    }
+                    for teacher in teachers
+                ]
+            ),
+            200,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error fetching teachers: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
 @teacher_bp.route("/teachers/<int:teacher_id>", methods=["GET"])
 def get_teacher(teacher_id):
-    teacher = Teacher.query.get_or_404(teacher_id)
-    return (
-        jsonify(
-            {
-                "teacher_id": teacher.teacher_id,
-                "user_name": teacher.user_name,
-                "first_name": teacher.first_name,
-                "last_name": teacher.last_name,
-                "email": teacher.email,
-                "clerk_user_id": teacher.clerk_user_id,
-                "role": teacher.role,
-                "is_active": teacher.is_active,
-                "last_login": teacher.last_login,
-                "created_at": teacher.created_at,
-                "updated_at": teacher.updated_at,
-            }
-        ),
-        200,
-    )
+    """Get specific teacher"""
+    try:
+        teacher = teacher_service.get_teacher_by_id(teacher_id)
+        if not teacher:
+            return jsonify({"error": "Teacher not found"}), 404
+        return (
+            jsonify(
+                {"teacher_id": teacher.teacher_id, "teacher_name": teacher.teacher_name}
+            ),
+            200,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error fetching teacher: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@teacher_bp.route("/teachers", methods=["POST"])
+def create_teacher():
+    """Create a new teacher"""
+    try:
+        data = request.json
+        new_teacher = Teacher(teacher_name=data.get("teacher_name"))
+        result = teacher_service.create_teacher(new_teacher)
+        return (
+            jsonify(
+                {"teacher_id": result.teacher_id, "teacher_name": result.teacher_name}
+            ),
+            201,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error creating teacher: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
 @teacher_bp.route("/teachers/<int:teacher_id>", methods=["PUT"])
 def update_teacher(teacher_id):
-    data = request.get_json()
-    teacher = Teacher.query.get_or_404(teacher_id)
+    """Update existing teacher"""
+    try:
+        data = request.json
+        existing_teacher = teacher_service.get_teacher_by_id(teacher_id)
+        if not existing_teacher:
+            return jsonify({"error": "Teacher not found"}), 404
 
-    teacher.user_name = data.get("user_name", teacher.user_name)
-    teacher.first_name = data.get("first_name", teacher.first_name)
-    teacher.last_name = data.get("last_name", teacher.last_name)
-    teacher.email = data.get("email", teacher.email)
-    teacher.clerk_user_id = data.get("clerk_user_id", teacher.clerk_user_id)
-    teacher.role = data.get("role", teacher.role)
-    teacher.is_active = data.get("is_active", teacher.is_active)
-    teacher.last_login = data.get("last_login", teacher.last_login)
-    teacher.updated_at = datetime.utcnow()
+        existing_teacher.teacher_name = data.get(
+            "teacher_name", existing_teacher.teacher_name
+        )
 
-    db.session.commit()
-    return jsonify({"message": "Teacher updated successfully."}), 200
+        updated_teacher = teacher_service.update_teacher(existing_teacher)
+        return (
+            jsonify(
+                {
+                    "teacher_id": updated_teacher.teacher_id,
+                    "teacher_name": updated_teacher.teacher_name,
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error updating teacher: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
 @teacher_bp.route("/teachers/<int:teacher_id>", methods=["DELETE"])
 def delete_teacher(teacher_id):
-    teacher = Teacher.query.get_or_404(teacher_id)
-    db.session.delete(teacher)
-    db.session.commit()
-    return jsonify({"message": "Teacher deleted successfully."}), 204
+    """Delete existing teacher"""
+    try:
+        teacher = teacher_service.get_teacher_by_id(teacher_id)
+        if not teacher:
+            return jsonify({"error": "Teacher not found"}), 404
+
+        teacher_service.delete_teacher(teacher)
+        return jsonify({"message": "Teacher deleted successfully"}), 200
+    except Exception as e:
+        current_app.logger.error(f"Error deleting teacher: {str(e)}")
+        return jsonify({"error": str(e)}), 500

@@ -1,135 +1,122 @@
-# routes/student_routes.py
+""" 
+This module contains routes for the student model.
+ 
+It defines a Flask Blueprint for the student routes and includes functions for
+handling the student routes.
+"""
 
-from database import SessionLocal
-from flask import Blueprint, jsonify, request
-from repositories.student_repository import StudentRepository
-from services.student_service import StudentService
+from flask import Blueprint, current_app, jsonify, request
 
-student_bp = Blueprint("student", __name__)
+from app.database import get_db_session
+from app.models.student_model import Student
+from app.repositories.student_repository import StudentRepository
+from app.services.student_service import StudentService
+
+# Create the blueprint
+student_bp = Blueprint("student_bp", __name__)
+
+# Initialize service with repository
+db_session = get_db_session()
+student_repository = StudentRepository(db_session)
+student_service = StudentService(student_repository)
+
+
+@student_bp.route("/students", methods=["GET"])
+def get_all_students():
+    """Get all students"""
+    try:
+        students = student_service.get_all_students()
+        return (
+            jsonify(
+                [
+                    {
+                        "student_id": student.student_id,
+                        "student_name": student.student_name,
+                    }
+                    for student in students
+                ]
+            ),
+            200,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error fetching students: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
 @student_bp.route("/students/<int:student_id>", methods=["GET"])
 def get_student(student_id):
-    session = SessionLocal()
-    student_repo = StudentRepository(session)
-    student_service = StudentService(student_repo)
-    student = student_service.get_student(student_id)
-    session.close()
-
-    if student:
-        return jsonify(
-            {
-                "student_id": student.student_id,
-                "user_name": student.user_name,
-                "first_name": student.first_name,
-                "last_name": student.last_name,
-                "email": student.email,
-                "clerk_user_id": student.clerk_user_id,
-                "is_active": student.is_active,
-                "last_login": student.last_login,
-                "created_at": student.created_at,
-                "updated_at": student.updated_at,
-            }
+    """Get specific student"""
+    try:
+        student = student_service.get_student_by_id(student_id)
+        if not student:
+            return jsonify({"error": "Student not found"}), 404
+        return (
+            jsonify(
+                {"student_id": student.student_id, "student_name": student.student_name}
+            ),
+            200,
         )
-    return jsonify({"error": "Student not found"}), 404
-
-
-@student_bp.route("/students", methods=["GET"])
-def get_students():
-    session = SessionLocal()
-    student_repo = StudentRepository(session)
-    student_service = StudentService(student_repo)
-    students = student_service.list_students()
-    session.close()
-
-    return jsonify(
-        [
-            {
-                "student_id": student.student_id,
-                "user_name": student.user_name,
-                "first_name": student.first_name,
-                "last_name": student.last_name,
-                "email": student.email,
-                "clerk_user_id": student.clerk_user_id,
-                "is_active": student.is_active,
-                "last_login": student.last_login,
-                "created_at": student.created_at,
-                "updated_at": student.updated_at,
-            }
-            for student in students
-        ]
-    )
+    except Exception as e:
+        current_app.logger.error(f"Error fetching student: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
 @student_bp.route("/students", methods=["POST"])
 def create_student():
-    data = request.get_json()
-    session = SessionLocal()
-    student_repo = StudentRepository(session)
-    student_service = StudentService(student_repo)
-    student = student_service.create_new_student(
-        user_name=data["user_name"],
-        first_name=data["first_name"],
-        last_name=data["last_name"],
-        email=data["email"],
-        clerk_user_id=data["clerk_user_id"],
-    )
-    session.close()
-
-    return (
-        jsonify(
-            {
-                "student_id": student.student_id,
-                "user_name": student.user_name,
-                "first_name": student.first_name,
-                "last_name": student.last_name,
-                "email": student.email,
-                "clerk_user_id": student.clerk_user_id,
-                "is_active": student.is_active,
-                "last_login": student.last_login,
-                "created_at": student.created_at,
-                "updated_at": student.updated_at,
-            }
-        ),
-        201,
-    )
+    """Create a new student"""
+    try:
+        data = request.json
+        new_student = Student(student_name=data.get("student_name"))
+        result = student_service.create_student(new_student)
+        return (
+            jsonify(
+                {"student_id": result.student_id, "student_name": result.student_name}
+            ),
+            201,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error creating student: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
 @student_bp.route("/students/<int:student_id>", methods=["PUT"])
 def update_student(student_id):
-    data = request.get_json()
-    session = SessionLocal()
-    student_repo = StudentRepository(session)
-    student_service = StudentService(student_repo)
-    student = student_service.update_existing_student(student_id, **data)
-    session.close()
+    """Update existing student"""
+    try:
+        data = request.json
+        existing_student = student_service.get_student_by_id(student_id)
+        if not existing_student:
+            return jsonify({"error": "Student not found"}), 404
 
-    if student:
-        return jsonify(
-            {
-                "student_id": student.student_id,
-                "user_name": student.user_name,
-                "first_name": student.first_name,
-                "last_name": student.last_name,
-                "email": student.email,
-                "clerk_user_id": student.clerk_user_id,
-                "is_active": student.is_active,
-                "last_login": student.last_login,
-                "created_at": student.created_at,
-                "updated_at": student.updated_at,
-            }
+        existing_student.student_name = data.get(
+            "student_name", existing_student.student_name
         )
-    return jsonify({"error": "Student not found"}), 404
+
+        updated_student = student_service.update_student(existing_student)
+        return (
+            jsonify(
+                {
+                    "student_id": updated_student.student_id,
+                    "student_name": updated_student.student_name,
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error updating student: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
 @student_bp.route("/students/<int:student_id>", methods=["DELETE"])
 def delete_student(student_id):
-    session = SessionLocal()
-    student_repo = StudentRepository(session)
-    student_service = StudentService(student_repo)
-    deleted_student = student_service.delete_student(student_id)
-    session.close()
+    """Delete existing student"""
+    try:
+        student = student_service.get_student_by_id(student_id)
+        if not student:
+            return jsonify({"error": "Student not found"}), 404
 
-    if deleted_student:
-        return jsonify({"message": "Student deleted successfully"})
-    return jsonify({"error": "Student not found"}), 404
+        student_service.delete_student(student)
+        return jsonify({"message": "Student deleted successfully"}), 200
+    except Exception as e:
+        current_app.logger.error(f"Error deleting student: {str(e)}")
+        return jsonify({"error": str(e)}), 500
