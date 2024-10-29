@@ -5,7 +5,7 @@ from .enrollment_service import EnrollmentService
 from .exam_service import ExamService
 from .question_service import QuestionService
 from .student_service import StudentService
-from .studentAnswer import StudentAnswerService
+from .studentAnswer_service import StudentAnswerService
 
 __all__ = [
     "AiService",
