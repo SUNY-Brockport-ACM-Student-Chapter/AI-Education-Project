@@ -14,26 +14,29 @@ Dependencies:
 - declarative_base
 """
 
+import os
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# SQLALCHEMY_DATABASE_URL can be configured with your actual database URL.
-# Example for a local SQLite database:
-# SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-# Example for a PostgreSQL database:
-# SQLALCHEMY_DATABASE_URL = "postgresql://user:password@localhost/dbname"
+# Move database URL to config file or environment variable
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./test.db")
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"  # Replace with your actual database URL
-
-# Create a new SQLAlchemy engine instance
+# Add echo=True during development for SQL logging
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    echo=os.getenv("FLASK_ENV") == "development",
 )
 
-# Create a new sessionmaker for handling transactions
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Add some common configuration options
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine,
+    expire_on_commit=False,  # Useful for API responses
+)
 
 # Create a base class for the models to inherit
 Base = declarative_base()
@@ -45,16 +48,26 @@ def get_db():
     Provide a new database session for each request.
 
     This function is a generator that yields a database session and ensures
-    the session is properly closed after the request is processed. It is 
-    typically used as a dependency in FastAPI routes to handle database 
+    the session is properly closed after the request is processed. It is
+    typically used as a dependency in FastAPI routes to handle database
     transactions.
 
     Yields:
-        db (Session): A SQLAlchemy session that can be used to interact with 
+        db (Session): A SQLAlchemy session that can be used to interact with
         the database.
     """
     db = SessionLocal()
     try:
         yield db
+    except Exception:
+        db.rollback()
+        raise
     finally:
         db.close()
+
+
+def get_db_session():
+    """
+    Returns a database session for use in repositories
+    """
+    return SessionLocal()

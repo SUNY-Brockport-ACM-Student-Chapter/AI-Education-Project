@@ -5,6 +5,7 @@ from .enrollment_model import Enrollment
 from .exam_model import Exam
 from .question_model import Question
 from .student_model import Student
+from .studentAnswer_model import StudentAnswer
 from .teacher_model import Teacher
 
 __all__ = [
@@ -15,5 +16,6 @@ __all__ = [
     "Enrollment",
     "Teacher",
     "Student",
+    "StudentAnswer",
     "Ai",
 ]

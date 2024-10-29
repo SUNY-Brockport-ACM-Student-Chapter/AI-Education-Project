@@ -1,6 +1,7 @@
 # models/ai_model.py
 
 from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
 from database import Base
 
@@ -22,6 +23,9 @@ class Ai(Base):
     assessment_text = Column(String(255))
     student_answer_id = Column(Integer, ForeignKey("student_answer.student_answer_id"))
     grade = Column(String(1))
+
+    # Add relationship
+    student_answer = relationship("StudentAnswer", back_populates="ai_assessment")
 
     def __repr__(self):
         return f"<Ai(assessment_text={self.assessment_text}, student_answer_id={self.student_answer_id})>"

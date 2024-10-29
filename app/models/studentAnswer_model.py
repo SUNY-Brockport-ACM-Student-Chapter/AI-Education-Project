@@ -1,11 +1,8 @@
 # models/studentAnswer_model.py
 
-import datetime
-from datetime import UTC, datetime
+from sqlalchemy import Column, Integer, String
 
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
-
-from database import Base
+from ..database import Base
 
 
 class StudentAnswer(Base):

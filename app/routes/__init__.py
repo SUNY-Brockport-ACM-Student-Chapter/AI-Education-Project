@@ -1,8 +1,5 @@
 """
 This module initializes and collects all the Flask blueprints for the application.
-
-It imports the blueprints from their respective modules and creates a list
-of all blueprints for easy registration in the main application factory.
 """
 
 from .ai_routes import ai_bp
@@ -17,17 +14,29 @@ from .studentAnswer_routes import student_answer_bp
 from .teacher_routes import teacher_bp
 from .user_routes import user_bp
 
-# Define a list of all blueprints for easy registration
-all_blueprints = [
-    student_bp,
-    ai_bp,
+# Group related blueprints
+core_blueprints = [main_bp, user_bp]
+
+educational_blueprints = [
     course_bp,
     exam_bp,
-    main_bp,
-    user_bp,
-    enrollment_bp,
     question_bp,
-    student_answer_bp,
-    teacher_bp,
     answer_bp,
 ]
+
+user_management_blueprints = [
+    student_bp,
+    teacher_bp,
+    enrollment_bp,
+    student_answer_bp,
+]
+
+ai_blueprints = [ai_bp]
+
+# Combine all blueprints
+all_blueprints = (
+    core_blueprints
+    + educational_blueprints
+    + user_management_blueprints
+    + ai_blueprints
+)

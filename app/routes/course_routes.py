@@ -1,108 +1,138 @@
-from datetime import datetime
+"""
+This module contains routes for the course model.
 
-from flask import Blueprint, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
+It defines a Flask Blueprint for course-related routes and includes functions for
+course data processing.
+"""
 
-from app.models import Course, db
+from flask import Blueprint, current_app, jsonify, request
 
-# Create a blueprint for the course API
-course_bp = Blueprint("course_api", __name__)
+from database import get_db_session
+from models.course_model import Course
+from repositories.course_repository import CourseRepository
+from services.course_service import CourseService
+
+# Create the blueprint
+course_bp = Blueprint("course_bp", __name__)
+
+# Initialize service with repository
+db_session = get_db_session()
+course_repository = CourseRepository(db_session)
+course_service = CourseService(course_repository)
+
+
+@course_bp.route("/courses", methods=["GET"])
+def get_all_courses():
+    """Get all courses"""
+    try:
+        courses = course_service.get_all_courses()
+        return (
+            jsonify(
+                [
+                    {
+                        "course_id": course.course_id,
+                        "course_name": course.course_name,
+                        "course_description": course.course_description,
+                    }
+                    for course in courses
+                ]
+            ),
+            200,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error fetching courses: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@course_bp.route("/courses/<int:course_id>", methods=["GET"])
+def get_course(course_id):
+    """Get specific course"""
+    try:
+        course = course_service.get_course_by_id(course_id)
+        if not course:
+            return jsonify({"error": "Course not found"}), 404
+        return (
+            jsonify(
+                {
+                    "course_id": course.course_id,
+                    "course_name": course.course_name,
+                    "course_description": course.course_description,
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error fetching course: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
 @course_bp.route("/courses", methods=["POST"])
 def create_course():
-    data = request.get_json()
-    new_course = Course(
-        course_id=data["course_id"],
-        course_name=data["course_name"],
-        course_code=data["course_code"],
-        course_description=data.get("course_description"),
-        capacity=data["capacity"],
-        teacher_id=data["teacher_id"],
-        is_active=data.get("is_active", False),
-        start_date=data["start_date"],
-        end_date=data["end_date"],
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow(),
-    )
-    db.session.add(new_course)
-    db.session.commit()
-    return jsonify({"message": "Course created successfully."}), 201
-
-
-@course_bp.route("/courses", methods=["GET"])
-def get_courses():
-    courses = Course.query.all()
-    return (
-        jsonify(
-            [
+    """Create a new course"""
+    try:
+        data = request.json
+        new_course = Course(
+            course_name=data.get("course_name"),
+            course_description=data.get("course_description"),
+        )
+        result = course_service.create_course(new_course)
+        return (
+            jsonify(
                 {
-                    "course_id": course.course_id,
-                    "course_name": course.course_name,
-                    "course_code": course.course_code,
-                    "course_description": course.course_description,
-                    "capacity": course.capacity,
-                    "teacher_id": course.teacher_id,
-                    "is_active": course.is_active,
-                    "start_date": course.start_date,
-                    "end_date": course.end_date,
-                    "created_at": course.created_at,
-                    "updated_at": course.updated_at,
+                    "course_id": result.course_id,
+                    "course_name": result.course_name,
+                    "course_description": result.course_description,
                 }
-                for course in courses
-            ]
-        ),
-        200,
-    )
+            ),
+            201,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error creating course: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
-@course_bp.route("/courses/<string:course_id>", methods=["GET"])
-def get_course(course_id):
-    course = Course.query.get_or_404(course_id)
-    return (
-        jsonify(
-            {
-                "course_id": course.course_id,
-                "course_name": course.course_name,
-                "course_code": course.course_code,
-                "course_description": course.course_description,
-                "capacity": course.capacity,
-                "teacher_id": course.teacher_id,
-                "is_active": course.is_active,
-                "start_date": course.start_date,
-                "end_date": course.end_date,
-                "created_at": course.created_at,
-                "updated_at": course.updated_at,
-            }
-        ),
-        200,
-    )
-
-
-@course_bp.route("/courses/<string:course_id>", methods=["PUT"])
+@course_bp.route("/courses/<int:course_id>", methods=["PUT"])
 def update_course(course_id):
-    data = request.get_json()
-    course = Course.query.get_or_404(course_id)
+    """Update existing course"""
+    try:
+        data = request.json
+        existing_course = course_service.get_course_by_id(course_id)
+        if not existing_course:
+            return jsonify({"error": "Course not found"}), 404
 
-    course.course_name = data.get("course_name", course.course_name)
-    course.course_code = data.get("course_code", course.course_code)
-    course.course_description = data.get(
-        "course_description", course.course_description
-    )
-    course.capacity = data.get("capacity", course.capacity)
-    course.teacher_id = data.get("teacher_id", course.teacher_id)
-    course.is_active = data.get("is_active", course.is_active)
-    course.start_date = data.get("start_date", course.start_date)
-    course.end_date = data.get("end_date", course.end_date)
-    course.updated_at = datetime.utcnow()
+        existing_course.course_name = data.get(
+            "course_name", existing_course.course_name
+        )
+        existing_course.course_description = data.get(
+            "course_description", existing_course.course_description
+        )
 
-    db.session.commit()
-    return jsonify({"message": "Course updated successfully."}), 200
+        updated_course = course_service.update_course(existing_course)
+        return (
+            jsonify(
+                {
+                    "course_id": updated_course.course_id,
+                    "course_name": updated_course.course_name,
+                    "course_description": updated_course.course_description,
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error updating course: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 
-@course_bp.route("/courses/<string:course_id>", methods=["DELETE"])
+@course_bp.route("/courses/<int:course_id>", methods=["DELETE"])
 def delete_course(course_id):
-    course = Course.query.get_or_404(course_id)
-    db.session.delete(course)
-    db.session.commit()
-    return jsonify({"message": "Course deleted successfully."}), 204
+    """Delete existing course"""
+    try:
+        course = course_service.get_course_by_id(course_id)
+        if not course:
+            return jsonify({"error": "Course not found"}), 404
+
+        course_service.delete_course(course)
+        return jsonify({"message": "Course deleted successfully"}), 200
+    except Exception as e:
+        current_app.logger.error(f"Error deleting course: {str(e)}")
+        return jsonify({"error": str(e)}), 500

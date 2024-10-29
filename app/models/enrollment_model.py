@@ -1,7 +1,5 @@
 # models/enrollment_model.py
 
-from datetime import datetime
-
 from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
 
 from database import Base
