@@ -22,3 +22,6 @@ class StudentService:
 
     def delete_student(self, student: Student):
         return self.student_repo.delete_student(student)
+
+    def get_student_by_clerk_id(self, clerk_user_id: str):
+        return self.student_repo.get_student_by_clerk_id(clerk_user_id)

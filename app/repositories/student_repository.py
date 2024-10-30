@@ -28,3 +28,6 @@ class StudentRepository:
     def delete_student(self, student: Student):
         self.session.delete(student)
         self.session.commit()
+
+    def get_student_by_clerk_id(self, clerk_user_id: str):
+        return self.session.query(Student).filter(Student.clerk_user_id == clerk_user_id).first()
