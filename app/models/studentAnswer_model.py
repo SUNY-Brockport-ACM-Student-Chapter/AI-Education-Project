@@ -20,25 +20,24 @@ class StudentAnswer(Base):
         answer_grade (str): Grade for first attempt (single character)
         second_attempt_grade (str): Grade for second attempt, defaults to first grade
         answer_stage (int): Indicates the current attempt stage (1 or 2)
-        created_at (datetime): Timestamp when the answer was created
-        updated_at (datetime): Timestamp when the answer was last updated
     """
 
     __tablename__ = "student_answer"
 
     student_answer_id = Column(Integer, primary_key=True, autoincrement=True)
-    student_id = Column(Integer, ForeignKey("students.student_id"), nullable=False)
-    question_id = Column(Integer, ForeignKey("questions.question_id"), nullable=False)
+    student_id = Column(Integer, ForeignKey("student.student_id"), nullable=False)
+    question_id = Column(Integer, ForeignKey("question.question_id"), nullable=False)
     answer_text = Column(String(255))
-    second_attempt_answer = Column(String(255), default=answer_text)
+    second_attempt_answer = Column(String(255))
     answer_grade = Column(String(1), nullable=False)
-    second_attempt_grade = Column(String(1), default=answer_grade)
+    second_attempt_grade = Column(String(1))
     answer_stage = Column(Integer, nullable=False)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
-
     # Add the relationship to Ai
-    ai_assessment = relationship("Ai", back_populates="student_answer", uselist=False)
+    ai_assessments = relationship("AiAssessment", back_populates="student_answer")
+
+    # Define relationships
+    student = relationship("Student", back_populates="answers")
+    question = relationship("Question", back_populates="student_answers")
 
     def __repr__(self):
-        return f"<StudentAnswer(student_id = {self.student_id}, question_id = {self.question_id})>"
+        return f"<StudentAnswer(student_id={self.student_id}, question_id={self.question_id})>"

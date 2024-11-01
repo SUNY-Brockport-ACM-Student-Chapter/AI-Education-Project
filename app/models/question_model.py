@@ -29,6 +29,9 @@ class Question(Base):
     updated_at = Column(
         DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
     )
+    exam = relationship("Exam", back_populates="questions")
+    student_answers = relationship("StudentAnswer", back_populates="question")
+    answers = relationship("Answer", back_populates="question")
 
     def __repr__(self):
-        return f"<Question(question_text='{self.question_text}')>"
+        return f"<Question(question_id={self.question_id})>"

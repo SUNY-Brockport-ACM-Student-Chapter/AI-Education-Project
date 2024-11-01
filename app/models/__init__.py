@@ -1,4 +1,4 @@
-from app.models.ai_model import Ai
+from app.models.ai_assessment_model import AiAssessment
 from app.models.answer_model import Answer
 from app.models.course_model import Course
 from app.models.enrollment_model import Enrollment
@@ -17,5 +17,5 @@ __all__ = [
     "Teacher",
     "Student",
     "StudentAnswer",
-    "Ai",
+    "AIAssessment",
 ]

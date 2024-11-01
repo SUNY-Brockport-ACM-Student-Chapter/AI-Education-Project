@@ -10,7 +10,7 @@ class StudentRepository:
         self.session = session
 
     def get_student_by_id(self, student_id: int):
-        return self.session.query(Student).filter(Student.id == student_id).first()
+        return self.session.query(Student).filter(Student.student_id == student_id).first()
 
     def get_all_students(self):
         return self.session.query(Student).all()

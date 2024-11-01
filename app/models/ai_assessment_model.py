@@ -9,8 +9,7 @@ from sqlalchemy.orm import relationship
 
 from app.database import Base
 
-
-class Ai(Base):
+class AiAssessment(Base):
     """
     Represents an AI assessment of a student's answer.
 
@@ -21,15 +20,15 @@ class Ai(Base):
         grade (str): AI-assigned grade (single character)
     """
 
-    __tablename__ = "ai"
+    __tablename__ = "ai_assessment"
 
-    ai_id = Column(Integer, primary_key=True, autoincrement=True)
+    Id = Column(Integer, primary_key=True, autoincrement=True)
     assessment_text = Column(String(255))
     student_answer_id = Column(Integer, ForeignKey("student_answer.student_answer_id"))
     grade = Column(String(1))
 
     # Add relationship
-    student_answer = relationship("StudentAnswer", back_populates="ai_assessment")
+    student_answer = relationship("StudentAnswer", back_populates="ai_assessments")
 
     def __repr__(self):
-        return f"<Ai(assessment_text={self.assessment_text}, student_answer_id={self.student_answer_id})>"
+        return f"<AiAssessment(assessment_text={self.assessment_text}, student_answer_id={self.student_answer_id})>"

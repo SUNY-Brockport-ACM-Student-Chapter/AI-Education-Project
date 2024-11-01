@@ -1,4 +1,4 @@
-from app.services.ai_service import AiService
+from app.services.ai_assessment_service import AiAssessmentService
 from app.services.answer_service import AnswerService
 from app.services.course_service import CourseService
 from app.services.enrollment_service import EnrollmentService
@@ -9,7 +9,7 @@ from app.services.studentAnswer_service import StudentAnswerService
 from app.services.teacher_service import TeacherService
 
 __all__ = [
-    "AiService",
+    "AiAssessmentService",
     "AnswerService",
     "CourseService",
     "EnrollmentService",

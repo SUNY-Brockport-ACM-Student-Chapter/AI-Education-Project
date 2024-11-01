@@ -29,7 +29,6 @@ def get_all_answers():
                     {
                         "answer_id": answer.answer_id,
                         "answer_text": answer.answer_text,
-                        "student_id": answer.student_id,
                         "question_id": answer.question_id,
                     }
                     for answer in answers

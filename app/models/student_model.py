@@ -38,6 +38,8 @@ class Student(Base):
     updated_at = Column(
         DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
     )
+    answers = relationship("StudentAnswer", back_populates="student")
+    enrollments = relationship("Enrollment", back_populates="student")
 
     def __repr__(self):
-        return f"<Student(user_name={self.user_name}, email={self.email})>"
+        return f"<Student(student_id={self.student_id})>"

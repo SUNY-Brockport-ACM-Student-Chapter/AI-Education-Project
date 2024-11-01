@@ -22,3 +22,10 @@ class CourseService:
 
     def delete_course(self, course: Course):
         return self.course_repo.delete_course(course)
+
+    def get_courses_for_student(self, student_id: int):
+        """
+        Get all courses that a student is currently enrolled in.
+        Returns active courses ordered by course code.
+        """
+        return self.course_repo.get_courses_for_student(student_id)
