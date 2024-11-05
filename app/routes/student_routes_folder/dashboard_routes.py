@@ -44,6 +44,7 @@ def get_dashboard_data():
         # Get student's enrolled courses
         enrolled_courses = course_service.get_courses_for_student(student_id)
         #enrolled_courses = course_service.get_courses_for_student(current_user.student_id)
+        
 
         return jsonify({
             'first_name': student.first_name,

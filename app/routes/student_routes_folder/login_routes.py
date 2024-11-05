@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, current_app
 from datetime import datetime, timezone
-from clerk import Clerk
+from clerk_backend_api import Clerk
 import os
 import jwt
 
@@ -12,7 +12,7 @@ from app.services.student_service import StudentService
 student_auth_bp = Blueprint("student_auth_bp", __name__)
 
 # Initialize Clerk
-clerk = Clerk(secret_key=os.getenv('CLERK_SECRET_KEY'))
+clerk = Clerk(os.getenv('CLERK_SECRET_KEY'))
 
 # Initialize service with repository
 db_session = get_db_session()

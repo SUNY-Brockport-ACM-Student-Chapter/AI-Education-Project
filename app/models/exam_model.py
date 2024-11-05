@@ -41,3 +41,16 @@ class Exam(Base):
 
     def __repr__(self):
         return f"<Exam(exam_name='{self.exam_name}')>"
+
+    def to_dict(self):
+        """Convert Exam object to dictionary for JSON serialization"""
+        return {
+            'id': self.exam_id,
+            'course_id': self.course_id,
+            'name': self.exam_name,
+            'description': self.exam_description,
+            'start_date': self.start_date.isoformat() if self.start_date else None,
+            'end_date': self.end_date.isoformat() if self.end_date else None,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }

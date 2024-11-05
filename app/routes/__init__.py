@@ -14,6 +14,7 @@ from app.routes.studentAnswer_routes import student_answer_bp
 from app.routes.teacher_routes import teacher_bp
 from app.routes.user_routes import user_bp
 from app.routes.student_routes_folder.dashboard_routes import dashboard_bp
+from app.routes.student_routes_folder.login_routes import student_auth_bp
 
 # Group related blueprints
 core_blueprints = [main_bp, user_bp]
@@ -34,7 +35,7 @@ user_management_blueprints = [
 
 ai_blueprints = [ai_bp]
 
-student_blueprints = [dashboard_bp]
+student_blueprints = [dashboard_bp, student_auth_bp]
 
 # Combine all blueprints
 all_blueprints = (

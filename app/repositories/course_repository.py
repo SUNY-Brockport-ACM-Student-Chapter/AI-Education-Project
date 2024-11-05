@@ -38,9 +38,9 @@ class CourseRepository:
             student_id (int): The ID of the student
             
         Returns:
-            List[Course]: List of active courses ordered by course code
+            List[Dict]: List of active courses as dictionaries, ordered by course code
         """
-        return (
+        courses = (
             self.session.query(Course)
             .join(Enrollment, Course.course_id == Enrollment.course_id)
             .filter(
@@ -50,3 +50,12 @@ class CourseRepository:
             .order_by(Course.course_code.asc())
             .all()
         )
+        
+        # Use the to_dict() method we defined in the Course model
+        return [{
+            'id': course.course_id,
+            'name': course.course_name,
+            'code': course.course_code,
+            'description': course.course_description,
+            'capacity': course.capacity
+            } for course in courses]

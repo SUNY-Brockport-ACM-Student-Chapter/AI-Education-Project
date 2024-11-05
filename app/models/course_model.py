@@ -53,3 +53,14 @@ class Course(Base):
 
     def __repr__(self):
         return f"<Course(course_name='{self.course_name}')>"
+
+    def to_dict(self):
+        """Convert Course object to dictionary for JSON serialization"""
+        return {
+            'id': self.course_id,
+            'course_code': self.course_code,
+            'title': self.course_name,
+            'description': self.course_description,
+            'is_active': self.is_active,
+            # Add any other fields you want to include
+        }
