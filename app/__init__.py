@@ -13,6 +13,8 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+from app.database import Base, engine  # Import Base and engine
+
 from .routes import all_blueprints
 
 # Load environment variables from .env file
@@ -64,6 +66,8 @@ def create_app():
 
     # Create all database tables
     with app.app_context():
-        db.create_all()
+        Base.metadata.create_all(engine)
+        app.logger.info("All tables created.")
+        print(f"Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
 
     return app

@@ -10,8 +10,8 @@ from werkzeug.security import generate_password_hash
 
 from app.database import get_db_session
 from app.models.teacher_model import Teacher
-from app.services.teacher_service import TeacherService
 from app.repositories.teacher_repository import TeacherRepository
+from app.services.teacher_service import TeacherService
 
 user_bp = Blueprint("user_bp", __name__)
 
@@ -19,6 +19,7 @@ user_bp = Blueprint("user_bp", __name__)
 db_session = get_db_session()
 teacher_repository = TeacherRepository(db_session)
 teacher_service = TeacherService(teacher_repository)
+
 
 @user_bp.route("/register", methods=["POST"])
 def register_user():

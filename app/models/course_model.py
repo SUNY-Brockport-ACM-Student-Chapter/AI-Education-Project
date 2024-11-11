@@ -33,13 +33,15 @@ class Course(Base):
     course_code = Column(String(12), nullable=False)
     course_description = Column(String(255))
     capacity = Column(Integer)
-    teacher_id = Column(Integer, ForeignKey("teachers.teacher_id"))
+    teacher_id = Column(Integer, ForeignKey("teacher.teacher_id"))
     is_active = Column(Boolean, default=False)
     start_date = Column(DateTime, nullable=False)
     end_date = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
-        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
+        DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
     )
 
     def __repr__(self):

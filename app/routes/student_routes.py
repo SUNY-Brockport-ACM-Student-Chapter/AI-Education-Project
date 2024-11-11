@@ -31,7 +31,7 @@ def get_all_students():
                 [
                     {
                         "student_id": student.student_id,
-                        "student_name": student.student_name,
+                        "student_name": student.first_name,
                     }
                     for student in students
                 ]

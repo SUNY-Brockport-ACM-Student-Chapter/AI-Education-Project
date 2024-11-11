@@ -1,6 +1,7 @@
 # models/student_model.py
 
 from datetime import datetime, timezone
+
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
@@ -33,10 +34,14 @@ class Student(Base):
     email = Column(String(120), unique=True, nullable=False)
     clerk_user_id = Column(String(255), nullable=False)
     is_active = Column(Boolean, default=False)
-    last_login = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+    last_login = Column(
+        DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)
+    )
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
-        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
+        DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
     )
 
     def __repr__(self):

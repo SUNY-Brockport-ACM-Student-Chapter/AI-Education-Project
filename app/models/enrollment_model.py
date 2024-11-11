@@ -21,8 +21,8 @@ class Enrollment(Base):
     __tablename__ = "enrollment"
 
     enrollment_id = Column(Integer, primary_key=True, autoincrement=True)
-    student_id = Column(Integer, ForeignKey("students.student_id"), nullable=False)
-    course_id = Column(Integer, ForeignKey("courses.course_id"), nullable=False)
+    student_id = Column(Integer, ForeignKey("student.student_id"), nullable=False)
+    course_id = Column(Integer, ForeignKey("course.course_id"), nullable=False)
     status = Column(Enum("enrolled", "cancelled", "padding"), default="enrolled")
     enrollment_date = Column(DateTime, nullable=False)
 
