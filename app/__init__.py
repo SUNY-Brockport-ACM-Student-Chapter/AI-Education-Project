@@ -2,17 +2,14 @@
 Initializes the Flask app and sets up the database with SQLAlchemy.
 """
 
-import logging
 import os
-from logging.handlers import RotatingFileHandler
 
 from dotenv import load_dotenv
 from flask import Flask
-from sqlalchemy import text
+from app.database import init_db
+from app.config import SQLALCHEMY_DATABASE_URI
 
-from .database import Base, engine
-
-from .routes import all_blueprints
+from .routes import all_blueprints, main_bp
 
 # Load environment variables
 load_dotenv()
@@ -23,38 +20,27 @@ def create_app():
     # Load configuration
     app.config.from_object("app.config")
 
-    # Set up logging
-    if not app.debug:
-        if not os.path.exists("logs"):
-            os.mkdir("logs")
-        file_handler = RotatingFileHandler(
-            "logs/acm_education.log", maxBytes=10240, backupCount=10
-        )
-        file_handler.setFormatter(
-            logging.Formatter(
-                "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
-            )
-        )
-        file_handler.setLevel(logging.INFO)
-        app.logger.addHandler(file_handler)
-        app.logger.setLevel(logging.INFO)
-        app.logger.info("ACM Education startup")
+    # Add a secret key (required for sessions)
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'admin')
 
-    # Register blueprints
-    for bp in all_blueprints:
-        app.register_blueprint(bp, url_prefix="/api" if bp.name != "main_bp" else "/")
+    # Database configuration - use environment variables
+    app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    # Initialize database connection
+    init_db(app)
+    
+    # Register main blueprint without prefix
+    app.register_blueprint(main_bp)
+    
+    # Register all other blueprints with API prefix
+    for blueprint in [bp for bp in all_blueprints if bp != main_bp]:
+        app.register_blueprint(blueprint, url_prefix='/api')
 
-
-    # Create tables
-    with app.app_context():
-        with engine.connect() as conn:
-            # Disable foreign key checks and drop all tables
-            conn.execute(text("SET FOREIGN_KEY_CHECKS=0"))
-            # Drop other tables as needed
-            conn.execute(text("SET FOREIGN_KEY_CHECKS=1"))
-            conn.commit()
-            
-            # Create all tables fresh
-            Base.metadata.create_all(bind=engine)
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        # Close the session if it exists
+        if hasattr(app, 'session'):
+            app.session.close()
 
     return app
