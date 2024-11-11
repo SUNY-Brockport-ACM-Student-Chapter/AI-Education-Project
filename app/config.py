@@ -14,7 +14,8 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_NAME = os.getenv("DB_NAME", "acm_education_db")
 
 # Construct the database URI
-SQLALCHEMY_DATABASE_URI = f"mysql://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+SQLALCHEMY_DATABASE_URI = "sqlite:///./test.db"
+
 
 # Disable SQLAlchemy modification tracking for better performance
 SQLALCHEMY_TRACK_MODIFICATIONS = False

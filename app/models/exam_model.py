@@ -26,7 +26,7 @@ class Exam(Base):
     __tablename__ = "exam"
 
     exam_id = Column(Integer, primary_key=True, autoincrement=True)
-    course_id = Column(Integer, ForeignKey("courses.course_id"), nullable=False)
+    course_id = Column(Integer, ForeignKey("course.course_id"), nullable=False)
     exam_name = Column(String(100), nullable=False)
     exam_description = Column(String(255), nullable=False)
     start_date = Column(DateTime, nullable=False)

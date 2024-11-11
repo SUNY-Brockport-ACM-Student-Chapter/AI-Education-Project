@@ -24,7 +24,7 @@ class Answer(Base):
 
     answer_id = Column(Integer, primary_key=True, autoincrement=True)
     answer_text = Column(String(255), nullable=False)
-    question_id = Column(Integer, ForeignKey("questions.question_id"), nullable=False)
+    question_id = Column(Integer, ForeignKey("question.question_id"), nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
         DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
