@@ -36,10 +36,10 @@ class ExamService:
     def get_course_exams(self, course_id):
         """
         Retrieves all exams for a specific course.
-        
+
         Args:
             course_id: The ID of the course
-            
+
         Returns:
             List of exam objects for the specified course
         """

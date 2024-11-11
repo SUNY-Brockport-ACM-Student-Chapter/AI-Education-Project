@@ -1,7 +1,10 @@
 from datetime import datetime, timezone
+
 from sqlalchemy import Boolean, Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
+
 from app.database import Base
+
 
 class Teacher(Base):
     __tablename__ = "teacher"
@@ -15,6 +18,7 @@ class Teacher(Base):
     role = Column(Enum("admin", "teacher"), default="teacher", nullable=False)
     is_active = Column(Boolean, default=False)
 
+
 class Student(Base):
     __tablename__ = "student"
     # ... existing Student attributes and relationships ...
@@ -25,12 +29,14 @@ class Student(Base):
     email = Column(String(120), unique=True, nullable=False)
     clerk_user_id = Column(String(255), nullable=False)
 
+
 class Course(Base):
     __tablename__ = "course"
     # ... existing Course attributes and relationships ...
     course_id = Column(String(8), primary_key=True)
     course_name = Column(String(100), nullable=False)
     course_description = Column(String(255), nullable=False)
+
 
 class Exam(Base):
     __tablename__ = "exam"
@@ -42,6 +48,7 @@ class Exam(Base):
     start_date = Column(DateTime, nullable=False)
     end_date = Column(DateTime, nullable=False)
 
+
 class Question(Base):
     __tablename__ = "question"
     # ... existing Question attributes and relationships ...
@@ -50,13 +57,15 @@ class Question(Base):
     question_text = Column(String(255), nullable=False)
     question_type = Column(Enum("multiple_choice", "essay"), nullable=False)
 
+
 class Answer(Base):
     __tablename__ = "answer"
     # ... existing Answer attributes and relationships ...
     answer_id = Column(Integer, primary_key=True, autoincrement=True)
     question_id = Column(Integer, ForeignKey("question.question_id"), nullable=False)
     answer_text = Column(String(255), nullable=False)
-    is_correct = Column(Boolean, default=False) 
+    is_correct = Column(Boolean, default=False)
+
 
 class StudentAnswer(Base):
     __tablename__ = "student_answer"
@@ -67,12 +76,16 @@ class StudentAnswer(Base):
     question_id = Column(Integer, ForeignKey("question.question_id"), nullable=False)
     answer_id = Column(Integer, ForeignKey("answer.answer_id"), nullable=False)
 
+
 class AiAssessment(Base):
     __tablename__ = "ai_assessment"
     # ... existing AiAssessment attributes and relationships ...
     ai_assessment_id = Column(Integer, primary_key=True, autoincrement=True)
-    student_answer_id = Column(Integer, ForeignKey("student_answer.student_answer_id"), nullable=False)
+    student_answer_id = Column(
+        Integer, ForeignKey("student_answer.student_answer_id"), nullable=False
+    )
     ai_assessment_result = Column(String(255), nullable=False)
+
 
 class Enrollment(Base):
     __tablename__ = "enrollment"

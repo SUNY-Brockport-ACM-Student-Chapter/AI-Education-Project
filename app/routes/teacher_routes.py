@@ -33,7 +33,7 @@ def get_all_teachers():
                         "teacher_id": teacher.teacher_id,
                         "first_name": teacher.first_name,
                         "last_name": teacher.last_name,
-                        "email": teacher.email
+                        "email": teacher.email,
                     }
                     for teacher in teachers
                 ]

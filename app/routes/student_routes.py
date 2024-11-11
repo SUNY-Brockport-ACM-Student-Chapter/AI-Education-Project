@@ -53,8 +53,8 @@ def get_student(student_id):
         return (
             jsonify(
                 {
-                    "student_id": student.student_id, 
-                    "student_name": student.first_name + " " + student.last_name
+                    "student_id": student.student_id,
+                    "student_name": student.first_name + " " + student.last_name,
                 }
             ),
             200,
@@ -74,8 +74,8 @@ def create_student():
         return (
             jsonify(
                 {
-                    "student_id": result.student_id, 
-                    "student_name": result.first_name + " " + result.last_name
+                    "student_id": result.student_id,
+                    "student_name": result.first_name + " " + result.last_name,
                 }
             ),
             201,

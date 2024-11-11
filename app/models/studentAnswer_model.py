@@ -1,7 +1,8 @@
 # models/studentAnswer_model.py
 
 from datetime import datetime, timezone
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.database import Base

@@ -14,7 +14,9 @@ class AIRepository:
         self.session = session
 
     def get_ai_by_id(self, ai_id: int):
-        return self.session.query(AIAssessment).filter(AIAssessment.ai_id == ai_id).first()
+        return (
+            self.session.query(AIAssessment).filter(AIAssessment.ai_id == ai_id).first()
+        )
 
     def get_all_ais(self):
         return self.session.query(AIAssessment).all()

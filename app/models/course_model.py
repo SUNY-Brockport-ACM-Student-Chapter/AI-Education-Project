@@ -39,7 +39,9 @@ class Course(Base):
     end_date = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
-        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
+        DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
     )
 
     # Add relationship to Teacher
@@ -57,10 +59,10 @@ class Course(Base):
     def to_dict(self):
         """Convert Course object to dictionary for JSON serialization"""
         return {
-            'id': self.course_id,
-            'course_code': self.course_code,
-            'title': self.course_name,
-            'description': self.course_description,
-            'is_active': self.is_active,
+            "id": self.course_id,
+            "course_code": self.course_code,
+            "title": self.course_name,
+            "description": self.course_description,
+            "is_active": self.is_active,
             # Add any other fields you want to include
         }

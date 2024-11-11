@@ -79,30 +79,38 @@ def create_student_answer():
             student_id=data.get("student_id"),
             question_id=data.get("question_id"),
             answer_text=data.get("answer_text"),
-            answer_grade=data.get("answer_grade", "N"),  # Default grade 'N' for Not graded
-            answer_stage=data.get("answer_stage", 1),    # Default to first attempt
+            answer_grade=data.get(
+                "answer_grade", "N"
+            ),  # Default grade 'N' for Not graded
+            answer_stage=data.get("answer_stage", 1),  # Default to first attempt
             second_attempt_answer=data.get("second_attempt_answer", None),
-            second_attempt_grade=data.get("second_attempt_grade", None)
+            second_attempt_grade=data.get("second_attempt_grade", None),
         )
-        
+
         # Validate required fields
-        if not all([new_student_answer.student_id, 
-                   new_student_answer.question_id, 
-                   new_student_answer.answer_text]):
+        if not all(
+            [
+                new_student_answer.student_id,
+                new_student_answer.question_id,
+                new_student_answer.answer_text,
+            ]
+        ):
             return jsonify({"error": "Missing required fields"}), 400
 
         result = student_answer_service.create_student_answer(new_student_answer)
         return (
-            jsonify({
-                "student_answer_id": result.student_answer_id,
-                "student_id": result.student_id,
-                "question_id": result.question_id,
-                "answer_text": result.answer_text,
-                "second_attempt_answer": result.second_attempt_answer,
-                "answer_grade": result.answer_grade,
-                "second_attempt_grade": result.second_attempt_grade,
-                "answer_stage": result.answer_stage
-            }),
+            jsonify(
+                {
+                    "student_answer_id": result.student_answer_id,
+                    "student_id": result.student_id,
+                    "question_id": result.question_id,
+                    "answer_text": result.answer_text,
+                    "second_attempt_answer": result.second_attempt_answer,
+                    "answer_grade": result.answer_grade,
+                    "second_attempt_grade": result.second_attempt_grade,
+                    "answer_stage": result.answer_stage,
+                }
+            ),
             201,
         )
     except Exception as e:

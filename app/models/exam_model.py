@@ -33,7 +33,9 @@ class Exam(Base):
     end_date = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
-        DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc)
+        DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
     )
 
     course = relationship("Course", back_populates="exams")
@@ -45,12 +47,12 @@ class Exam(Base):
     def to_dict(self):
         """Convert Exam object to dictionary for JSON serialization"""
         return {
-            'id': self.exam_id,
-            'course_id': self.course_id,
-            'name': self.exam_name,
-            'description': self.exam_description,
-            'start_date': self.start_date.isoformat() if self.start_date else None,
-            'end_date': self.end_date.isoformat() if self.end_date else None,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+            "id": self.exam_id,
+            "course_id": self.course_id,
+            "name": self.exam_name,
+            "description": self.exam_description,
+            "start_date": self.start_date.isoformat() if self.start_date else None,
+            "end_date": self.end_date.isoformat() if self.end_date else None,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

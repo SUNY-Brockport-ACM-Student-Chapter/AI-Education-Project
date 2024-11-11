@@ -10,11 +10,11 @@ from app.routes.exam_routes import exam_bp
 from app.routes.main_routes import main_bp
 from app.routes.question_routes import question_bp
 from app.routes.student_routes import student_bp
+from app.routes.student_routes_folder.dashboard_routes import dashboard_bp
+from app.routes.student_routes_folder.login_routes import student_auth_bp
 from app.routes.studentAnswer_routes import student_answer_bp
 from app.routes.teacher_routes import teacher_bp
 from app.routes.user_routes import user_bp
-from app.routes.student_routes_folder.dashboard_routes import dashboard_bp
-from app.routes.student_routes_folder.login_routes import student_auth_bp
 
 # Group related blueprints
 core_blueprints = [main_bp, user_bp]

@@ -10,7 +10,9 @@ class StudentRepository:
         self.session = session
 
     def get_student_by_id(self, student_id: int):
-        return self.session.query(Student).filter(Student.student_id == student_id).first()
+        return (
+            self.session.query(Student).filter(Student.student_id == student_id).first()
+        )
 
     def get_all_students(self):
         return self.session.query(Student).all()
@@ -30,4 +32,8 @@ class StudentRepository:
         self.session.commit()
 
     def get_student_by_clerk_id(self, clerk_user_id: str):
-        return self.session.query(Student).filter(Student.clerk_user_id == clerk_user_id).first()
+        return (
+            self.session.query(Student)
+            .filter(Student.clerk_user_id == clerk_user_id)
+            .first()
+        )

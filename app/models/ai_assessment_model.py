@@ -9,6 +9,7 @@ from sqlalchemy.orm import relationship
 
 from app.database import Base
 
+
 class AiAssessment(Base):
     """
     Represents an AI assessment of a student's answer.

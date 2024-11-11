@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.models.ai_assessment_model import AiAssessment
 
-    
+
 class AiAssessmentRepository:
     def __init__(self, session: Session):
         self.session = session
