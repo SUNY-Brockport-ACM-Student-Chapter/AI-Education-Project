@@ -42,5 +42,5 @@ def create_app():
         # Close the session if it exists
         if hasattr(app, 'session'):
             app.session.close()
-
+            
     return app
