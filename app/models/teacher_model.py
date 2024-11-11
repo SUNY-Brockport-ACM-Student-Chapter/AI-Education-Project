@@ -37,9 +37,15 @@ class Teacher(Base):
     clerk_user_id = Column(String(255), nullable=False)
     role = Column(Enum("admin", "teacher"), default="teacher", nullable=False)
     is_active = Column(Boolean, default=False)
-    last_login = Column(DateTime, nullable=False, default=datetime.datetime.now(timezone.utc))
+    last_login = Column(
+        DateTime, nullable=False, default=datetime.datetime.now(timezone.utc)
+    )
     created_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc))
-    updated_at = Column(DateTime, default=lambda: datetime.datetime.now(timezone.utc), onupdate=lambda: datetime.datetime.now(timezone.utc))
+    updated_at = Column(
+        DateTime,
+        default=lambda: datetime.datetime.now(timezone.utc),
+        onupdate=lambda: datetime.datetime.now(timezone.utc),
+    )
 
     def __repr__(self):
         return f"<Teacher(user_name = {self.user_name}, email = {self.email})>"

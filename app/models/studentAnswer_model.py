@@ -1,7 +1,8 @@
 # models/studentAnswer_model.py
 
 from datetime import datetime, timezone
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -35,7 +36,11 @@ class StudentAnswer(Base):
     second_attempt_grade = Column(String(1), default=answer_grade)
     answer_stage = Column(Integer, nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    updated_at = Column(
+        DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
 
     # Add the relationship to Ai
     ai_assessment = relationship("Ai", back_populates="student_answer", uselist=False)
