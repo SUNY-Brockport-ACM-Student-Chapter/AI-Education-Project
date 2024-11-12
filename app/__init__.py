@@ -65,6 +65,12 @@ def create_app():
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
+        """
+        Closes the database session at the end of the request.
+
+        Args:
+            exception: Optional; an exception that occurred during the request.
+        """
         # Close the session if it exists
         print(exception)
         if hasattr(app, "session"):

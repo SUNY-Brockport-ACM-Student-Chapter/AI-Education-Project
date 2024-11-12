@@ -12,7 +12,8 @@ Environment Variables:
 
 Configuration Constants:
 - SQLALCHEMY_DATABASE_URI: The URI for connecting to the MySQL database.
-- SQLALCHEMY_TRACK_MODIFICATIONS: A flag to disable SQLAlchemy modification tracking for better performance.
+- SQLALCHEMY_TRACK_MODIFICATIONS: A flag to disable SQLAlchemy
+- modification tracking for better performance.
 """
 
 import os
