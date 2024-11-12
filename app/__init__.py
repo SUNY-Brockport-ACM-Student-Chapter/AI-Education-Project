@@ -64,8 +64,9 @@ def create_app():
         app.register_blueprint(blueprint, url_prefix="/api")
 
     @app.teardown_appcontext
-    def shutdown_session():
+    def shutdown_session(exception=None):
         # Close the session if it exists
+        print(exception)
         if hasattr(app, "session"):
             app.session.close()
 

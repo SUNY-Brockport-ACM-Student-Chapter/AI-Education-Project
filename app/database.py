@@ -40,15 +40,9 @@ session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def init_db(app):
     # Create the database engine (use the existing engine)
-    # engine = create_engine(app.config["SQLALCHEMY_DATABASE_URI"])  # Removed this line
 
-    # Create all tables in the database (if they don't exist)
     Base.metadata.create_all(engine)  # Use the existing engine
 
-    # Bind the engine to the session (use the existing SessionLocal)
-    # SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)  # Removed this line
-
-    # Optionally, you can set the session to the app context
     app.session = session_local()  # Use the existing SessionLocal
 
 
