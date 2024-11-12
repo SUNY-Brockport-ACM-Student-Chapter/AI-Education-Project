@@ -41,6 +41,15 @@ load_dotenv()
 
 
 def create_app():
+    """
+    Create and configure the Flask application.
+
+    This function initializes the Flask app, loads configuration settings,
+    sets up the database connection, and registers blueprints for routing.
+
+    Returns:
+        Flask: The configured Flask application instance.
+    """
     app = Flask(__name__)
 
     # Load configuration
