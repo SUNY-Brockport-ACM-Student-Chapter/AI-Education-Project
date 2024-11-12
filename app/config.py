@@ -1,8 +1,18 @@
 """
-Application configuration module.
+config.py
 
 This module contains the configuration settings for the application,
 including database connection details and SQLAlchemy settings.
+
+Environment Variables:
+- MYSQL_USER: The username for the MySQL database.
+- MYSQL_PASSWORD: The password for the MySQL database.
+- MYSQL_HOST: The host address of the MySQL database.
+- MYSQL_DB: The name of the MySQL database.
+
+Configuration Constants:
+- SQLALCHEMY_DATABASE_URI: The URI for connecting to the MySQL database.
+- SQLALCHEMY_TRACK_MODIFICATIONS: A flag to disable SQLAlchemy modification tracking for better performance.
 """
 
 import os

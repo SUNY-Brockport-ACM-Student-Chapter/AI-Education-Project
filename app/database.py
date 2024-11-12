@@ -5,13 +5,18 @@ This module sets up the connection to the database using SQLAlchemy.
 It configures the database engine, creates a session factory for handling
 database transactions, and defines a base class for all database models.
 
-The `get_db` function is used to provide a session for each request and 
-ensure the session is closed after the request is processed.
-
 Dependencies:
 - SQLAlchemy
 - sessionmaker
 - declarative_base
+
+Functions:
+- init_db(app): Initializes the database and creates a session for the given app.
+- get_db_session(): Returns a new database session.
+
+Usage:
+- Call `init_db(app)` during application startup to set up the database.
+- Use `get_db_session()` to obtain a session for database operations.
 """
 
 import os
@@ -39,12 +44,21 @@ session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 def init_db(app):
-    # Create the database engine (use the existing engine)
+    """
+    Initializes the database and creates a session for the given app.
 
+    Args:
+        app: The application instance to attach the session to.
+    """
     Base.metadata.create_all(engine)  # Use the existing engine
-
     app.session = session_local()  # Use the existing SessionLocal
 
 
 def get_db_session():
+    """
+    Returns a new database session.
+
+    Returns:
+        A new session object for database operations.
+    """
     return session_local()
