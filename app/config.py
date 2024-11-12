@@ -8,7 +8,14 @@ including database connection details and SQLAlchemy settings.
 import os
 
 # Construct the database URI
-SQLALCHEMY_DATABASE_URI = f"mysql://{os.getenv('MYSQL_USER')}:{os.getenv('MYSQL_PASSWORD')}@{os.getenv('MYSQL_HOST')}/{os.getenv('MYSQL_DB')}"
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+MYSQL_HOST = os.getenv("MYSQL_HOST")
+MYSQL_DB = os.getenv("MYSQL_DB")
+
+SQLALCHEMY_DATABASE_URI = (
+    f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
+)
 
 # Disable SQLAlchemy modification tracking for better performance
 SQLALCHEMY_TRACK_MODIFICATIONS = False

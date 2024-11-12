@@ -34,7 +34,8 @@ class StudentAnswer(Base):
     second_attempt_grade = Column(String(1))
     answer_stage = Column(Integer, nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(DateTime,
+    updated_at = Column(
+        DateTime,
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
     )

@@ -1,5 +1,29 @@
 """
-Initializes the Flask app and sets up the database with SQLAlchemy.
+Initializes the Flask application and sets up the database with SQLAlchemy.
+
+This module is responsible for creating the Flask app instance, loading
+configuration settings, initializing the database, and registering
+blueprints for routing.
+
+Imports:
+- os: Provides a way to use operating system-dependent functionality,
+  such as accessing environment variables.
+- load_dotenv: A function from the dotenv package that loads environment
+  variables from a .env file into the application's environment.
+- Flask: The main class for creating a Flask web application.
+- SQLALCHEMY_DATABASE_URI: The database URI configuration imported from
+  the app's configuration module.
+- init_db: A function that initializes the database connection and
+  creates the necessary tables.
+- all_blueprints: A collection of all blueprints defined in the
+  application for routing.
+- main_bp: The main blueprint for the application, typically containing
+  the core routes.
+
+Usage:
+- Call the `create_app()` function to create and configure the Flask
+  application instance. This function will load the configuration,
+  initialize the database, and register the blueprints.
 """
 
 import os
@@ -40,9 +64,9 @@ def create_app():
         app.register_blueprint(blueprint, url_prefix="/api")
 
     @app.teardown_appcontext
-    def shutdown_session(exception=None):
+    def shutdown_session():
         # Close the session if it exists
         if hasattr(app, "session"):
             app.session.close()
-            
+
     return app
