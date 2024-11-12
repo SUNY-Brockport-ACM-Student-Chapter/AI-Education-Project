@@ -31,7 +31,9 @@ def get_all_teachers():
                 [
                     {
                         "teacher_id": teacher.teacher_id,
-                        "teacher_name": teacher.first_name,
+                        "first_name": teacher.first_name,
+                        "last_name": teacher.last_name,
+                        "email": teacher.email,
                     }
                     for teacher in teachers
                 ]

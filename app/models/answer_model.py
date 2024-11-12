@@ -32,5 +32,7 @@ class Answer(Base):
         onupdate=lambda: datetime.now(timezone.utc),
     )
 
+    question = relationship("Question", back_populates="answers")
+
     def __repr__(self):
         return f"<Answer(answer_text='{self.answer_text}')>"

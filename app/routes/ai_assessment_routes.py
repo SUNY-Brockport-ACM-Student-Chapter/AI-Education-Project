@@ -8,17 +8,17 @@ AI data processing.
 from flask import Blueprint, current_app, jsonify, request
 
 from app.database import get_db_session
-from app.models.ai_model import Ai
-from app.repositories.ai_repository import AIRepository
-from app.services.ai_service import AiService
+from app.models.ai_assessment_model import AiAssessment
+from app.repositories.ai_assessment_repository import AiAssessmentRepository
+from app.services.ai_assessment_service import AiAssessmentService
 
 # Create the blueprint
 ai_bp = Blueprint("ai_bp", __name__)
 
 # Initialize service with repository
 db_session = get_db_session()
-ai_repository = AIRepository(db_session)
-ai_service = AiService(ai_repository)
+ai_repository = AiAssessmentRepository(db_session)
+ai_service = AiAssessmentService(ai_repository)
 
 
 @ai_bp.route("/ai", methods=["GET"])
@@ -30,7 +30,7 @@ def get_all_ais():
             jsonify(
                 [
                     {
-                        "ai_id": ai.ai_id,
+                        "Id": ai.Id,
                         "assessment_text": ai.assessment_text,
                         "grade": ai.grade,
                         "student_answer_id": ai.student_answer_id,
@@ -55,7 +55,7 @@ def get_ai(ai_id):
         return (
             jsonify(
                 {
-                    "ai_id": ai.ai_id,
+                    "ai_id": ai.Id,
                     "assessment_text": ai.assessment_text,
                     "grade": ai.grade,
                     "student_answer_id": ai.student_answer_id,
@@ -73,7 +73,7 @@ def process_data():
     """Create new AI assessment"""
     try:
         data = request.json
-        new_ai = Ai(
+        new_ai = AiAssessment(
             assessment_text=data.get("assessment_text"),
             student_answer_id=data.get("student_answer_id"),
             grade=data.get("grade"),
@@ -82,10 +82,9 @@ def process_data():
         return (
             jsonify(
                 {
-                    "ai_id": result.ai_id,
                     "assessment_text": result.assessment_text,
-                    "grade": result.grade,
                     "student_answer_id": result.student_answer_id,
+                    "grade": result.grade,
                 }
             ),
             201,
@@ -116,7 +115,6 @@ def update_ai(ai_id):
         return (
             jsonify(
                 {
-                    "ai_id": updated_ai.ai_id,
                     "assessment_text": updated_ai.assessment_text,
                     "grade": updated_ai.grade,
                     "student_answer_id": updated_ai.student_answer_id,

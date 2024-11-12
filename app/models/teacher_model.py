@@ -47,5 +47,8 @@ class Teacher(Base):
         onupdate=lambda: datetime.datetime.now(timezone.utc),
     )
 
+    # Add relationship to Course
+    courses = relationship("Course", back_populates="teacher")
+
     def __repr__(self):
-        return f"<Teacher(user_name = {self.user_name}, email = {self.email})>"
+        return f"<Teacher(user_name = {self.User_name}, email = {self.email})>"

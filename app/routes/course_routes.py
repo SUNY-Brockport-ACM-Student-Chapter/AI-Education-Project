@@ -32,7 +32,15 @@ def get_all_courses():
                     {
                         "course_id": course.course_id,
                         "course_name": course.course_name,
+                        "course_code": course.course_code,
                         "course_description": course.course_description,
+                        "capacity": course.capacity,
+                        "teacher_id": course.teacher_id,
+                        "is_active": course.is_active,
+                        "start_date": course.start_date,
+                        "end_date": course.end_date,
+                        "created_at": course.created_at,
+                        "updated_at": course.updated_at,
                     }
                     for course in courses
                 ]

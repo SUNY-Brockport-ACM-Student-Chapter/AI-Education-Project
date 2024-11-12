@@ -1,21 +1,32 @@
 """
-Application configuration module.
+config.py
 
 This module contains the configuration settings for the application,
 including database connection details and SQLAlchemy settings.
+
+Environment Variables:
+- MYSQL_USER: The username for the MySQL database.
+- MYSQL_PASSWORD: The password for the MySQL database.
+- MYSQL_HOST: The host address of the MySQL database.
+- MYSQL_DB: The name of the MySQL database.
+
+Configuration Constants:
+- SQLALCHEMY_DATABASE_URI: The URI for connecting to the MySQL database.
+- SQLALCHEMY_TRACK_MODIFICATIONS: A flag to disable SQLAlchemy
+- modification tracking for better performance.
 """
 
 import os
 
-# Load database credentials from environment variables for security
-DB_USERNAME = os.getenv("DB_USERNAME")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_NAME = os.getenv("DB_NAME", "acm_education_db")
-
 # Construct the database URI
-SQLALCHEMY_DATABASE_URI = "sqlite:///./test.db"
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+MYSQL_HOST = os.getenv("MYSQL_HOST")
+MYSQL_DB = os.getenv("MYSQL_DB")
 
+SQLALCHEMY_DATABASE_URI = (
+    f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
+)
 
 # Disable SQLAlchemy modification tracking for better performance
 SQLALCHEMY_TRACK_MODIFICATIONS = False

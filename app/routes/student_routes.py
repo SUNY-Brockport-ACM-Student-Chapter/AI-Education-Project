@@ -31,7 +31,7 @@ def get_all_students():
                 [
                     {
                         "student_id": student.student_id,
-                        "student_name": student.first_name,
+                        "student_name": student.first_name + " " + student.last_name,
                     }
                     for student in students
                 ]
@@ -52,7 +52,10 @@ def get_student(student_id):
             return jsonify({"error": "Student not found"}), 404
         return (
             jsonify(
-                {"student_id": student.student_id, "student_name": student.student_name}
+                {
+                    "student_id": student.student_id,
+                    "student_name": student.first_name + " " + student.last_name,
+                }
             ),
             200,
         )
@@ -70,7 +73,10 @@ def create_student():
         result = student_service.create_student(new_student)
         return (
             jsonify(
-                {"student_id": result.student_id, "student_name": result.student_name}
+                {
+                    "student_id": result.student_id,
+                    "student_name": result.first_name + " " + result.last_name,
+                }
             ),
             201,
         )

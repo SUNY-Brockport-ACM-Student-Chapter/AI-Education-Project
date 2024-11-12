@@ -1,73 +1,88 @@
 """
-Initializes the Flask app and sets up the database with SQLAlchemy.
+Initializes the Flask application and sets up the database with SQLAlchemy.
 
-This module is responsible for creating and configuring the Flask application,
-initializing the database, and registering all the necessary blueprints.
+This module is responsible for creating the Flask app instance, loading
+configuration settings, initializing the database, and registering
+blueprints for routing.
+
+Imports:
+- os: Provides a way to use operating system-dependent functionality,
+  such as accessing environment variables.
+- load_dotenv: A function from the dotenv package that loads environment
+  variables from a .env file into the application's environment.
+- Flask: The main class for creating a Flask web application.
+- SQLALCHEMY_DATABASE_URI: The database URI configuration imported from
+  the app's configuration module.
+- init_db: A function that initializes the database connection and
+  creates the necessary tables.
+- all_blueprints: A collection of all blueprints defined in the
+  application for routing.
+- main_bp: The main blueprint for the application, typically containing
+  the core routes.
+
+Usage:
+- Call the `create_app()` function to create and configure the Flask
+  application instance. This function will load the configuration,
+  initialize the database, and register the blueprints.
 """
 
-import logging
 import os
-from logging.handlers import RotatingFileHandler
 
 from dotenv import load_dotenv
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 
-from app.database import Base, engine  # Import Base and engine
+from app.config import SQLALCHEMY_DATABASE_URI
+from app.database import init_db
 
-from .routes import all_blueprints
+from .routes import all_blueprints, main_bp
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
-
-# Initialize SQLAlchemy instance
-db = SQLAlchemy()
 
 
 def create_app():
     """
-    Create and configure an instance of the Flask application.
+    Create and configure the Flask application.
 
-    This function sets up the Flask app, initializes the database,
-    registers all blueprints, and creates all database tables.
+    This function initializes the Flask app, loads configuration settings,
+    sets up the database connection, and registers blueprints for routing.
 
     Returns:
-        Flask: A configured Flask application instance.
+        Flask: The configured Flask application instance.
     """
     app = Flask(__name__)
 
     # Load configuration
     app.config.from_object("app.config")
 
-    # Initialize the database with the app
-    db.init_app(app)
+    # Add a secret key (required for sessions)
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "admin")
 
-    # Set up logging
-    if not app.debug:
-        if not os.path.exists("logs"):
-            os.mkdir("logs")
-        file_handler = RotatingFileHandler(
-            "logs/acm_education.log", maxBytes=10240, backupCount=10
-        )
-        file_handler.setFormatter(
-            logging.Formatter(
-                "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
-            )
-        )
-        file_handler.setLevel(logging.INFO)
-        app.logger.addHandler(file_handler)
-        app.logger.setLevel(logging.INFO)
-        app.logger.info("ACM Education startup")
+    # Database configuration - use environment variables
+    app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    # Import and register blueprints
+    # Initialize database connection
+    init_db(app)
 
-    for bp in all_blueprints:
-        app.register_blueprint(bp, url_prefix="/api" if bp.name != "main_bp" else "/")
+    # Register main blueprint without prefix
+    app.register_blueprint(main_bp)
 
-    # Create all database tables
-    with app.app_context():
-        Base.metadata.create_all(engine)
-        app.logger.info("All tables created.")
-        print(f"Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+    # Register all other blueprints with API prefix
+    for blueprint in [bp for bp in all_blueprints if bp != main_bp]:
+        app.register_blueprint(blueprint, url_prefix="/api")
+
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        """
+        Closes the database session at the end of the request.
+
+        Args:
+            exception: Optional; an exception that occurred during the request.
+        """
+        # Close the session if it exists
+        print(exception)
+        if hasattr(app, "session"):
+            app.session.close()
 
     return app

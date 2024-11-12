@@ -12,7 +12,7 @@ class StudentAnswerRepository:
     def get_student_answer_by_id(self, student_answer_id: int):
         return (
             self.session.query(StudentAnswer)
-            .filter(StudentAnswer.id == student_answer_id)
+            .filter(StudentAnswer.student_id == student_answer_id)
             .first()
         )
 

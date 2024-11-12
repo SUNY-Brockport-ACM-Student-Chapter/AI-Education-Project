@@ -44,5 +44,25 @@ class Course(Base):
         onupdate=lambda: datetime.now(timezone.utc),
     )
 
+    # Add relationship to Teacher
+    teacher = relationship("Teacher", back_populates="courses")
+
+    # Add this relationship
+    enrollments = relationship("Enrollment", back_populates="course")
+
+    # Add relationship for exams
+    exams = relationship("Exam", back_populates="course")
+
     def __repr__(self):
         return f"<Course(course_name='{self.course_name}')>"
+
+    def to_dict(self):
+        """Convert Course object to dictionary for JSON serialization"""
+        return {
+            "id": self.course_id,
+            "course_code": self.course_code,
+            "title": self.course_name,
+            "description": self.course_description,
+            "is_active": self.is_active,
+            # Add any other fields you want to include
+        }

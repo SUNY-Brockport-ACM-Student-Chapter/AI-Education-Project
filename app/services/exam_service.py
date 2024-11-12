@@ -22,3 +22,25 @@ class ExamService:
 
     def delete_exam(self, exam: Exam):
         return self.exam_repo.delete_exam(exam)
+
+    def get_upcoming_exams_for_student(self, student_id: int):
+        """
+        Get all upcoming exams for a specific student.
+        Only returns exams that:
+        1. Are for courses the student is enrolled in
+        2. Haven't ended yet
+        3. Are ordered by start date
+        """
+        return self.exam_repo.get_upcoming_exams_for_student(student_id)
+
+    def get_course_exams(self, course_id):
+        """
+        Retrieves all exams for a specific course.
+
+        Args:
+            course_id: The ID of the course
+
+        Returns:
+            List of exam objects for the specified course
+        """
+        return self.exam_repo.get_course_exams(course_id)
