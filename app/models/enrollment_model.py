@@ -26,8 +26,8 @@ class Enrollment(Base):
     status = Column(Enum("enrolled", "cancelled", "padding"), default="enrolled")
     enrollment_date = Column(DateTime, nullable=False)
 
-    student = relationship("Student", back_populates="enrollments")
-    course = relationship("Course", back_populates="enrollments")
+    student = relationship("Student", back_populates="enrollment")
+    course = relationship("Course", back_populates="enrollment")
 
     def __repr__(self):
         return f"<Enrollment(student_id={self.student_id}, course_id={self.course_id})>"
