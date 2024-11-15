@@ -48,7 +48,7 @@ class Course(Base):
     teacher = relationship("Teacher", back_populates="courses")
 
     # Add this relationship
-    enrollments = relationship("Enrollment", back_populates="course")
+    enrollment = relationship("Enrollment", back_populates="course")
 
     # Add relationship for exams
     exams = relationship("Exam", back_populates="course", cascade="all, delete-orphan")
