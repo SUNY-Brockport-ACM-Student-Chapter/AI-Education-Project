@@ -48,7 +48,9 @@ class Teacher(Base):
     )
 
     # Add relationship to Course
-    courses = relationship("Course", back_populates="teacher")
+    courses = relationship(
+        "Course", back_populates="teacher", cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return f"<Teacher(user_name = {self.User_name}, email = {self.email})>"
