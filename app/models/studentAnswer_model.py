@@ -35,13 +35,8 @@ class StudentAnswer(Base):
     answer_grade = Column(String(1), nullable=False)
     second_attempt_grade = Column(String(1))
     answer_stage = Column(Integer, nullable=False)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(
-        DateTime,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
-    )
 
+    
     # Add the relationship to Ai
     ai_assessments = relationship("AiAssessment", back_populates="student_answer")
 

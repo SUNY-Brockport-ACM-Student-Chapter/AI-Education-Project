@@ -21,7 +21,7 @@ student_repository = StudentRepository(db_session)
 student_service = StudentService(student_repository)
 
 
-@student_bp.route("/students", methods=["GET"])
+@student_bp.route("/get_all_students", methods=["GET"])
 def get_all_students():
     """Get all students"""
     try:
@@ -43,7 +43,7 @@ def get_all_students():
         return jsonify({"error": str(e)}), 500
 
 
-@student_bp.route("/students/<int:student_id>", methods=["GET"])
+@student_bp.route("/get_student_by_id/<int:student_id>", methods=["GET"])
 def get_student(student_id):
     """Get specific student"""
     try:
@@ -64,12 +64,18 @@ def get_student(student_id):
         return jsonify({"error": str(e)}), 500
 
 
-@student_bp.route("/students", methods=["POST"])
+@student_bp.route("/create_student", methods=["POST"])
 def create_student():
     """Create a new student"""
     try:
         data = request.json
-        new_student = Student(student_name=data.get("student_name"))
+        new_student = Student(
+            clerk_user_id=data.get("clerk_user_id"),
+            user_name=data.get("user_name"),
+            email=data.get("email"),
+            first_name=data.get("first_name"),
+            last_name=data.get("last_name")
+            )
         result = student_service.create_student(new_student)
         return (
             jsonify(
@@ -85,7 +91,7 @@ def create_student():
         return jsonify({"error": str(e)}), 500
 
 
-@student_bp.route("/students/<int:student_id>", methods=["PUT"])
+@student_bp.route("/update_student_by_id/<int:student_id>", methods=["PUT"])
 def update_student(student_id):
     """Update existing student"""
     try:
@@ -94,16 +100,38 @@ def update_student(student_id):
         if not existing_student:
             return jsonify({"error": "Student not found"}), 404
 
-        existing_student.student_name = data.get(
-            "student_name", existing_student.student_name
-        )
+        # Update only the attributes that are provided in the request
+        # Partial updates
+        if "clerk_user_id" in data:
+            existing_student.clerk_user_id = data["clerk_user_id"]
+        if "user_name" in data:
+            existing_student.user_name = data["user_name"]
+        if "email" in data:
+            existing_student.email = data["email"]
+        if "first_name" in data:
+            existing_student.first_name = data["first_name"]
+        if "last_name" in data:
+            existing_student.last_name = data["last_name"]
+        if "is_active" in data:
+            existing_student.is_active = data["is_active"]
+        if "last_login" in data:
+            existing_student.last_login = data["last_login"]
 
+        # Update the student in the database
         updated_student = student_service.update_student(existing_student)
+
         return (
             jsonify(
                 {
                     "student_id": updated_student.student_id,
-                    "student_name": updated_student.student_name,
+                    "user_name": updated_student.user_name,
+                    "email": updated_student.email,
+                    "first_name": updated_student.first_name,
+                    "last_name": updated_student.last_name,
+                    "is_active": updated_student.is_active,
+                    "last_login": updated_student.last_login.isoformat() if updated_student.last_login else None,
+                    "created_at": updated_student.created_at.isoformat() if updated_student.created_at else None,
+                    "updated_at": updated_student.updated_at.isoformat() if updated_student.updated_at else None,
                 }
             ),
             200,
@@ -113,7 +141,7 @@ def update_student(student_id):
         return jsonify({"error": str(e)}), 500
 
 
-@student_bp.route("/students/<int:student_id>", methods=["DELETE"])
+@student_bp.route("/delete_student_by_id/<int:student_id>", methods=["DELETE"])
 def delete_student(student_id):
     """Delete existing student"""
     try:

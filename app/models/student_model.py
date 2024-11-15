@@ -44,7 +44,7 @@ class Student(Base):
         onupdate=lambda: datetime.now(timezone.utc),
     )
     answers = relationship("StudentAnswer", back_populates="student")
-    enrollments = relationship("Enrollment", back_populates="student")
+    enrollment = relationship("Enrollment", back_populates="student")
 
     def __repr__(self):
         return f"<Student(student_id={self.student_id})>"

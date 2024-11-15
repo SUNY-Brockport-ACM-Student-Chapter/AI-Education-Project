@@ -4,9 +4,9 @@ from functools import wraps
 import jwt
 from flask import jsonify, redirect, request, url_for
 
-from app.config_db.database import get_db_session
-from app.repository.student_repository import StudentRepository
-from app.service.student_service import StudentService
+from app.database import get_db_session
+from app.repositories.student_repository import StudentRepository
+from app.services.student_service import StudentService
 
 db_session = get_db_session()
 student_repository = StudentRepository(db_session)
