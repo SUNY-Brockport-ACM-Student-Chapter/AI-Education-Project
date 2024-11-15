@@ -17,7 +17,9 @@ Configuration Constants:
 """
 
 import os
+
 from dotenv import load_dotenv
+
 # Construct the database URI
 load_dotenv()
 MYSQL_USER = os.getenv("MYSQL_USER")

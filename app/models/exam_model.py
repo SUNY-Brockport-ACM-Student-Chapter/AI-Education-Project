@@ -39,7 +39,9 @@ class Exam(Base):
     )
 
     course = relationship("Course", back_populates="exams")
-    questions = relationship("Question", back_populates="exam",cascade="all, delete-orphan")
+    questions = relationship(
+        "Question", back_populates="exam", cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return f"<Exam(exam_name='{self.exam_name}')>"

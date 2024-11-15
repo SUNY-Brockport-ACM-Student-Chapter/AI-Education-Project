@@ -32,8 +32,12 @@ class Question(Base):
         onupdate=lambda: datetime.now(timezone.utc),
     )
     exam = relationship("Exam", back_populates="questions")
-    student_answers = relationship("StudentAnswer", back_populates="question", cascade="all, delete-orphan")
-    answers = relationship("Answer", back_populates="question", cascade="all, delete-orphan")
+    student_answers = relationship(
+        "StudentAnswer", back_populates="question", cascade="all, delete-orphan"
+    )
+    answers = relationship(
+        "Answer", back_populates="question", cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return f"<Question(question_id={self.question_id})>"
