@@ -41,3 +41,10 @@ class Question(Base):
 
     def __repr__(self):
         return f"<Question(question_id={self.question_id})>"
+    
+    def to_dict(self):
+        return {
+            "question_id": self.question_id,
+            "exam_id": self.exam_id,
+            "question_text": self.question_text,
+        }   

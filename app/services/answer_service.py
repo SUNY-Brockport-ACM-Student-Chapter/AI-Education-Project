@@ -8,6 +8,9 @@ class AnswerService:
     def __init__(self, answer_repo: AnswerRepository):
         self.answer_repo = answer_repo
 
+    def save_answer(self, question_id: int, answer: str):
+        self.answer_repo.save_answer(question_id, answer)
+
     def get_answer_by_id(self, answer_id: int):
         return self.answer_repo.get_answer_by_id(answer_id)
 

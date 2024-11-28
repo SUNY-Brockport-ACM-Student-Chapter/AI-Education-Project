@@ -1,6 +1,7 @@
 # services/exam_service.py
 
 from app.models.exam_model import Exam
+from app.models.question_model import Question
 from app.repositories.exam_repository import ExamRepository
 
 
@@ -32,6 +33,9 @@ class ExamService:
         3. Are ordered by start date
         """
         return self.exam_repo.get_upcoming_exams_for_student(student_id)
+    
+    def add_question_to_exam(self, question: Question):
+        return self.exam_repo.add_question_to_exam(question)
 
     def get_course_exams(self, course_id):
         """

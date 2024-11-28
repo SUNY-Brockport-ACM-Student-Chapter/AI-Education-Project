@@ -11,7 +11,6 @@ from app.database import get_db_session
 from app.models.student_model import Student
 from app.repositories.student_repository import StudentRepository
 from app.services.student_service import StudentService
-
 # Create the blueprint
 student_bp = Blueprint("student_bp", __name__)
 
@@ -19,6 +18,39 @@ student_bp = Blueprint("student_bp", __name__)
 db_session = get_db_session()
 student_repository = StudentRepository(db_session)
 student_service = StudentService(student_repository)
+
+
+
+
+    
+@student_bp.route("/get_student_dashboard_data/<string:student_id>", methods=["GET"])
+def get_student_dashboard_data(student_id):
+    """Get dashboard data for a specific student"""
+    try:
+
+        # Now we can safely access student properties
+        dashboard_data = student_service.get_dashboard_data(student_id)
+        
+        return jsonify({
+            "dashboard_data": dashboard_data
+        }), 200
+
+    except Exception as e:
+        current_app.logger.error(f"Error fetching student dashboard data: {str(e)}")
+        return jsonify({"error": "Failed to fetch dashboard data"}), 500
+    
+@student_bp.route("/get_exam_list_for_student/<string:student_id>", methods=["GET"])
+def get_exam_list_for_student(student_id):
+    """Get exam list for a specific student"""
+    try:
+        exam_list = student_service.get_exam_list(student_id)
+        return jsonify({"exam_list": exam_list}), 200
+    except Exception as e:
+        current_app.logger.error(f"Error fetching exam list: {str(e)}")
+        return jsonify({"error": "Failed to fetch exam list"}), 500
+    
+
+    
 
 
 @student_bp.route("/get_all_students", methods=["GET"])
@@ -63,6 +95,23 @@ def get_student(student_id):
         current_app.logger.error(f"Error fetching student: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+@student_bp.route("/get_student_by_clerk_user_id/<string:clerk_user_id>", methods=["GET"])
+def get_student_by_clerk_user_id(clerk_user_id):
+    """Get student by clerk user id"""
+    try:
+        student = student_service.get_student_by_clerk_user_id(clerk_user_id)
+        return (
+            jsonify(
+                {
+                    "student_id": student.student_id,
+                    "student_name": student.first_name + " " + student.last_name,
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error fetching student: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 @student_bp.route("/create_student", methods=["POST"])
 def create_student():
@@ -81,7 +130,7 @@ def create_student():
             jsonify(
                 {
                     "student_id": result.student_id,
-                    "student_name": result.first_name + " " + result.last_name,
+                    "student_name": result.first_name + " " + result.last_name
                 }
             ),
             201,

@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 
 from app.models.course_model import Course
 from app.models.enrollment_model import Enrollment
-
+from app.models.student_model import Student
+from app.models.exam_model import Exam
 
 class CourseRepository:
     def __init__(self, session: Session):
@@ -29,6 +30,20 @@ class CourseRepository:
     def delete_course(self, course: Course):
         self.session.delete(course)
         self.session.commit()
+
+    def get_course_info(self, course_id: int):
+        course = self.session.query(Course).filter(Course.course_id == course_id).first()
+        enrollments = self.session.query(Enrollment).filter(Enrollment.course_id == course_id).all()
+        students = self.session.query(Student).filter(Student.student_id.in_(enrollment.student_id for enrollment in enrollments)).all()
+        exams = self.session.query(Exam).filter(Exam.course_id == course_id).all()
+        return {
+            "course": course.to_dict(),
+            "students": [student.to_dict() for student in students],
+            "exams": [exam.to_dict() for exam in exams],
+        }
+    
+    def get_exams_for_course(self, course_id: int):
+        return self.session.query(Exam).filter(Exam.course_id == course_id).all()
 
     def get_courses_for_student(self, student_id: int):
         """

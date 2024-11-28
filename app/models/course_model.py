@@ -47,10 +47,10 @@ class Course(Base):
     # Add relationship to Teacher
     teacher = relationship("Teacher", back_populates="courses")
 
-    # Add this relationship
+    # Add relationship to Enrollment
     enrollment = relationship("Enrollment", back_populates="course")
 
-    # Add relationship for exams
+    # Add relationship to Exam
     exams = relationship("Exam", back_populates="course", cascade="all, delete-orphan")
 
     def __repr__(self):
@@ -59,10 +59,12 @@ class Course(Base):
     def to_dict(self):
         """Convert Course object to dictionary for JSON serialization"""
         return {
-            "id": self.course_id,
+            "course_name": self.course_name,
             "course_code": self.course_code,
-            "title": self.course_name,
-            "description": self.course_description,
+            "course_description": self.course_description,
+            "capacity": self.capacity,
+            "teacher_id": self.teacher_id,
             "is_active": self.is_active,
-            # Add any other fields you want to include
+            "start_date": self.start_date.isoformat() if self.start_date else None,
+            "end_date": self.end_date.isoformat() if self.end_date else None,
         }

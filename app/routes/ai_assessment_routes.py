@@ -68,7 +68,7 @@ def get_ai(ai_id):
         return jsonify({"error": str(e)}), 500
 
 
-@ai_bp.route("/ai/process", methods=["POST"])
+@ai_bp.route("/ai", methods=["POST"])
 def process_data():
     """Create new AI assessment"""
     try:
@@ -77,7 +77,7 @@ def process_data():
             assessment_text=data.get("assessment_text"),
             student_answer_id=data.get("student_answer_id"),
             grade=data.get("grade"),
-            )
+        )
         result = ai_service.create_ai(new_ai)
         return (
             jsonify(

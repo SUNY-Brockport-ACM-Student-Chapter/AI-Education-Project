@@ -3,20 +3,65 @@ This module contains routes for the answer model.
 """
 
 from flask import Blueprint, current_app, jsonify, request
+from datetime import datetime, timezone
 
 from app.database import get_db_session
 from app.models.answer_model import Answer
 from app.repositories.answer_repository import AnswerRepository
+from app.repositories.question_repository import QuestionRepository
 from app.services.answer_service import AnswerService
+from app.services.question_service import QuestionService
 
 # Create the blueprint
 answer_bp = Blueprint("answer_bp", __name__)
 
 # Initialize service with repository
 db_session = get_db_session()
-answer_repository = AnswerRepository(db_session)
-answer_service = AnswerService(answer_repository)
 
+answer_repository = AnswerRepository(db_session)
+question_repository = QuestionRepository(db_session)
+
+answer_service = AnswerService(answer_repository)
+question_service = QuestionService(question_repository)
+
+
+
+@answer_bp.route("/save_answer/<int:question_id>/<string:answer_text>", methods=["POST"])
+def save_answer(question_id, answer_text):
+    """Save a new answer"""
+    try:
+        # First verify that the question exists
+        question = question_service.get_question_by_id(question_id)
+        if not question:
+            current_app.logger.warning(f"Attempted to save answer for non-existent question_id: {question_id}")
+            return jsonify({"error": "Question not found"}), 404
+
+        # Create new answer with validated question_id
+        new_answer = Answer(
+            answer_text=answer_text,
+            question_id=question.question_id,
+            created_at=datetime.now(timezone.utc),
+            updated_at=datetime.now(timezone.utc)
+        )
+
+        # Save the answer
+        result = answer_service.create_answer(new_answer)
+        
+        return jsonify({
+            "message": "Answer saved successfully",
+            "answer": {
+                "answer_id": result.answer_id,
+                "answer_text": result.answer_text,
+                "question_id": result.question_id,
+                "created_at": result.created_at.isoformat(),
+                "updated_at": result.updated_at.isoformat()
+            }
+        }), 201
+
+    except Exception as e:
+        current_app.logger.error(f"Error saving answer: {str(e)}")
+        return jsonify({"error": "Failed to save answer"}), 500
+    
 
 @answer_bp.route("/answers", methods=["GET"])
 def get_all_answers():

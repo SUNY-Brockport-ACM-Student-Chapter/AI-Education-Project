@@ -2,6 +2,7 @@
 
 from app.models.course_model import Course
 from app.repositories.course_repository import CourseRepository
+from app.models.exam_model import Exam
 
 
 class CourseService:
@@ -13,6 +14,9 @@ class CourseService:
 
     def get_all_courses(self):
         return self.course_repo.get_all_courses()
+    
+    def get_exams_for_course(self, course_id: int):
+        return self.course_repo.get_exams_for_course(course_id)
 
     def create_course(self, course: Course):
         return self.course_repo.create_course(course)
@@ -22,6 +26,12 @@ class CourseService:
 
     def delete_course(self, course: Course):
         return self.course_repo.delete_course(course)
+    
+    def add_exam_to_course(self, exam: Exam):
+        return self.course_repo.add_exam_to_course(exam)
+    
+    def get_course_info(self, course_id: int):
+        return self.course_repo.get_course_info(course_id)
 
     def get_courses_for_student(self, student_id: int):
         """

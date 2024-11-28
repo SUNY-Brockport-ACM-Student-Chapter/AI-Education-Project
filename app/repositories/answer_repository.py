@@ -9,6 +9,11 @@ class AnswerRepository:
     def __init__(self, session: Session):
         self.session = session
 
+    def save_answer(self, question_id: int, answer: str):
+        new_answer = Answer(question_id=question_id, answer_text=answer)
+        self.session.add(new_answer)
+        self.session.commit()
+
     def get_answer_by_id(self, answer_id: int):
         return self.session.query(Answer).filter(Answer.id == answer_id).first()
 

@@ -11,6 +11,7 @@ from app.database import get_db_session
 from app.models.exam_model import Exam
 from app.repositories.exam_repository import ExamRepository
 from app.services.exam_service import ExamService
+from app.models.question_model import Question
 
 # Create the blueprint
 exam_bp = Blueprint("exam_bp", __name__)
@@ -19,6 +20,22 @@ exam_bp = Blueprint("exam_bp", __name__)
 db_session = get_db_session()
 exam_repository = ExamRepository(db_session)
 exam_service = ExamService(exam_repository)
+
+
+@exam_bp.route("/add_question_to_exam/<int:exam_id>", methods=["POST"])
+def add_question_to_exam(exam_id):
+    """Add a question to an exam"""
+    try:
+        data = request.json
+        question = Question(
+            question_text=data.get("question_text"),
+            exam_id=exam_id
+        )
+        result = exam_service.add_question_to_exam(question)
+        return jsonify({"question": result}), 201
+    except Exception as e:
+        current_app.logger.error(f"Error adding question to exam: {str(e)}")
+        return jsonify({"error": "Failed to add question to exam"}), 500
 
 
 @exam_bp.route("/exams", methods=["GET"])
@@ -90,7 +107,7 @@ def create_exam():
         return jsonify({"error": str(e)}), 500
 
 
-@exam_bp.route("/exams/<int:exam_id>", methods=["PUT"])
+@exam_bp.route("/update_exam/<int:exam_id>", methods=["PUT"])
 def update_exam(exam_id):
     """Update existing exam"""
     try:
@@ -100,15 +117,23 @@ def update_exam(exam_id):
             return jsonify({"error": "Exam not found"}), 404
 
         existing_exam.exam_name = data.get("exam_name", existing_exam.exam_name)
-        existing_exam.course_id = data.get("course_id", existing_exam.course_id)
+        existing_exam.exam_description = data.get("exam_description", existing_exam.exam_description)
+        existing_exam.start_date = data.get("start_date", existing_exam.start_date)
+        existing_exam.end_date = data.get("end_date", existing_exam.end_date)
+        existing_exam.max_attempt = data.get("max_attempt", existing_exam.max_attempt)
 
         updated_exam = exam_service.update_exam(existing_exam)
         return (
+            "Exam updated successfully",
             jsonify(
                 {
                     "exam_id": updated_exam.exam_id,
                     "exam_name": updated_exam.exam_name,
                     "course_id": updated_exam.course_id,
+                    "exam_description": updated_exam.exam_description,
+                    "start_date": updated_exam.start_date,
+                    "end_date": updated_exam.end_date,
+                    "max_attempt": updated_exam.max_attempt,
                 }
             ),
             200,

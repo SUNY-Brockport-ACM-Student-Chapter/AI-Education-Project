@@ -7,14 +7,14 @@ from sqlalchemy.orm import Session
 
 from app.models.enrollment_model import Enrollment
 from app.models.exam_model import Exam
-
+from app.models.question_model import Question
 
 class ExamRepository:
     def __init__(self, session: Session):
         self.session = session
 
     def get_exam_by_id(self, exam_id: int):
-        return self.session.query(Exam).filter(Exam.id == exam_id).first()
+        return self.session.query(Exam).filter(Exam.exam_id == exam_id).first()
 
     def get_all_exams(self):
         return self.session.query(Exam).all()
@@ -32,6 +32,11 @@ class ExamRepository:
     def delete_exam(self, exam: Exam):
         self.session.delete(exam)
         self.session.commit()
+
+    def add_question_to_exam(self, question: Question):
+        self.session.add(question)
+        self.session.commit()
+        return question
 
     def get_upcoming_exams_for_student(self, student_id: int):
         """
@@ -56,7 +61,6 @@ class ExamRepository:
             .all()
         )
 
-        # Use the to_dict() method we defined in the Exam model
         return [
             {
                 "id": exam.exam_id,

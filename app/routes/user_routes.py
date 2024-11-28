@@ -23,25 +23,14 @@ teacher_service = TeacherService(teacher_repository)
 
 @user_bp.route("/register", methods=["POST"])
 def register_user():
-    """
-    Register a new user.
-
-
-    This route handles POST requests to register a new user. It expects JSON data
-    containing 'username', 'password_hash', and 'role' fields.
-
-    Returns:
-        flask.Response: A JSON response indicating successful user registration.
-    """
+    """Register a new user."""
     try:
         data = request.json
         if not all(k in data for k in ("username", "password", "role")):
             current_app.logger.warning("Registration attempt with missing fields")
             return jsonify({"error": "Missing required fields"}), 400
         if data["role"] not in ["student", "teacher"]:
-            current_app.logger.warning(
-                f'Registration attempt with invalid role: {data["role"]}'
-            )
+            current_app.logger.warning(f'Registration attempt with invalid role: {data["role"]}')
             return jsonify({"error": "Invalid role"}), 400
 
         new_user = Teacher(

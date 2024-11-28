@@ -21,6 +21,18 @@ question_repository = QuestionRepository(db_session)
 question_service = QuestionService(question_repository)
 
 
+
+@question_bp.route("/get_question_list_for_exam/<int:exam_id>", methods=["GET"])
+def get_question_list_for_exam(exam_id):
+    """Get question list for a specific exam"""
+    try:
+        question_list = question_service.get_question_list_for_exam(exam_id)
+        return jsonify({"question_list": question_list}), 200
+    except Exception as e:
+        current_app.logger.error(f"Error fetching question list: {str(e)}")
+        return jsonify({"error": "Failed to fetch question list"}), 500
+
+
 @question_bp.route("/questions", methods=["GET"])
 def get_all_questions():
     """Get all questions"""
