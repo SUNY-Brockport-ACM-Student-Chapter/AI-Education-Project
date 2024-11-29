@@ -26,7 +26,23 @@ teacher_service = TeacherService(teacher_repository)
 def get_teacher_dashboard_data(teacher_id):
     """Get dashboard data for a specific teacher"""
     try:
-        dashboard_data = teacher_service.get_dashboard_data(teacher_id)
+        
+
+        teacher = teacher_service.get_teacher_by_id(teacher_id)
+        if not teacher:
+            return jsonify({"error": "Teacher not found"}), 404
+        exams = teacher_service.get_all_exams_for_teacher(teacher_id)
+        if not exams:
+            return jsonify({"error": "Exams not found"}), 404
+        courses = teacher_service.get_all_courses_for_teacher(teacher_id)
+        if not courses:
+            return jsonify({"error": "Courses not found"}), 404
+        
+        dashboard_data = {
+            "teacher": teacher.to_dict(),
+            "courses": [course.to_dict() for course in courses],
+            "exams": [exam.to_dict() for exam in exams]
+        }
         return jsonify({"dashboard_data": dashboard_data}), 200
     except Exception as e:
         current_app.logger.error(f"Error fetching teacher dashboard data: {str(e)}")

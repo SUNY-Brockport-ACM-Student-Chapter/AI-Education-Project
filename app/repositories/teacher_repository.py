@@ -6,7 +6,6 @@ from app.models.teacher_model import Teacher
 from app.models.course_model import Course
 from app.models.exam_model import Exam
 from app.models.student_model import Student
-from app.models.enrollment_model import Enrollment
 
 class TeacherRepository:
     def __init__(self, session: Session):
@@ -25,13 +24,6 @@ class TeacherRepository:
         exams = self.session.query(Exam).filter(Exam.course_id.in_(course.course_id for course in courses)).all()
         return exams
     
-    def get_dashboard_data(self, teacher_id: int):
-        courses = self.get_all_courses_for_teacher(teacher_id)
-        exams = self.get_all_exams_for_teacher(teacher_id)
-        return {
-            "courses": [course.to_dict() for course in courses],
-            "exams": [exam.to_dict() for exam in exams],
-        }
 
     def search_for_student(self, search_query: str):
         students = self.session.query(Student).filter(Student.first_name.ilike(f"%{search_query}%") 

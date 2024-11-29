@@ -8,16 +8,6 @@ class TeacherService:
     def __init__(self, teacher_repo: TeacherRepository):
         self.teacher_repo = teacher_repo
 
-    def get_dashboard_data(self, teacher_id: int):
-        teacher = self.get_teacher_by_id(teacher_id)
-        courses = self.get_all_courses_for_teacher(teacher.teacher_id)
-        exams = self.get_all_exams_for_teacher(teacher.teacher_id)
-
-        return {
-            "courses": [course.to_dict() for course in courses],
-            "exams": [exam.to_dict() for exam in exams],
-            "teacher": teacher.to_dict()
-        }
     
     def search_for_student(self, search_query: str):
         return self.teacher_repo.search_for_student(search_query)
