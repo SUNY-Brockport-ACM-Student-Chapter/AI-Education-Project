@@ -1,13 +1,12 @@
 # repositories/exam_repository.py
 
-from datetime import datetime, timezone
-
-from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 from app.models.enrollment_model import Enrollment
 from app.models.exam_model import Exam
 from app.models.question_model import Question
+from app.models.studentAnswer_model import StudentAnswer
+
 
 class ExamRepository:
     def __init__(self, session: Session):
@@ -15,60 +14,29 @@ class ExamRepository:
 
     def get_exam_by_id(self, exam_id: int):
         return self.session.query(Exam).filter(Exam.exam_id == exam_id).first()
-
-    def get_all_exams(self):
-        return self.session.query(Exam).all()
-
-    def create_exam(self, exam: Exam):
-        self.session.add(exam)
+    
+    def get_exams_for_teacher(self, teacher_id: int):
+        return self.session.query(Exam).filter(Exam.teacher_id == teacher_id).all()
+    
+    def get_exams_for_course(self, course_id: int):
+        return self.session.query(Exam).filter(Exam.course_id == course_id).all()
+    
+    def create_exam(self, course_id: int):
+        new_exam = Exam(course_id=course_id)
+        self.session.add(new_exam)
         self.session.commit()
-        return exam
+        return new_exam
+    
+    
+    def get_exam_submission_number(self, exam_id: int, student_id: int):
+        exam_questions = self.session.query(Question).filter(Question.exam_id == exam_id).all()
+        student_answers = self.session.query(StudentAnswer).filter(StudentAnswer.student_id == student_id, StudentAnswer.question_id.in_(exam_questions)).all()
+        first_answer_id = student_answers[0].student_answer_id
+        return first_answer_id.answer_stage
+    
 
-    def update_exam(self, exam: Exam):
-        self.session.merge(exam)
-        self.session.commit()
-        return exam
 
-    def delete_exam(self, exam: Exam):
-        self.session.delete(exam)
-        self.session.commit()
+    def get_exams_for_student(self, student_id: int):
+        return self.session.query(Exam).join(Enrollment).filter(Enrollment.student_id == student_id).all()
 
-    def add_question_to_exam(self, question: Question):
-        self.session.add(question)
-        self.session.commit()
-        return question
-
-    def get_upcoming_exams_for_student(self, student_id: int):
-        """
-        Get all upcoming exams for a specific student.
-
-        Args:
-            student_id (int): The ID of the student
-
-        Returns:
-            List[Dict]: List of upcoming exams as dictionaries, ordered by start date
-        """
-        current_datetime = datetime.now(timezone.utc)
-
-        exams = (
-            self.session.query(Exam)
-            .join(Enrollment, Exam.course_id == Enrollment.course_id)
-            .filter(
-                Enrollment.student_id == student_id,
-                Exam.end_date >= current_datetime.replace(tzinfo=None),
-            )
-            .order_by(Exam.start_date.asc())
-            .all()
-        )
-
-        return [
-            {
-                "id": exam.exam_id,
-                "course_id": exam.course_id,
-                "name": exam.exam_name,
-                "start_date": exam.start_date,
-                "end_date": exam.end_date,
-                "exam_description": exam.exam_description,
-            }
-            for exam in exams
-        ]
+    

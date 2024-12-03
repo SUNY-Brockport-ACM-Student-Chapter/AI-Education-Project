@@ -1,6 +1,5 @@
 # services/answer_service.py
 
-from app.models.answer_model import Answer
 from app.repositories.answer_repository import AnswerRepository
 
 
@@ -8,20 +7,5 @@ class AnswerService:
     def __init__(self, answer_repo: AnswerRepository):
         self.answer_repo = answer_repo
 
-    def save_answer(self, question_id: int, answer: str):
-        self.answer_repo.save_answer(question_id, answer)
-
-    def get_answer_by_id(self, answer_id: int):
-        return self.answer_repo.get_answer_by_id(answer_id)
-
-    def get_all_answers(self):
-        return self.answer_repo.get_all_answers()
-
-    def create_answer(self, answer: Answer):
-        return self.answer_repo.create_answer(answer)
-
-    def update_answer(self, answer: Answer):
-        return self.answer_repo.update_answer(answer)
-
-    def delete_answer(self, answer: Answer):
-        return self.answer_repo.delete_answer(answer)
+    def create_answer(self, question_id: int, answer_text: str):
+        return self.answer_repo.create_answer(question_id, answer_text)

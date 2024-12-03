@@ -13,22 +13,7 @@ class AiAssessmentRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def get_ai_by_id(self, ai_id: int):
-        return self.session.query(AiAssessment).filter(AiAssessment.Id == ai_id).first()
+    def get_ai_assesment_for_studentAnswer(self, studentAnswer_id: int):
+        ai_assesment = self.session.query(AiAssessment).filter(AiAssessment.student_answer_id == studentAnswer_id).first()
+        return ai_assesment
 
-    def get_all_ais(self):
-        return self.session.query(AiAssessment).all()
-
-    def create_ai(self, ai: AiAssessment):
-        self.session.add(ai)
-        self.session.commit()
-        return ai
-
-    def update_ai(self, ai: AiAssessment):
-        self.session.merge(ai)
-        self.session.commit()
-        return ai
-
-    def delete_ai(self, ai: AiAssessment):
-        self.session.delete(ai)
-        self.session.commit()

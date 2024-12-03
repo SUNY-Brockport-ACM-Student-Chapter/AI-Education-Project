@@ -12,6 +12,7 @@
 2. [answer](#answer)
 
     1. Teacher
+        - [CREATE `api/v1/create_answer/<int:question_id>`](#create-apiv1create_answerintquestion_id)
 
     2. Student
 
@@ -26,6 +27,8 @@
         - [PUT `api/v1/update_exam/<int:exam_id>`](#put-apiv1update_examintexam_id)
 
     2. Student
+
+        - [GET `api/v1/get_active_courses_for_student/<int:student_id>`](#get-apiv1get_active_courses_for_studentintstudent_id)
 
 
 4. [enrollment](#enrollment)
@@ -44,9 +47,9 @@
         - [GET `api/v1/get_exam_submission_number/<int:exam_id>`](#get-apiv1get_exam_submission_numberintexam_id)
 
     2. Student
-
-
-
+        - [GET `api/v1/get_exams_for_student/<int:student_id>`](#get-apiv1get_exams_for_studentintstudent_id)
+        - [GET `api/v1/get_exams_for_course/<int:course_id>`](#get-apiv1get_exams_for_courseintcourse_id)
+        - [GET `api/v1/get_exam_submission_number/<int:exam_id>`](#get-apiv1get_exam_submission_numberintexam_id)
 
 6. [question](#question)
     1. Teacher
@@ -54,7 +57,7 @@
         - [GET `api/v1/get_questions_for_exam/<int:exam_id>`](#get-apiv1get_questions_for_examintexam_id)
 
     2. Student
-
+        - [GET `api/v1/get_questions_for_exam/<int:exam_id>`](#get-apiv1get_questions_for_examintexam_id)
 
 
 
@@ -72,7 +75,7 @@
         - [GET `api/v1/get_student_answers_for_student/<int:student_id>/<int:question_id>`](#get-apiv1get_student_answers_for_studentintstudent_idintquestion_id)
 
     2. Student
-
+        - [CREATE `api/v1/create_student_answer/<int:student_id>/<int:question_id>`](#create-apiv1create_student_answerintstudent_idintquestion_id)
 
 
 
@@ -93,83 +96,243 @@
 
 - **Description**: Get AI assesment for a student answer
 
-- **Request Body**:
+- **Response Body**:
     ```json
     {
-        "ai_assesment": {
-            "assesment": "The student's answer is correct",
-            "assesment_id": 1
-        }
+        "Id": 1,
+        "assessment_text": "Very good answer",
+        "grade": "S",
+        "student_answer_id": 1
     }
     ```
 
 ## answer
 
+### CREATE `api/v1/create_answer/<int:question_id>`
+
+- **Description**: Create an answer for a question
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
+- **Response Body**:
+    ```json
+    {
+    }
+    ```
+
 ## course
 
 ### GET `api/v1/get_active_courses_for_teacher/<int:teacher_id>`
 
+- **Description**: Get active courses for a teacher
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
 ### CREATE `api/v1/create_course/<int:teacher_id>`
+
+- **Description**: Create a course
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
 
 ### PUT `api/v1/update_course/<int:course_id>`
 
+- **Description**: Update a course
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
 ### PUT `api/v1/change_course_status/<int:course_id>`
 
-### PUT `api/v1/update_exam/<int:exam_id>`
+- **Description**: Change the status of a course
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
+### GET `api/v1/get_active_courses_for_student/<int:student_id>`
+
+- **Description**: Get active courses for a student
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
 
 ## enrollment
 
+### PUT `api/v1/change_enrollment_status_for_student/<int:student_id>/<int:course_id>/<string:status>`
+
+- **Description**: Change the enrollment status for a student
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
+### CREATE `api/v1/create_enrollment/<int:student_id>/<int:course_id>`
+
+- **Description**: Create an enrollment for a student
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
+
+
+
 ## exam
 
+### GET `api/v1/get_exams_for_teacher/<int:teacher_id>`
+
+- **Description**: Get exams for a teacher
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
+### GET `api/v1/get_exams_for_course/<int:course_id>`
+
+- **Description**: Get exams for a course
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
+### CREATE `api/v1/create_exam/<int:course_id>`
+
+- **Description**: Create an exam
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
+### GET `api/v1/get_exam_submission_number/<int:exam_id>/<int:student_id>`
+
+- **Description**: Get the number of submissions for an exam
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
+### GET `api/v1/get_exams_for_student/<int:student_id>`
+
+- **Description**: Get exams for a student
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
 ## question
+
+### CREATE `api/v1/create_question/<int:exam_id>`
+
+- **Description**: Create a question for an exam
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
+### GET `api/v1/get_questions_for_exam/<int:exam_id>`
+
+- **Description**: Get questions for an exam
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
 
 
 ## student
 
+### GET `api/v1/search_for_students/<str:search_query>`
+
+- **Description**: Search for students
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
+### GET `api/v1/get_students_for_course/<int:course_id>`
+
+- **Description**: Get students for a course
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
 ## studentAnswer
+
+### GET `api/v1/get_student_answers_for_student/<int:student_id>/<int:question_id>`
+
+- **Description**: Get student answers for a student
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
+### CREATE `api/v1/create_student_answer/<int:student_id>/<int:question_id>`
+
+- **Description**: Create a student answer
+
+- **Request Body**:
+    ```json
+    {
+    }
+    ```
+
 
 
 ## teacher
 
-### GET `/api/v1/teacher_dashboard_data/<int:teacher_id>`
+### GET `api/v1/teacher_by_id/<int:teacher_id>`
 
-- **Description**: Get dashboard data for a specific teacher by teacher_id
+- **Description**: Get a teacher by their ID
 
 - **Request Body**:
-  ```json 
+  ```json
   {
-  "dashboard_data": {
-    "courses": [
-      {
-        "capacity": 50,
-        "course_code": "1",
-        "course_description": "A beginner course on CS",
-        "course_name": "Intro to CS",
-        "end_date": "2024-11-22T00:00:00",
-        "is_active": true,
-        "start_date": "2024-11-22T00:00:00",
-        "teacher_id": 1
-      }
-    ],
-    "exams": [
-      {
-        "course_id": 1,
-        "description": "Covers chapters 1-5 of intro to cs",
-        "end_date": "2024-10-10T00:00:00",
-        "exam_id": 1,
-        "max_attempts": 2,
-        "name": "Midterm exam 1",
-        "start_date": "2024-10-10T00:00:00"
-      }
-    ],
     "teacher": {
       "email": "Tsmith1@brockport.edu",
-      "first_name": "Tom",
-      "last_name": "Smith",
-      "teacher_id": 1,
-      "user_name": "Tsmith1"
-    }
-    }
   }
   ```
-

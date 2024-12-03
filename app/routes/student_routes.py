@@ -20,186 +20,22 @@ student_repository = StudentRepository(db_session)
 student_service = StudentService(student_repository)
 
 
-
-
+@student_bp.route("/search_for_students/<string:search_query>", methods=["GET"])
+def search_for_students(search_query: str):
+    """Search for students"""
+    try:
+        students = student_service.search_for_students(search_query)
+        return jsonify({"students": students}), 200
+    except Exception as e:
+        current_app.logger.error(f"Error searching for students: {str(e)}")
+        return jsonify({"error": "Failed to search for students"}), 500
     
-@student_bp.route("/get_student_dashboard_data/<string:student_id>", methods=["GET"])
-def get_student_dashboard_data(student_id):
-    """Get dashboard data for a specific student"""
+@student_bp.route("/get_students_for_course/<int:course_id>", methods=["GET"])
+def get_students_for_course(course_id: int):
+    """Get students for a course"""
     try:
-
-        # Now we can safely access student properties
-        dashboard_data = student_service.get_dashboard_data(student_id)
-        
-        return jsonify({
-            "dashboard_data": dashboard_data
-        }), 200
-
+        students = student_service.get_students_for_course(course_id)
+        return jsonify({"students": students}), 200
     except Exception as e:
-        current_app.logger.error(f"Error fetching student dashboard data: {str(e)}")
-        return jsonify({"error": "Failed to fetch dashboard data"}), 500
-    
-@student_bp.route("/get_exam_list_for_student/<string:student_id>", methods=["GET"])
-def get_exam_list_for_student(student_id):
-    """Get exam list for a specific student"""
-    try:
-        exam_list = student_service.get_exam_list(student_id)
-        return jsonify({"exam_list": exam_list}), 200
-    except Exception as e:
-        current_app.logger.error(f"Error fetching exam list: {str(e)}")
-        return jsonify({"error": "Failed to fetch exam list"}), 500
-    
-
-    
-
-
-@student_bp.route("/get_all_students", methods=["GET"])
-def get_all_students():
-    """Get all students"""
-    try:
-        students = student_service.get_all_students()
-        return (
-            jsonify(
-                [
-                    {
-                        "student_id": student.student_id,
-                        "student_name": student.first_name + " " + student.last_name,
-                    }
-                    for student in students
-                ]
-            ),
-            200,
-        )
-    except Exception as e:
-        current_app.logger.error(f"Error fetching students: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@student_bp.route("/get_student_by_id/<int:student_id>", methods=["GET"])
-def get_student(student_id):
-    """Get specific student"""
-    try:
-        student = student_service.get_student_by_id(student_id)
-        if not student:
-            return jsonify({"error": "Student not found"}), 404
-        return (
-            jsonify(
-                {
-                    "student_id": student.student_id,
-                    "student_name": student.first_name + " " + student.last_name,
-                }
-            ),
-            200,
-        )
-    except Exception as e:
-        current_app.logger.error(f"Error fetching student: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-@student_bp.route("/get_student_by_clerk_user_id/<string:clerk_user_id>", methods=["GET"])
-def get_student_by_clerk_user_id(clerk_user_id):
-    """Get student by clerk user id"""
-    try:
-        student = student_service.get_student_by_clerk_user_id(clerk_user_id)
-        return (
-            jsonify(
-                {
-                    "student_id": student.student_id,
-                    "student_name": student.first_name + " " + student.last_name,
-                }
-            ),
-            200,
-        )
-    except Exception as e:
-        current_app.logger.error(f"Error fetching student: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-@student_bp.route("/create_student", methods=["POST"])
-def create_student():
-    """Create a new student"""
-    try:
-        data = request.json
-        new_student = Student(
-            clerk_user_id=data.get("clerk_user_id"),
-            user_name=data.get("user_name"),
-            email=data.get("email"),
-            first_name=data.get("first_name"),
-            last_name=data.get("last_name")
-            )
-        result = student_service.create_student(new_student)
-        return (
-            jsonify(
-                {
-                    "student_id": result.student_id,
-                    "student_name": result.first_name + " " + result.last_name
-                }
-            ),
-            201,
-        )
-    except Exception as e:
-        current_app.logger.error(f"Error creating student: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@student_bp.route("/update_student_by_id/<int:student_id>", methods=["PUT"])
-def update_student(student_id):
-    """Update existing student"""
-    try:
-        data = request.json
-        existing_student = student_service.get_student_by_id(student_id)
-        if not existing_student:
-            return jsonify({"error": "Student not found"}), 404
-
-        # Update only the attributes that are provided in the request
-        # Partial updates
-        if "clerk_user_id" in data:
-            existing_student.clerk_user_id = data["clerk_user_id"]
-        if "user_name" in data:
-            existing_student.user_name = data["user_name"]
-        if "email" in data:
-            existing_student.email = data["email"]
-        if "first_name" in data:
-            existing_student.first_name = data["first_name"]
-        if "last_name" in data:
-            existing_student.last_name = data["last_name"]
-        if "is_active" in data:
-            existing_student.is_active = data["is_active"]
-        if "last_login" in data:
-            existing_student.last_login = data["last_login"]
-
-        # Update the student in the database
-        updated_student = student_service.update_student(existing_student)
-
-        return (
-            jsonify(
-                {
-                    "student_id": updated_student.student_id,
-                    "user_name": updated_student.user_name,
-                    "email": updated_student.email,
-                    "first_name": updated_student.first_name,
-                    "last_name": updated_student.last_name,
-                    "is_active": updated_student.is_active,
-                    "last_login": updated_student.last_login.isoformat() if updated_student.last_login else None,
-                    "created_at": updated_student.created_at.isoformat() if updated_student.created_at else None,
-                    "updated_at": updated_student.updated_at.isoformat() if updated_student.updated_at else None,
-                }
-            ),
-            200,
-        )
-    except Exception as e:
-        current_app.logger.error(f"Error updating student: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@student_bp.route("/delete_student_by_id/<int:student_id>", methods=["DELETE"])
-def delete_student(student_id):
-    """Delete existing student"""
-    try:
-        student = student_service.get_student_by_id(student_id)
-        if not student:
-            return jsonify({"error": "Student not found"}), 404
-
-        student_service.delete_student(student)
-        return jsonify({"message": "Student deleted successfully"}), 200
-    except Exception as e:
-        current_app.logger.error(f"Error deleting student: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        current_app.logger.error(f"Error fetching students for course: {str(e)}")
+        return jsonify({"error": "Failed to fetch students for course"}), 500
