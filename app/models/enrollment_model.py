@@ -27,7 +27,6 @@ class Enrollment(Base):
     course_id = Column(Integer, ForeignKey("course.course_id"), nullable=False)
     status = Column(Enum("enrolled", "cancelled", "padding"), default="enrolled")
     enrollment_date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-
     student = relationship("Student", back_populates="enrollment")
     course = relationship("Course", back_populates="enrollment")
 
