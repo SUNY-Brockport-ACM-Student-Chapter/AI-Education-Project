@@ -25,7 +25,10 @@ def search_for_students():
     """Search for students"""
     try:
         students = student_service.search_for_students(request.json)
-        return jsonify({"students": students}), 200
+        students_dict = [student.to_dict() for student in students]
+        return jsonify({"students": students_dict}), 200
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
         current_app.logger.error(f"Error searching for students: {str(e)}")
         return jsonify({"error": "Failed to search for students"}), 500
@@ -35,7 +38,8 @@ def get_students_for_course(course_id: int):
     """Get students for a course"""
     try:
         students = student_service.get_students_for_course(course_id)
-        return jsonify({"students": students}), 200
+        students_dict = [student.to_dict() for student in students]
+        return jsonify({"students": students_dict}), 200
     except Exception as e:
         current_app.logger.error(f"Error fetching students for course: {str(e)}")
         return jsonify({"error": "Failed to fetch students for course"}), 500

@@ -21,16 +21,14 @@ teacher_repository = TeacherRepository(db_session)
 teacher_service = TeacherService(teacher_repository)
 
 
-@teacher_bp.route("/get_teacher_by_id/<string:teacher_id>", methods=["GET"])
-def get_teacher_by_id(teacher_id: str):
+@teacher_bp.route("/get_teacher_by_id/<int:teacher_id>", methods=["GET"])
+def get_teacher_by_id(teacher_id: int):
     """Get a teacher by their ID"""
     try:
-        teacher = teacher_service.get_teacher_by_id(int(teacher_id))
-        if not teacher:
-            return jsonify({"error": "Teacher not found"}), 404
+        teacher = teacher_service.get_teacher_by_id(teacher_id)
         return jsonify({"teacher": teacher.to_dict()}), 200
-    except ValueError:
-        return jsonify({"error": "Invalid teacher ID format"}), 400
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
         current_app.logger.error(f"Error fetching teacher by ID: {str(e)}")
         return jsonify({"error": "Failed to fetch teacher by ID"}), 500

@@ -10,8 +10,3 @@ class TeacherService:
 
     def get_teacher_by_id(self, teacher_id: int):
         return self.teacher_repo.get_teacher_by_id(teacher_id)
-    
-    def search_for_student(self, search_query: str):
-        return self.teacher_repo.search_for_student(search_query)
-    
-    

@@ -11,6 +11,9 @@ class TeacherRepository:
 
     def get_teacher_by_id(self, teacher_id: int):
         """Get a teacher by their ID""" 
-        return self.session.query(Teacher).filter(Teacher.teacher_id == teacher_id).first()
+        teacher = self.session.query(Teacher).filter(Teacher.teacher_id == teacher_id).first()
+        if not teacher:
+            raise ValueError("Teacher not found")
+        return teacher
     
     

@@ -26,7 +26,10 @@ def get_student_answers_for_student(student_id: int, question_id: int):
     """Get student answers for a student"""
     try:
         student_answers = student_answer_service.get_student_answers_for_student(student_id, question_id)
-        return jsonify({"student_answers": student_answers}), 200
+        student_answers_dict = [student_answer.to_dict() for student_answer in student_answers]
+        return jsonify({"student_answers": student_answers_dict}), 200
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
         current_app.logger.error(f"Error fetching student answers: {str(e)}")
         return jsonify({"error": "Failed to fetch student answers"}), 500
@@ -35,8 +38,8 @@ def get_student_answers_for_student(student_id: int, question_id: int):
 def create_student_answer(student_id: int, question_id: int):
     """Create a student answer"""
     try:
-        student_answer = student_answer_service.create_student_answer(student_id, question_id)  
-        return jsonify({"student_answer": student_answer}), 200
+        student_answer = student_answer_service.create_student_answer(student_id, question_id, request.json)  
+        return jsonify({"student_answer": student_answer.to_dict()}), 200
     except Exception as e:
         current_app.logger.error(f"Error creating student answer: {str(e)}")
         return jsonify({"error": "Failed to create student answer"}), 500

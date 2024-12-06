@@ -563,23 +563,58 @@
 
 ## student
 
-### GET `api/v1/search_for_students/<str:search_query>`
+### GET `api/v1/search_for_students`
+
+- **Example**:
+    ```
+    api/v1/search_for_students
+    ```
 
 - **Description**: Search for students
 
 - **Request Body**:
     ```json
     {
+        "first_name": "bendo"
+    }
+    ```
+
+- **Response Body**:
+    ```json
+    {
+        "students": [
+            {
+                "email": "pilse",
+                "first_name": "bendo",
+                "last_name": "smite",
+                "student_id": 3,
+                "user_name": "runner12"
+            }
+        ]
     }
     ```
 
 ### GET `api/v1/get_students_for_course/<int:course_id>`
 
+- **Example**:
+    ```
+    api/v1/get_students_for_course/1
+    ```
+
 - **Description**: Get students for a course
 
-- **Request Body**:
+- **Response Body**:
     ```json
     {
+        "students": [
+            {
+                "email": "jdoe1@brockport.edu",
+                "first_name": "John",
+                "last_name": "smith",
+                "student_id": 1,
+                "user_name": "Jdoe1"
+            }
+        ]
     }
     ```
 
@@ -587,21 +622,62 @@
 
 ### GET `api/v1/get_student_answers_for_student/<int:student_id>/<int:question_id>`
 
+- **Example**:
+    ```
+    api/v1/get_student_answers_for_student/1/1
+    ```
+
 - **Description**: Get student answers for a student
 
-- **Request Body**:
+- **Response Body**:
     ```json
     {
+        "student_answers": [
+            {
+                "answer_grade": "S",
+                "answer_stage": 1,
+                "answer_text": "A variable is a data holder",
+                "question_id": 1,
+                "second_attempt_answer": "A variable is a data holder",
+                "second_attempt_grade": "S",
+                "student_answer_id": 1,
+                "student_id": 1
+            }
+        ]
     }
     ```
 
 ### CREATE `api/v1/create_student_answer/<int:student_id>/<int:question_id>`
+
+- **Example**:
+    ```
+    api/v1/create_student_answer/1/1
+    ```
 
 - **Description**: Create a student answer
 
 - **Request Body**:
     ```json
     {
+        "answer_text":"Ryan is Tall",
+        "answer_grade":"N",
+        "answer_stage":"1"
+    }
+    ```
+
+- **Response Body**:
+    ```json
+    {
+        "student_answer": {
+            "answer_grade": "N",
+            "answer_stage": 1,
+            "answer_text": "Ryan is Tall",
+            "question_id": 1,
+            "second_attempt_answer": "Ryan is Tall",
+            "second_attempt_grade": "N",
+            "student_answer_id": 2,
+                "student_id": 1
+        }
     }
     ```
 
@@ -609,14 +685,24 @@
 
 ## teacher
 
-### GET `api/v1/teacher_by_id/<int:teacher_id>`
+### GET `api/v1/get_teacher_by_id/<int:teacher_id>`
+
+- **Example**:
+    ```
+    api/v1/get_teacher_by_id/1
+    ```
 
 - **Description**: Get a teacher by their ID
 
-- **Request Body**:
-  ```json
-  {
-    "teacher": {
-      "email": "Tsmith1@brockport.edu",
-  }
-  ```
+- **Response Body**:
+    ```json
+    {
+        "teacher": {
+            "email": "Tsmith1@brockport.edu",
+            "first_name": "Tom",
+            "last_name": "Smith",
+            "teacher_id": 1,
+            "user_name": "Tsmith1"
+        }
+    }
+    ```

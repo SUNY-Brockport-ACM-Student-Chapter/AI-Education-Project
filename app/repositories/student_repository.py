@@ -3,9 +3,6 @@
 from sqlalchemy.orm import Session
 
 from app.models.student_model import Student
-from app.models.course_model import Course
-from app.models.exam_model import Exam
-from app.models.teacher_model import Teacher
 from app.models.enrollment_model import Enrollment
 
 class StudentRepository:
@@ -24,11 +21,18 @@ class StudentRepository:
             search_query += data.get("last_name")
         if data.get("email"):
             search_query += data.get("email")
-        students = self.session.query(Student).filter(Student.name.ilike(f"%{search_query}%")).all()
+        students = self.session.query(Student).filter(Student.user_name.ilike(f"%{search_query}%") | Student.first_name.ilike(f"%{search_query}%") | Student.last_name.ilike(f"%{search_query}%") | Student.email.ilike(f"%{search_query}%")).all()
         if not students:
             raise ValueError("No students found")
         return students
     
     def get_students_for_course(self, course_id: int):
-        return self.session.query(Student).join(Enrollment).filter(Enrollment.course_id == course_id).all()
+        enrollments = self.session.query(Enrollment).filter(Enrollment.course_id == course_id).all()
+        students = [enrollment.student for enrollment in enrollments]
+        for student in students:
+            if student in students:
+                students.remove(student)
+        if not students:
+            raise ValueError("No students found")
+        return students
     
