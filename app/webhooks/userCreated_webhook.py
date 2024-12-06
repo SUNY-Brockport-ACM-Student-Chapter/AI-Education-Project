@@ -18,7 +18,6 @@ student_repository = StudentRepository(db_session)
 student_service = StudentService(student_repository)
 
 
-# define a post endpoint that listens for the user-created webhook event.
 @webhook_bp.route("/webhooks/user-created", methods=["PUT"])
 def handle_user_created():
     """process the webhook, verify the signature, extract the user data, and update the student record."""
@@ -50,11 +49,8 @@ def handle_user_created():
         except WebhookVerificationError:
             return jsonify({"error": "Invalid webhook signature"}), 401
 
-        # Extract user data from payload,
-        # if the data section is missing default to an empty dictionary.
         user_data = payload.get("data", {})
 
-        # GET STUDENT BY EMAIL, UPDATE THAT STUDENTS CLERK ID
         new_student = Student.clerk_user_id(
             clerk_user_id=user_data.get("id"), created_at=datetime.now(timezone.utc)
         )
