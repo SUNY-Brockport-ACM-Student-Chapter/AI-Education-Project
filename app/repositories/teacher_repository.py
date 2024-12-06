@@ -9,6 +9,8 @@ class TeacherRepository:
         self.session = session
 
 
-    def get_teacher_by_clerk_user_id(self, clerk_user_id: str):
-        return self.session.query(Teacher).filter(Teacher.clerk_user_id == clerk_user_id).first()
+    def get_teacher_by_id(self, teacher_id: int):
+        """Get a teacher by their ID""" 
+        return self.session.query(Teacher).filter(Teacher.teacher_id == teacher_id).first()
+    
     
