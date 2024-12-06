@@ -39,6 +39,5 @@ class AiAssessment(Base):
             "Id": self.Id,
             "assessment_text": self.assessment_text,
             "student_answer_id": self.student_answer_id,
-            "grade": self.grade
+            "grade": self.grade,
         }
-

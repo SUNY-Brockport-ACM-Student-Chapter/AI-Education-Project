@@ -54,12 +54,12 @@ class Teacher(Base):
 
     def __repr__(self):
         return f"<Teacher(user_name = {self.user_name}, email = {self.email})>"
-    
+
     def to_dict(self):
         return {
             "teacher_id": self.teacher_id,
             "user_name": self.user_name,
             "email": self.email,
             "first_name": self.first_name,
-            "last_name": self.last_name
+            "last_name": self.last_name,
         }

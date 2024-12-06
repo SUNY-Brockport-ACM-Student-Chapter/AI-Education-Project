@@ -11,6 +11,7 @@ from app.database import get_db_session
 from app.models.student_model import Student
 from app.repositories.student_repository import StudentRepository
 from app.services.student_service import StudentService
+
 # Create the blueprint
 student_bp = Blueprint("student_bp", __name__)
 
@@ -32,7 +33,8 @@ def search_for_students():
     except Exception as e:
         current_app.logger.error(f"Error searching for students: {str(e)}")
         return jsonify({"error": "Failed to search for students"}), 500
-    
+
+
 @student_bp.route("/get_students_for_course/<int:course_id>", methods=["GET"])
 def get_students_for_course(course_id: int):
     """Get students for a course"""

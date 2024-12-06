@@ -2,8 +2,9 @@
 
 from sqlalchemy.orm import Session
 
-from app.models.student_model import Student
 from app.models.enrollment_model import Enrollment
+from app.models.student_model import Student
+
 
 class StudentRepository:
     def __init__(self, session: Session):
@@ -21,13 +22,26 @@ class StudentRepository:
             search_query += data.get("last_name")
         if data.get("email"):
             search_query += data.get("email")
-        students = self.session.query(Student).filter(Student.user_name.ilike(f"%{search_query}%") | Student.first_name.ilike(f"%{search_query}%") | Student.last_name.ilike(f"%{search_query}%") | Student.email.ilike(f"%{search_query}%")).all()
+        students = (
+            self.session.query(Student)
+            .filter(
+                Student.user_name.ilike(f"%{search_query}%")
+                | Student.first_name.ilike(f"%{search_query}%")
+                | Student.last_name.ilike(f"%{search_query}%")
+                | Student.email.ilike(f"%{search_query}%")
+            )
+            .all()
+        )
         if not students:
             raise ValueError("No students found")
         return students
-    
+
     def get_students_for_course(self, course_id: int):
-        enrollments = self.session.query(Enrollment).filter(Enrollment.course_id == course_id).all()
+        enrollments = (
+            self.session.query(Enrollment)
+            .filter(Enrollment.course_id == course_id)
+            .all()
+        )
         students = [enrollment.student for enrollment in enrollments]
         for student in students:
             if student in students:
@@ -35,4 +49,3 @@ class StudentRepository:
         if not students:
             raise ValueError("No students found")
         return students
-    

@@ -32,5 +32,3 @@ def get_teacher_by_id(teacher_id: int):
     except Exception as e:
         current_app.logger.error(f"Error fetching teacher by ID: {str(e)}")
         return jsonify({"error": "Failed to fetch teacher by ID"}), 500
-
-

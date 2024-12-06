@@ -30,7 +30,9 @@ def register_user():
             current_app.logger.warning("Registration attempt with missing fields")
             return jsonify({"error": "Missing required fields"}), 400
         if data["role"] not in ["student", "teacher"]:
-            current_app.logger.warning(f'Registration attempt with invalid role: {data["role"]}')
+            current_app.logger.warning(
+                f'Registration attempt with invalid role: {data["role"]}'
+            )
             return jsonify({"error": "Invalid role"}), 400
 
         new_user = Teacher(

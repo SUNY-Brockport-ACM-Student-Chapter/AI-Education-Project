@@ -26,7 +26,12 @@ def create_answer(question_id: int):
         data = request.json
         answer_text = data.get("answer_text")
         answer = answer_service.create_answer(question_id, answer_text)
-        return jsonify({"message": "Answer created successfully", "answer": answer.to_dict()}), 201
+        return (
+            jsonify(
+                {"message": "Answer created successfully", "answer": answer.to_dict()}
+            ),
+            201,
+        )
     except Exception as e:
         current_app.logger.error(f"Error creating answer: {str(e)}")
         return jsonify({"error": str(e)}), 500

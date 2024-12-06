@@ -33,7 +33,6 @@ class StudentAnswer(Base):
     second_attempt_grade = Column(String(1))
     answer_stage = Column(Integer, nullable=False)
 
-    
     # Add the relationship to Ai
     ai_assessments = relationship("AiAssessment", back_populates="student_answer")
 
@@ -43,7 +42,7 @@ class StudentAnswer(Base):
 
     def __repr__(self):
         return f"<StudentAnswer(student_id={self.student_id}, question_id={self.question_id})>"
-    
+
     def to_dict(self):
         return {
             "student_answer_id": self.student_answer_id,
@@ -53,5 +52,5 @@ class StudentAnswer(Base):
             "second_attempt_answer": self.second_attempt_answer,
             "answer_grade": self.answer_grade,
             "second_attempt_grade": self.second_attempt_grade,
-            "answer_stage": self.answer_stage
+            "answer_stage": self.answer_stage,
         }

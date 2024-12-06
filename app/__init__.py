@@ -73,7 +73,9 @@ def create_app():
 
     # Register all other blueprints with API prefix
     for blueprint in [bp for bp in all_blueprints if bp != main_bp]:
-        app.register_blueprint(blueprint, url_prefix=f"/api/{app.config['API_VERSION']}")
+        app.register_blueprint(
+            blueprint, url_prefix=f"/api/{app.config['API_VERSION']}"
+        )
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):

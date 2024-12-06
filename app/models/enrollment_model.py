@@ -1,8 +1,9 @@
 # models/enrollment_model.py
 
+from datetime import datetime, timezone
+
 from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-from datetime import datetime, timezone
 
 from app.database import Base
 
@@ -32,12 +33,12 @@ class Enrollment(Base):
 
     def __repr__(self):
         return f"<Enrollment(student_id={self.student_id}, course_id={self.course_id})>"
-    
+
     def to_dict(self):
         return {
             "enrollment_id": self.enrollment_id,
             "student_id": self.student_id,
             "course_id": self.course_id,
             "status": self.status,
-            "enrollment_date": self.enrollment_date.isoformat()
+            "enrollment_date": self.enrollment_date.isoformat(),
         }

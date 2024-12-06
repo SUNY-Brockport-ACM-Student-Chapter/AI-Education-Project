@@ -9,7 +9,11 @@ class StudentAnswerService:
         self.student_answer_repo = student_answer_repo
 
     def get_student_answers_for_student(self, student_id: int, question_id: int):
-        return self.student_answer_repo.get_student_answers_for_student(student_id, question_id)
-    
+        return self.student_answer_repo.get_student_answers_for_student(
+            student_id, question_id
+        )
+
     def create_student_answer(self, student_id: int, question_id: int, data: dict):
-        return self.student_answer_repo.create_student_answer(student_id, question_id, data)
+        return self.student_answer_repo.create_student_answer(
+            student_id, question_id, data
+        )
