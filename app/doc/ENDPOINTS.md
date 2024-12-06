@@ -616,7 +616,12 @@
 - **Request Body**:
   ```json
   {
-    "teacher": {
-      "email": "Tsmith1@brockport.edu",
-  }
+        "teacher": {
+        "email": "Tsmith1@brockport.edu",
+        "first_name": "Tom",
+        "last_name": "Smith",
+        "teacher_id": 201,
+        "user_name": "Tsmith1"
+        }
+    }
   ```
