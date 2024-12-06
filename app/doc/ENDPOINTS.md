@@ -94,6 +94,11 @@
 
 ### GET `api/v1/get_ai_assesment_for_studentAnswer/<int:studentAnswer_id>`
 
+- **Example**:
+    ```
+    api/v1/get_ai_assesment_for_studentAnswer/1
+    ```
+
 - **Description**: Get AI assesment for a student answer
 
 - **Response Body**:
@@ -110,17 +115,29 @@
 
 ### CREATE `api/v1/create_answer/<int:question_id>`
 
+- **Example**:
+    ```
+    api/v1/create_answer/1
+    ```
+
 - **Description**: Create an answer for a question
 
 - **Request Body**:
     ```json
     {
+        "answer_text": "Hello world"
     }
     ```
 
 - **Response Body**:
     ```json
     {
+        "answer": {
+            "answer_id": 9,
+            "answer_text": "Big Byt bur",
+            "question_id": 1
+        },
+        "message": "Answer created successfully"
     }
     ```
 
@@ -128,151 +145,418 @@
 
 ### GET `api/v1/get_active_courses_for_teacher/<int:teacher_id>`
 
+- **Example**:
+    ```
+    api/v1/get_active_courses_for_teacher/1
+    ```
+
 - **Description**: Get active courses for a teacher
 
-- **Request Body**:
+- **Response Body**:
     ```json
     {
+        "courses": [
+                {
+                    "capacity": 50,
+                    "course_code": "1",
+                    "course_description": "A beginner course on CS",
+                    "course_name": "Intro to CS",
+                    "end_date": "2024-11-22T00:00:00",
+                    "is_active": true,
+                "start_date": "2024-11-22T00:00:00",
+                "teacher_id": 1
+            }
+        ]   
     }
     ```
 
 ### CREATE `api/v1/create_course/<int:teacher_id>`
+
+- **Example**:
+    ```
+    api/v1/create_course/1
+    ```
 
 - **Description**: Create a course
 
 - **Request Body**:
     ```json
     {
+        "course_name": "intro to relations",
+        "course_code": "1",
+        "course_description": "Interpersonal relations",
+        "capacity": "13",
+        "start_date": "2024-11-22 00:00:00",
+        "end_date": "2024-11-22 00:00:00"
+    }
+    ```
+
+- **Response Body**:
+    ```json
+    {
+        "course": {
+            "capacity": 13,
+            "course_code": "1",
+            "course_description": "Interpersonal relations",
+            "course_name": "intro to relations",
+            "end_date": "2024-11-22T00:00:00",
+            "is_active": true,
+            "start_date": "2024-11-22T00:00:00",
+            "teacher_id": 1
+        },
+        "message": "Course created successfully"
     }
     ```
 
 ### PUT `api/v1/update_course/<int:course_id>`
+
+- **Example**:
+    ```
+    api/v1/update_course/1
+    ```
 
 - **Description**: Update a course
 
 - **Request Body**:
     ```json
     {
+        "course_code": "4",
+        "course_description": "A beginner course on js"
     }
     ```
 
+- **Response Body**:
+    ```json
+    {
+        "course": {
+            "capacity": 50,
+            "course_code": "4",
+            "course_description": "A beginner course on js",
+            "course_name": "Intro to CS",
+            "end_date": "2024-11-22T00:00:00",
+            "is_active": true,
+            "start_date": "2024-11-22T00:00:00",
+            "teacher_id": 1
+        },
+        "message": "Course updated successfully"
+    }
+    ```
+
+
 ### PUT `api/v1/change_course_status/<int:course_id>`
+
+- **Example**:
+    ```
+    api/v1/change_course_status/1
+    ```
 
 - **Description**: Change the status of a course
 
-- **Request Body**:
+- **Response Body**:
     ```json
     {
+        "course": {
+            "capacity": 50,
+            "course_code": "1",
+            "course_description": "A beginner course on CS",
+            "course_name": "Intro to CS",
+            "end_date": "2024-11-22T00:00:00",
+            "is_active": true,
+            "start_date": "2024-11-22T00:00:00",
+            "teacher_id": 1
+        },
+        "message": "Course status changed successfully"
     }
     ```
 
 ### GET `api/v1/get_active_courses_for_student/<int:student_id>`
 
+- **Example**:
+    ```
+    api/v1/get_active_courses_for_student/1
+    ```
+
 - **Description**: Get active courses for a student
 
-- **Request Body**:
+- **Response Body**:
     ```json
     {
+        "courses": [
+            {
+                "capacity": 50,
+                "course_code": "4",
+                "course_description": "A beginner course on js",
+                "course_name": "Intro to CS",
+                "end_date": "2024-11-22T00:00:00",
+                "is_active": true,
+                "start_date": "2024-11-22T00:00:00",
+                "teacher_id": 1
+            }
+        ]
     }
     ```
 
 
 ## enrollment
 
-### PUT `api/v1/change_enrollment_status_for_student/<int:student_id>/<int:course_id>/<string:status>`
+### PUT `api/v1/change_enrollment_status_for_student/<int:student_id>/<int:course_id>`
 
 - **Description**: Change the enrollment status for a student
 
+- **Example**:
+    ```
+    api/v1/change_enrollment_status_for_student/1/1
+    ```
+
+- **Status**:
+    - "enrolled"    # default
+    - "cancelled"   # cancels the enrollment
+    - "padding"     # puts the enrollment on pending list
+
 - **Request Body**:
     ```json
     {
+        "status": "cancelled"
     }
     ```
+
+- **Response Body**:
+    ```json
+    {
+        "enrollment": {
+            "course_id": 1,
+            "enrollment_date": "2023-09-02T00:00:00",
+            "enrollment_id": 1,
+            "status": "cancelled",
+            "student_id": 1
+        },
+        "message": "Enrollment status changed successfully"
+    }
+    ```
+
 
 ### CREATE `api/v1/create_enrollment/<int:student_id>/<int:course_id>`
 
-- **Description**: Create an enrollment for a student
-
-- **Request Body**:
-    ```json
-    {
-    }
+- **Example**:
+    ```
+    api/v1/create_enrollment/1/1
     ```
 
+- **Description**: Create an enrollment for a student
 
+- **Response Body**:
+    ```json
+    {
+        "enrollment": {
+                "course_id": 1,
+                "enrollment_date": "2024-12-05T21:53:51",
+                "enrollment_id": 3,
+                "status": "enrolled",
+            "student_id": 1
+        },
+        "message": "Enrollment created successfully"
+    }
+    ```
 
 
 ## exam
 
 ### GET `api/v1/get_exams_for_teacher/<int:teacher_id>`
 
+- **Example**:
+    ```
+    api/v1/get_exams_for_teacher/1
+    ```
+
 - **Description**: Get exams for a teacher
 
-- **Request Body**:
+- **Response Body**:
     ```json
     {
+        "exams": [
+            {
+                "course_id": 1,
+                "description": "Covers chapters 1-5 of intro to cs",
+                "end_date": "2024-10-10T00:00:00",
+                "exam_id": 1,
+                "max_attempts": 2,
+                "name": "Midterm exam 1",
+                "start_date": "2024-10-10T00:00:00"
+            }
+        ]
     }
     ```
 
 ### GET `api/v1/get_exams_for_course/<int:course_id>`
 
+- **Example**:
+    ```
+    api/v1/get_exams_for_course/1
+    ```
+
 - **Description**: Get exams for a course
 
-- **Request Body**:
+- **Response Body**:
     ```json
     {
+        "exams": [
+            {
+                "course_id": 1,
+                "description": "Covers chapters 1-5 of intro to cs",
+                "end_date": "2024-10-10T00:00:00",
+                "exam_id": 1,
+                "max_attempts": 2,
+                "name": "Midterm exam 1",
+                "start_date": "2024-10-10T00:00:00"
+            }
+        ]
     }
     ```
 
-### CREATE `api/v1/create_exam/<int:course_id>`
+### CREATE `api/v1/create_exam_for_course/<int:course_id>`
 
-- **Description**: Create an exam
+- **Example**:
+    ```
+    api/v1/create_exam_for_course/1
+    ```
+
+- **Description**: Create an exam for a course
 
 - **Request Body**:
     ```json
     {
+        "exam_name": "exam 4",
+        "exam_description": "Big Exam",
+        "max_attempt": "2",
+        "start_date": "2024-10-10 00:00:00",
+        "end_date": "2024-10-10 00:00:00"
     }
     ```
 
-### GET `api/v1/get_exam_submission_number/<int:exam_id>/<int:student_id>`
-
-- **Description**: Get the number of submissions for an exam
-
-- **Request Body**:
+- **Response Body**:
     ```json
     {
+        "exam": {
+            "course_id": 1,
+            "description": "Big Exam",
+            "end_date": "2024-10-10T00:00:00",
+            "exam_id": 2,
+            "max_attempts": 2,
+            "name": "exam 4",
+            "start_date": "2024-10-10T00:00:00"
+        },
+        "message": "Exam created successfully"
+    }
+    ```
+
+### GET `api/v1/get_student_exam_submission_stage/<int:exam_id>/<int:student_id>`
+
+- **Example**:
+    ```
+    api/v1/get_student_exam_submission_stage/1/1
+    ```
+
+- **Description**: Get the submission stage for a student in an exam
+
+- **Response Body**:
+    ```json
+    {
+        "stage": 1
     }
     ```
 
 ### GET `api/v1/get_exams_for_student/<int:student_id>`
 
+- **Example**:
+    ```
+    api/v1/get_exams_for_student/1
+    ```
+
 - **Description**: Get exams for a student
 
-- **Request Body**:
+- **Response Body**:
     ```json
     {
+        "exams": [
+            {
+                "course_id": 1,
+                "description": "Covers chapters 1-5 of intro to cs",
+                "end_date": "2024-10-10T00:00:00",
+                "exam_id": 1,
+                "max_attempts": 2,
+                "name": "Midterm exam 1",
+                "start_date": "2024-10-10T00:00:00"
+            },
+            {
+                "course_id": 1,
+                "description": "Big Exam",
+                "end_date": "2024-10-10T00:00:00",
+                "exam_id": 2,
+                "max_attempts": 2,
+                "name": "exam 4",
+                "start_date": "2024-10-10T00:00:00"
+            }
+        ],
+        "message": "Exams fetched successfully"
     }
     ```
+
+
 
 ## question
 
 ### CREATE `api/v1/create_question/<int:exam_id>`
+
+- **Example**:
+    ```
+    api/v1/create_question/1
+    ```
 
 - **Description**: Create a question for an exam
 
 - **Request Body**:
     ```json
     {
+        "question_text": "How old is ryan?"
+    }
+    ```
+
+- **Response Body**:
+    ```json
+    {
+        "message": "Question created successfully",
+        "question": {
+            "exam_id": 1,
+            "question_id": 2,
+            "question_text": "How old is ryan?"
+        }
     }
     ```
 
 ### GET `api/v1/get_questions_for_exam/<int:exam_id>`
 
+- **Example**:
+    ```
+    api/v1/get_questions_for_exam/1
+    ```
+
 - **Description**: Get questions for an exam
 
-- **Request Body**:
+- **Response Body**:
     ```json
     {
+        "questions": [
+            {
+                "exam_id": 1,
+                "question_id": 1,
+                "question_text": "What is a variable in programming"
+            },
+            {
+                "exam_id": 1,
+                "question_id": 2,
+                "question_text": "How old is ryan?"
+            }
+        ]
     }
     ```
 

@@ -36,3 +36,10 @@ class Answer(Base):
 
     def __repr__(self):
         return f"<Answer(answer_text='{self.answer_text}')>"
+    
+    def to_dict(self):
+        return {
+            "answer_id": self.answer_id,
+            "answer_text": self.answer_text,
+            "question_id": self.question_id
+        }

@@ -25,8 +25,11 @@ question_service = QuestionService(question_repository)
 def create_question(exam_id: int):
     """Create a question for an exam"""
     try:
-        question = question_service.create_question(exam_id)
-        return jsonify({"question": question}), 201
+        data = request.json
+        question = question_service.create_question(exam_id, data)
+        return jsonify({"question": question.to_dict(), "message": "Question created successfully"}), 201
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
         current_app.logger.error(f"Error creating question: {str(e)}")
         return jsonify({"error": "Failed to create question"}), 500
@@ -36,7 +39,10 @@ def get_questions_for_exam(exam_id: int):
     """Get questions for an exam"""
     try:
         questions = question_service.get_questions_for_exam(exam_id)
-        return jsonify({"questions": questions}), 200
+        questions_dicts = [question.to_dict() for question in questions]
+        return jsonify({"questions": questions_dicts, "message": "Questions fetched successfully"}), 200
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
         current_app.logger.error(f"Error fetching questions: {str(e)}")
         return jsonify({"error": "Failed to fetch questions"}), 500

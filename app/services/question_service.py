@@ -11,5 +11,5 @@ class QuestionService:
     def get_questions_for_exam(self, exam_id: int):
         return self.question_repo.get_questions_for_exam(exam_id)
     
-    def create_question(self, exam_id: int):
-        return self.question_repo.create_question(exam_id)
+    def create_question(self, exam_id: int, data: dict):
+        return self.question_repo.create_question(exam_id, data)

@@ -9,7 +9,7 @@ class EnrollmentService:
         self.enrollment_repo = enrollment_repo
 
     def change_enrollment_status_for_student(self, student_id: int, course_id: int, status: str):
-        return self.enrollment_repo.change_enrollment_status_for_student(student_id, course_id)
+        return self.enrollment_repo.change_enrollment_status_for_student(student_id, course_id, status)
 
     def create_enrollment(self, student_id: int, course_id: int):
         return self.enrollment_repo.create_enrollment(student_id, course_id)

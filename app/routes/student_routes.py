@@ -20,11 +20,11 @@ student_repository = StudentRepository(db_session)
 student_service = StudentService(student_repository)
 
 
-@student_bp.route("/search_for_students/<string:search_query>", methods=["GET"])
-def search_for_students(search_query: str):
+@student_bp.route("/search_for_students", methods=["GET"])
+def search_for_students():
     """Search for students"""
     try:
-        students = student_service.search_for_students(search_query)
+        students = student_service.search_for_students(request.json)
         return jsonify({"students": students}), 200
     except Exception as e:
         current_app.logger.error(f"Error searching for students: {str(e)}")

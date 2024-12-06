@@ -15,7 +15,7 @@ class Teacher(Base):
 
     Attributes:
         teacher_id (int): Primary key, auto-incrementing identifier
-        User_name (str): Unique username/netID, max 50 characters
+        user_name (str): Unique username/netID, max 50 characters
         first_name (str): Teacher's first name, max 32 characters
         last_name (str): Teacher's last name, max 32 characters
         email (str): Unique email address, max 120 characters
@@ -53,7 +53,7 @@ class Teacher(Base):
     )
 
     def __repr__(self):
-        return f"<Teacher(user_name = {self.User_name}, email = {self.email})>"
+        return f"<Teacher(user_name = {self.user_name}, email = {self.email})>"
     
     def to_dict(self):
         return {

@@ -27,7 +27,10 @@ def get_active_courses_for_teacher(teacher_id):
     """Get all active courses for a teacher"""
     try:
         courses = course_service.get_active_courses_for_teacher(teacher_id)
-        return jsonify({"courses": courses}), 200
+        courses_list = []
+        for course in courses:
+            courses_list.append(course.to_dict())
+        return jsonify({"courses": courses_list}), 200
     except Exception as e:
         current_app.logger.error(f"Error fetching active courses for teacher: {str(e)}")
         return jsonify({"error": "Failed to fetch active courses for teacher"}), 500
@@ -38,7 +41,7 @@ def create_course(teacher_id):
     """Create a course"""
     try:
         course = course_service.create_course(teacher_id, request.json)
-        return jsonify({"course": course}), 200
+        return jsonify({"message": "Course created successfully", "course": course.to_dict()}), 200
     except Exception as e:
         current_app.logger.error(f"Error creating course: {str(e)}")
         return jsonify({"error": "Failed to create course"}), 500
@@ -48,7 +51,7 @@ def update_course(course_id):
     """Update a course"""
     try:
         course = course_service.update_course(course_id, request.json)
-        return jsonify({"course": course}), 200
+        return jsonify({"message": "Course updated successfully", "course": course.to_dict()}), 200
     except Exception as e:
         current_app.logger.error(f"Error updating course: {str(e)}")
         return jsonify({"error": "Failed to update course"}), 500
@@ -57,8 +60,8 @@ def update_course(course_id):
 def change_course_status(course_id):
     """Change the status of a course"""
     try:
-        course = course_service.change_course_status(course_id, request.json)
-        return jsonify({"course": course}), 200
+        course = course_service.change_course_status(course_id)
+        return jsonify({"message": "Course status changed successfully", "course": course.to_dict()}), 200
     except Exception as e:
         current_app.logger.error(f"Error changing course status: {str(e)}")
         return jsonify({"error": "Failed to change course status"}), 500
@@ -68,7 +71,10 @@ def get_active_courses_for_student(student_id):
     """Get all active courses for a student"""
     try:
         courses = course_service.get_active_courses_for_student(student_id)
-        return jsonify({"courses": courses}), 200
+        courses_list = []
+        for course in courses:
+            courses_list.append(course.to_dict())
+        return jsonify({"courses": courses_list}), 200
     except Exception as e:
         current_app.logger.error(f"Error fetching active courses for student: {str(e)}")
         return jsonify({"error": "Failed to fetch active courses for student"}), 500

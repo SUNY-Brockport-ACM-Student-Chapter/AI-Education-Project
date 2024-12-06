@@ -19,18 +19,12 @@ ai_bp = Blueprint("ai_bp", __name__)
 db_session = get_db_session()
 ai_repository = AiAssessmentRepository(db_session)
 ai_service = AiAssessmentService(ai_repository)
-student_answer_repository = StudentAnswerRepository(db_session)
-student_answer_service = StudentAnswerService(student_answer_repository)
 
 
 @ai_bp.route("/get_ai_assesment_for_studentAnswer/<int:studentAnswer_id>", methods=["GET"])
 def get_ai_assesment_for_studentAnswer(studentAnswer_id: int):
     """Get AI assesment for a student answer"""
     try:
-        student_answer = student_answer_service.get_student_answer_by_id(studentAnswer_id)
-        if not student_answer:
-            return jsonify({"error": "Student answer not found"}), 404
-        
         ai = ai_service.get_ai_assesment_for_studentAnswer(studentAnswer_id)
         
         if not ai:
