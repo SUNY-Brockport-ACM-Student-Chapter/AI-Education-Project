@@ -1,6 +1,7 @@
 # services/course_service.py
 
 from app.models.course_model import Course
+from app.models.exam_model import Exam
 from app.repositories.course_repository import CourseRepository
 
 
@@ -8,24 +9,17 @@ class CourseService:
     def __init__(self, course_repo: CourseRepository):
         self.course_repo = course_repo
 
-    def get_course_by_id(self, course_id: int):
-        return self.course_repo.get_course_by_id(course_id)
+    def get_active_courses_for_teacher(self, teacher_id: int):
+        return self.course_repo.get_active_courses_for_teacher(teacher_id)
 
-    def get_all_courses(self):
-        return self.course_repo.get_all_courses()
+    def create_course(self, teacher_id: int, course_data: dict):
+        return self.course_repo.create_course(teacher_id, course_data)
 
-    def create_course(self, course: Course):
-        return self.course_repo.create_course(course)
+    def update_course(self, course_id: int, course_data: dict):
+        return self.course_repo.update_course(course_id, course_data)
 
-    def update_course(self, course: Course):
-        return self.course_repo.update_course(course)
+    def change_course_status(self, course_id: int):
+        return self.course_repo.change_course_status(course_id)
 
-    def delete_course(self, course: Course):
-        return self.course_repo.delete_course(course)
-
-    def get_courses_for_student(self, student_id: int):
-        """
-        Get all courses that a student is currently enrolled in.
-        Returns active courses ordered by course code.
-        """
-        return self.course_repo.get_courses_for_student(student_id)
+    def get_active_courses_for_student(self, student_id: int):
+        return self.course_repo.get_active_courses_for_student(student_id)

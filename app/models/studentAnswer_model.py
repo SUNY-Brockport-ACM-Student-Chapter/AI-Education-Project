@@ -1,8 +1,5 @@
 # models/studentAnswer_model.py
-
-from datetime import datetime, timezone
-
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -35,12 +32,6 @@ class StudentAnswer(Base):
     answer_grade = Column(String(1), nullable=False)
     second_attempt_grade = Column(String(1))
     answer_stage = Column(Integer, nullable=False)
-    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(
-        DateTime,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
-    )
 
     # Add the relationship to Ai
     ai_assessments = relationship("AiAssessment", back_populates="student_answer")
@@ -51,3 +42,15 @@ class StudentAnswer(Base):
 
     def __repr__(self):
         return f"<StudentAnswer(student_id={self.student_id}, question_id={self.question_id})>"
+
+    def to_dict(self):
+        return {
+            "student_answer_id": self.student_answer_id,
+            "student_id": self.student_id,
+            "question_id": self.question_id,
+            "answer_text": self.answer_text,
+            "second_attempt_answer": self.second_attempt_answer,
+            "answer_grade": self.answer_grade,
+            "second_attempt_grade": self.second_attempt_grade,
+            "answer_stage": self.answer_stage,
+        }

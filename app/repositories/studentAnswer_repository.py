@@ -9,26 +9,23 @@ class StudentAnswerRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def get_student_answer_by_id(self, student_answer_id: int):
-        return (
+    def get_student_answers_for_student(self, student_id: int, question_id: int):
+        student_answers = (
             self.session.query(StudentAnswer)
-            .filter(StudentAnswer.student_id == student_answer_id)
-            .first()
+            .filter(
+                StudentAnswer.student_id == student_id,
+                StudentAnswer.question_id == question_id,
+            )
+            .all()
         )
+        if not student_answers:
+            raise ValueError("No student answers found")
+        return student_answers
 
-    def get_all_student_answers(self):
-        return self.session.query(StudentAnswer).all()
-
-    def create_student_answer(self, student_answer: StudentAnswer):
-        self.session.add(student_answer)
+    def create_student_answer(self, student_id: int, question_id: int, data: dict):
+        new_student_answer = StudentAnswer(
+            student_id=student_id, question_id=question_id, **data
+        )
+        self.session.add(new_student_answer)
         self.session.commit()
-        return student_answer
-
-    def update_student_answer(self, student_answer: StudentAnswer):
-        self.session.merge(student_answer)
-        self.session.commit()
-        return student_answer
-
-    def delete_student_answer(self, student_answer: StudentAnswer):
-        self.session.delete(student_answer)
-        self.session.commit()
+        return new_student_answer

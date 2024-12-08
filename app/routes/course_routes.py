@@ -9,6 +9,7 @@ from flask import Blueprint, current_app, jsonify, request
 
 from app.database import get_db_session
 from app.models.course_model import Course
+from app.models.exam_model import Exam
 from app.repositories.course_repository import CourseRepository
 from app.services.course_service import CourseService
 
@@ -21,126 +22,80 @@ course_repository = CourseRepository(db_session)
 course_service = CourseService(course_repository)
 
 
-@course_bp.route("/courses", methods=["GET"])
-def get_all_courses():
-    """Get all courses"""
+@course_bp.route("/get_active_courses_for_teacher/<int:teacher_id>", methods=["GET"])
+def get_active_courses_for_teacher(teacher_id):
+    """Get all active courses for a teacher"""
     try:
-        courses = course_service.get_all_courses()
+        courses = course_service.get_active_courses_for_teacher(teacher_id)
+        courses_list = []
+        for course in courses:
+            courses_list.append(course.to_dict())
+        return jsonify({"courses": courses_list}), 200
+    except Exception as e:
+        current_app.logger.error(f"Error fetching active courses for teacher: {str(e)}")
+        return jsonify({"error": "Failed to fetch active courses for teacher"}), 500
+
+
+@course_bp.route("/create_course/<int:teacher_id>", methods=["POST"])
+def create_course(teacher_id):
+    """Create a course"""
+    try:
+        course = course_service.create_course(teacher_id, request.json)
         return (
             jsonify(
-                [
-                    {
-                        "course_id": course.course_id,
-                        "course_name": course.course_name,
-                        "course_code": course.course_code,
-                        "course_description": course.course_description,
-                        "capacity": course.capacity,
-                        "teacher_id": course.teacher_id,
-                        "is_active": course.is_active,
-                        "start_date": course.start_date,
-                        "end_date": course.end_date,
-                        "created_at": course.created_at,
-                        "updated_at": course.updated_at,
-                    }
-                    for course in courses
-                ]
+                {"message": "Course created successfully", "course": course.to_dict()}
             ),
             200,
-        )
-    except Exception as e:
-        current_app.logger.error(f"Error fetching courses: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@course_bp.route("/courses/<int:course_id>", methods=["GET"])
-def get_course(course_id):
-    """Get specific course"""
-    try:
-        course = course_service.get_course_by_id(course_id)
-        if not course:
-            return jsonify({"error": "Course not found"}), 404
-        return (
-            jsonify(
-                {
-                    "course_id": course.course_id,
-                    "course_name": course.course_name,
-                    "course_description": course.course_description,
-                }
-            ),
-            200,
-        )
-    except Exception as e:
-        current_app.logger.error(f"Error fetching course: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@course_bp.route("/courses", methods=["POST"])
-def create_course():
-    """Create a new course"""
-    try:
-        data = request.json
-        new_course = Course(
-            course_name=data.get("course_name"),
-            course_description=data.get("course_description"),
-        )
-        result = course_service.create_course(new_course)
-        return (
-            jsonify(
-                {
-                    "course_id": result.course_id,
-                    "course_name": result.course_name,
-                    "course_description": result.course_description,
-                }
-            ),
-            201,
         )
     except Exception as e:
         current_app.logger.error(f"Error creating course: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Failed to create course"}), 500
 
 
-@course_bp.route("/courses/<int:course_id>", methods=["PUT"])
+@course_bp.route("/update_course/<int:course_id>", methods=["PUT"])
 def update_course(course_id):
-    """Update existing course"""
+    """Update a course"""
     try:
-        data = request.json
-        existing_course = course_service.get_course_by_id(course_id)
-        if not existing_course:
-            return jsonify({"error": "Course not found"}), 404
-
-        existing_course.course_name = data.get(
-            "course_name", existing_course.course_name
-        )
-        existing_course.course_description = data.get(
-            "course_description", existing_course.course_description
-        )
-
-        updated_course = course_service.update_course(existing_course)
+        course = course_service.update_course(course_id, request.json)
         return (
             jsonify(
-                {
-                    "course_id": updated_course.course_id,
-                    "course_name": updated_course.course_name,
-                    "course_description": updated_course.course_description,
-                }
+                {"message": "Course updated successfully", "course": course.to_dict()}
             ),
             200,
         )
     except Exception as e:
         current_app.logger.error(f"Error updating course: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Failed to update course"}), 500
 
 
-@course_bp.route("/courses/<int:course_id>", methods=["DELETE"])
-def delete_course(course_id):
-    """Delete existing course"""
+@course_bp.route("/change_course_status/<int:course_id>", methods=["PUT"])
+def change_course_status(course_id):
+    """Change the status of a course"""
     try:
-        course = course_service.get_course_by_id(course_id)
-        if not course:
-            return jsonify({"error": "Course not found"}), 404
-
-        course_service.delete_course(course)
-        return jsonify({"message": "Course deleted successfully"}), 200
+        course = course_service.change_course_status(course_id)
+        return (
+            jsonify(
+                {
+                    "message": "Course status changed successfully",
+                    "course": course.to_dict(),
+                }
+            ),
+            200,
+        )
     except Exception as e:
-        current_app.logger.error(f"Error deleting course: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        current_app.logger.error(f"Error changing course status: {str(e)}")
+        return jsonify({"error": "Failed to change course status"}), 500
+
+
+@course_bp.route("/get_active_courses_for_student/<int:student_id>", methods=["GET"])
+def get_active_courses_for_student(student_id):
+    """Get all active courses for a student"""
+    try:
+        courses = course_service.get_active_courses_for_student(student_id)
+        courses_list = []
+        for course in courses:
+            courses_list.append(course.to_dict())
+        return jsonify({"courses": courses_list}), 200
+    except Exception as e:
+        current_app.logger.error(f"Error fetching active courses for student: {str(e)}")
+        return jsonify({"error": "Failed to fetch active courses for student"}), 500

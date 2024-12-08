@@ -29,6 +29,7 @@ class Exam(Base):
     course_id = Column(Integer, ForeignKey("course.course_id"), nullable=False)
     exam_name = Column(String(100), nullable=False)
     exam_description = Column(String(255), nullable=False)
+    max_attempt = Column(Integer, nullable=False)
     start_date = Column(DateTime, nullable=False)
     end_date = Column(DateTime, nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
@@ -49,12 +50,11 @@ class Exam(Base):
     def to_dict(self):
         """Convert Exam object to dictionary for JSON serialization"""
         return {
-            "id": self.exam_id,
+            "exam_id": self.exam_id,
             "course_id": self.course_id,
             "name": self.exam_name,
             "description": self.exam_description,
+            "max_attempts": self.max_attempt,
             "start_date": self.start_date.isoformat() if self.start_date else None,
             "end_date": self.end_date.isoformat() if self.end_date else None,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

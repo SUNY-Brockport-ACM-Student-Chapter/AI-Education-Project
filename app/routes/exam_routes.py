@@ -8,7 +8,6 @@ exam data processing.
 from flask import Blueprint, current_app, jsonify, request
 
 from app.database import get_db_session
-from app.models.exam_model import Exam
 from app.repositories.exam_repository import ExamRepository
 from app.services.exam_service import ExamService
 
@@ -21,113 +20,86 @@ exam_repository = ExamRepository(db_session)
 exam_service = ExamService(exam_repository)
 
 
-@exam_bp.route("/exams", methods=["GET"])
-def get_all_exams():
-    """Get all exams"""
+@exam_bp.route("/get_exams_for_teacher/<int:teacher_id>", methods=["GET"])
+def get_exams_for_teacher(teacher_id: int):
+    """Get exams for a teacher"""
     try:
-        exams = exam_service.get_all_exams()
-        return (
-            jsonify(
-                [
-                    {
-                        "exam_id": exam.exam_id,
-                        "exam_name": exam.exam_name,
-                        "course_id": exam.course_id,
-                    }
-                    for exam in exams
-                ]
-            ),
-            200,
-        )
+        exams = exam_service.get_exams_for_teacher(teacher_id)
+        exam_dicts = []
+        for exam in exams:
+            exam_dicts.append(exam.to_dict())
+        return jsonify({"exams": exam_dicts}), 200
+    except ValueError as e:
+        current_app.logger.error(f"Error getting exams for teacher: {str(e)}")
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
-        current_app.logger.error(f"Error fetching exams: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        current_app.logger.error(f"Error getting exams for teacher: {str(e)}")
+        return jsonify({"error": "Failed to get exams for teacher"}), 500
 
 
-@exam_bp.route("/exams/<int:exam_id>", methods=["GET"])
-def get_exam(exam_id):
-    """Get specific exam"""
+@exam_bp.route("/get_exams_for_course/<int:course_id>", methods=["GET"])
+def get_exams_for_course(course_id: int):
+    """Get exams for a course"""
     try:
-        exam = exam_service.get_exam_by_id(exam_id)
-        if not exam:
-            return jsonify({"error": "Exam not found"}), 404
-        return (
-            jsonify(
-                {
-                    "exam_id": exam.exam_id,
-                    "exam_name": exam.exam_name,
-                    "course_id": exam.course_id,
-                }
-            ),
-            200,
-        )
+        exams = exam_service.get_exams_for_course(course_id)
+        exam_dicts = []
+        for exam in exams:
+            exam_dicts.append(exam.to_dict())
+        return jsonify({"exams": exam_dicts}), 200
+    except ValueError as e:
+        current_app.logger.error(f"Error getting exams for course: {str(e)}")
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
-        current_app.logger.error(f"Error fetching exam: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        current_app.logger.error(f"Error getting exams for course: {str(e)}")
+        return jsonify({"error": "Failed to get exams for course"}), 500
 
 
-@exam_bp.route("/exams", methods=["POST"])
-def create_exam():
-    """Create a new exam"""
+@exam_bp.route("/create_exam_for_course/<int:course_id>", methods=["POST"])
+def create_exam_for_course(course_id: int):
+    """Create an exam for a course"""
     try:
         data = request.json
-        new_exam = Exam(
-            exam_name=data.get("exam_name"), course_id=data.get("course_id")
-        )
-        result = exam_service.create_exam(new_exam)
+        exam = exam_service.create_exam(course_id, data)
         return (
-            jsonify(
-                {
-                    "exam_id": result.exam_id,
-                    "exam_name": result.exam_name,
-                    "course_id": result.course_id,
-                }
-            ),
+            jsonify({"exam": exam.to_dict(), "message": "Exam created successfully"}),
             201,
         )
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
         current_app.logger.error(f"Error creating exam: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Failed to create exam"}), 500
 
 
-@exam_bp.route("/exams/<int:exam_id>", methods=["PUT"])
-def update_exam(exam_id):
-    """Update existing exam"""
+@exam_bp.route(
+    "/get_student_exam_submission_stage/<int:exam_id>/<int:student_id>", methods=["GET"]
+)
+def get_student_exam_submission_stage(exam_id: int, student_id: int):
+    """Get the submission stage for a student in an exam"""
     try:
-        data = request.json
-        existing_exam = exam_service.get_exam_by_id(exam_id)
-        if not existing_exam:
-            return jsonify({"error": "Exam not found"}), 404
+        stage = exam_service.get_student_exam_submission_stage(exam_id, student_id)
+        return jsonify({"stage": stage}), 200
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        current_app.logger.error(f"Error getting exam submission stage: {str(e)}")
+        return jsonify({"error": "Failed to get exam submission stage"}), 500
 
-        existing_exam.exam_name = data.get("exam_name", existing_exam.exam_name)
-        existing_exam.course_id = data.get("course_id", existing_exam.course_id)
 
-        updated_exam = exam_service.update_exam(existing_exam)
+@exam_bp.route("/get_exams_for_student/<int:student_id>", methods=["GET"])
+def get_exams_for_student(student_id: int):
+    """Get exams for a student"""
+    try:
+        exams = exam_service.get_exams_for_student(student_id)
+        exam_dicts = []
+        for exam in exams:
+            exam_dicts.append(exam.to_dict())
         return (
-            jsonify(
-                {
-                    "exam_id": updated_exam.exam_id,
-                    "exam_name": updated_exam.exam_name,
-                    "course_id": updated_exam.course_id,
-                }
-            ),
+            jsonify({"exams": exam_dicts, "message": "Exams fetched successfully"}),
             200,
         )
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
-        current_app.logger.error(f"Error updating exam: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@exam_bp.route("/exams/<int:exam_id>", methods=["DELETE"])
-def delete_exam(exam_id):
-    """Delete existing exam"""
-    try:
-        exam = exam_service.get_exam_by_id(exam_id)
-        if not exam:
-            return jsonify({"error": "Exam not found"}), 404
-
-        exam_service.delete_exam(exam)
-        return jsonify({"message": "Exam deleted successfully"}), 200
-    except Exception as e:
-        current_app.logger.error(f"Error deleting exam: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        current_app.logger.error(f"Error getting exams for student: {str(e)}")
+        return jsonify({"error": "Failed to get exams for student"}), 500

@@ -21,108 +21,27 @@ student_repository = StudentRepository(db_session)
 student_service = StudentService(student_repository)
 
 
-@student_bp.route("/students", methods=["GET"])
-def get_all_students():
-    """Get all students"""
+@student_bp.route("/search_for_students", methods=["GET"])
+def search_for_students():
+    """Search for students"""
     try:
-        students = student_service.get_all_students()
-        return (
-            jsonify(
-                [
-                    {
-                        "student_id": student.student_id,
-                        "student_name": student.first_name + " " + student.last_name,
-                    }
-                    for student in students
-                ]
-            ),
-            200,
-        )
+        students = student_service.search_for_students(request.json)
+        students_dict = [student.to_dict() for student in students]
+        return jsonify({"students": students_dict}), 200
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
-        current_app.logger.error(f"Error fetching students: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        current_app.logger.error(f"Error searching for students: {str(e)}")
+        return jsonify({"error": "Failed to search for students"}), 500
 
 
-@student_bp.route("/students/<int:student_id>", methods=["GET"])
-def get_student(student_id):
-    """Get specific student"""
+@student_bp.route("/get_students_for_course/<int:course_id>", methods=["GET"])
+def get_students_for_course(course_id: int):
+    """Get students for a course"""
     try:
-        student = student_service.get_student_by_id(student_id)
-        if not student:
-            return jsonify({"error": "Student not found"}), 404
-        return (
-            jsonify(
-                {
-                    "student_id": student.student_id,
-                    "student_name": student.first_name + " " + student.last_name,
-                }
-            ),
-            200,
-        )
+        students = student_service.get_students_for_course(course_id)
+        students_dict = [student.to_dict() for student in students]
+        return jsonify({"students": students_dict}), 200
     except Exception as e:
-        current_app.logger.error(f"Error fetching student: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@student_bp.route("/students", methods=["POST"])
-def create_student():
-    """Create a new student"""
-    try:
-        data = request.json
-        new_student = Student(student_name=data.get("student_name"))
-        result = student_service.create_student(new_student)
-        return (
-            jsonify(
-                {
-                    "student_id": result.student_id,
-                    "student_name": result.first_name + " " + result.last_name,
-                }
-            ),
-            201,
-        )
-    except Exception as e:
-        current_app.logger.error(f"Error creating student: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@student_bp.route("/students/<int:student_id>", methods=["PUT"])
-def update_student(student_id):
-    """Update existing student"""
-    try:
-        data = request.json
-        existing_student = student_service.get_student_by_id(student_id)
-        if not existing_student:
-            return jsonify({"error": "Student not found"}), 404
-
-        existing_student.student_name = data.get(
-            "student_name", existing_student.student_name
-        )
-
-        updated_student = student_service.update_student(existing_student)
-        return (
-            jsonify(
-                {
-                    "student_id": updated_student.student_id,
-                    "student_name": updated_student.student_name,
-                }
-            ),
-            200,
-        )
-    except Exception as e:
-        current_app.logger.error(f"Error updating student: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@student_bp.route("/students/<int:student_id>", methods=["DELETE"])
-def delete_student(student_id):
-    """Delete existing student"""
-    try:
-        student = student_service.get_student_by_id(student_id)
-        if not student:
-            return jsonify({"error": "Student not found"}), 404
-
-        student_service.delete_student(student)
-        return jsonify({"message": "Student deleted successfully"}), 200
-    except Exception as e:
-        current_app.logger.error(f"Error deleting student: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        current_app.logger.error(f"Error fetching students for course: {str(e)}")
+        return jsonify({"error": "Failed to fetch students for course"}), 500

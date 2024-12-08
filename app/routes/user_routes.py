@@ -23,16 +23,7 @@ teacher_service = TeacherService(teacher_repository)
 
 @user_bp.route("/register", methods=["POST"])
 def register_user():
-    """
-    Register a new user.
-
-
-    This route handles POST requests to register a new user. It expects JSON data
-    containing 'username', 'password_hash', and 'role' fields.
-
-    Returns:
-        flask.Response: A JSON response indicating successful user registration.
-    """
+    """Register a new user."""
     try:
         data = request.json
         if not all(k in data for k in ("username", "password", "role")):

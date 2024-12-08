@@ -21,117 +21,58 @@ enrollment_repository = EnrollmentRepository(db_session)
 enrollment_service = EnrollmentService(enrollment_repository)
 
 
-@enrollment_bp.route("/enrollments", methods=["GET"])
-def get_all_enrollments():
-    """Get all enrollments"""
+@enrollment_bp.route(
+    "/change_enrollment_status_for_student/<int:student_id>/<int:course_id>",
+    methods=["PUT"],
+)
+def change_enrollment_status_for_student(student_id, course_id):
+    """Change the enrollment status for a student"""
     try:
-        enrollments = enrollment_service.get_all_enrollments()
-        return (
-            jsonify(
-                [
-                    {
-                        "enrollment_id": enrollment.enrollment_id,
-                        "student_id": enrollment.student_id,
-                        "course_id": enrollment.course_id,
-                    }
-                    for enrollment in enrollments
-                ]
-            ),
-            200,
+        data = request.get_json()
+        status = data.get("status")
+        enrollment = enrollment_service.change_enrollment_status_for_student(
+            student_id, course_id, status
         )
-    except Exception as e:
-        current_app.logger.error(f"Error fetching enrollments: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@enrollment_bp.route("/enrollments/<int:enrollment_id>", methods=["GET"])
-def get_enrollment(enrollment_id):
-    """Get specific enrollment"""
-    try:
-        enrollment = enrollment_service.get_enrollment_by_id(enrollment_id)
-        if not enrollment:
-            return jsonify({"error": "Enrollment not found"}), 404
         return (
             jsonify(
                 {
-                    "enrollment_id": enrollment.enrollment_id,
-                    "student_id": enrollment.student_id,
-                    "course_id": enrollment.course_id,
+                    "enrollment": enrollment.to_dict(),
+                    "message": "Enrollment status changed successfully",
                 }
             ),
             200,
         )
-    except Exception as e:
-        current_app.logger.error(f"Error fetching enrollment: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@enrollment_bp.route("/enrollments", methods=["POST"])
-def create_enrollment():
-    """Create a new enrollment"""
-    try:
-        data = request.json
-        new_enrollment = Enrollment(
-            student_id=data.get("student_id"), course_id=data.get("course_id")
+    except ValueError as e:
+        current_app.logger.error(
+            f"Error changing enrollment status for student: {str(e)}"
         )
-        result = enrollment_service.create_enrollment(new_enrollment)
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        current_app.logger.error(
+            f"Error changing enrollment status for student: {str(e)}"
+        )
+        return jsonify({"error": "Failed to change enrollment status for student"}), 500
+
+
+@enrollment_bp.route(
+    "/create_enrollment/<int:student_id>/<int:course_id>", methods=["POST"]
+)
+def create_enrollment(student_id, course_id):
+    """Create an enrollment for a student"""
+    try:
+        enrollment = enrollment_service.create_enrollment(student_id, course_id)
         return (
             jsonify(
                 {
-                    "enrollment_id": result.enrollment_id,
-                    "student_id": result.student_id,
-                    "course_id": result.course_id,
+                    "enrollment": enrollment.to_dict(),
+                    "message": "Enrollment created successfully",
                 }
             ),
-            201,
+            200,
         )
+    except ValueError as e:
+        current_app.logger.error(f"Error creating enrollment: {str(e)}")
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
         current_app.logger.error(f"Error creating enrollment: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@enrollment_bp.route("/enrollments/<int:enrollment_id>", methods=["PUT"])
-def update_enrollment(enrollment_id):
-    """Update existing enrollment"""
-    try:
-        data = request.json
-        existing_enrollment = enrollment_service.get_enrollment_by_id(enrollment_id)
-        if not existing_enrollment:
-            return jsonify({"error": "Enrollment not found"}), 404
-
-        existing_enrollment.student_id = data.get(
-            "student_id", existing_enrollment.student_id
-        )
-        existing_enrollment.course_id = data.get(
-            "course_id", existing_enrollment.course_id
-        )
-
-        updated_enrollment = enrollment_service.update_enrollment(existing_enrollment)
-        return (
-            jsonify(
-                {
-                    "enrollment_id": updated_enrollment.enrollment_id,
-                    "student_id": updated_enrollment.student_id,
-                    "course_id": updated_enrollment.course_id,
-                }
-            ),
-            200,
-        )
-    except Exception as e:
-        current_app.logger.error(f"Error updating enrollment: {str(e)}")
-        return jsonify({"error": str(e)}), 500
-
-
-@enrollment_bp.route("/enrollments/<int:enrollment_id>", methods=["DELETE"])
-def delete_enrollment(enrollment_id):
-    """Delete existing enrollment"""
-    try:
-        enrollment = enrollment_service.get_enrollment_by_id(enrollment_id)
-        if not enrollment:
-            return jsonify({"error": "Enrollment not found"}), 404
-
-        enrollment_service.delete_enrollment(enrollment)
-        return jsonify({"message": "Enrollment deleted successfully"}), 200
-    except Exception as e:
-        current_app.logger.error(f"Error deleting enrollment: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": "Failed to create enrollment"}), 500

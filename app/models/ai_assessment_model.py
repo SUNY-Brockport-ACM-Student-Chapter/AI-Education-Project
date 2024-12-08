@@ -33,3 +33,11 @@ class AiAssessment(Base):
 
     def __repr__(self):
         return f"<AiAssessment(assessment_text={self.assessment_text}, student_answer_id={self.student_answer_id})>"
+
+    def to_dict(self):
+        return {
+            "Id": self.Id,
+            "assessment_text": self.assessment_text,
+            "student_answer_id": self.student_answer_id,
+            "grade": self.grade,
+        }

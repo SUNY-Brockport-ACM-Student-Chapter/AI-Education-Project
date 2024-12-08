@@ -2,33 +2,55 @@
 
 from sqlalchemy.orm import Session
 
+from app.models.course_model import Course
 from app.models.enrollment_model import Enrollment
+from app.models.student_model import Student
 
 
 class EnrollmentRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def get_enrollment_by_id(self, enrollment_id: int):
-        return (
+    ### status	ENUM(‘enrolled’, ‘cancelled’, ‘padding’)
+    def change_enrollment_status_for_student(
+        self, student_id: int, course_id: int, status: str
+    ):
+        student = (
+            self.session.query(Student).filter(Student.student_id == student_id).first()
+        )
+        if not student:
+            raise ValueError("Student not found")
+        course = (
+            self.session.query(Course).filter(Course.course_id == course_id).first()
+        )
+        if not course:
+            raise ValueError("Course not found")
+
+        enrollment = (
             self.session.query(Enrollment)
-            .filter(Enrollment.id == enrollment_id)
+            .filter(
+                Enrollment.student_id == student_id, Enrollment.course_id == course_id
+            )
             .first()
         )
-
-    def get_all_enrollments(self):
-        return self.session.query(Enrollment).all()
-
-    def create_enrollment(self, enrollment: Enrollment):
-        self.session.add(enrollment)
+        if not enrollment:
+            raise ValueError("Enrollment not found")
+        enrollment.status = status
         self.session.commit()
         return enrollment
 
-    def update_enrollment(self, enrollment: Enrollment):
-        self.session.merge(enrollment)
+    def create_enrollment(self, student_id: int, course_id: int):
+        student = (
+            self.session.query(Student).filter(Student.student_id == student_id).first()
+        )
+        if not student:
+            raise ValueError("Student not found")
+        course = (
+            self.session.query(Course).filter(Course.course_id == course_id).first()
+        )
+        if not course:
+            raise ValueError("Course not found")
+        new_enrollment = Enrollment(student_id=student_id, course_id=course_id)
+        self.session.add(new_enrollment)
         self.session.commit()
-        return enrollment
-
-    def delete_enrollment(self, enrollment: Enrollment):
-        self.session.delete(enrollment)
-        self.session.commit()
+        return new_enrollment
