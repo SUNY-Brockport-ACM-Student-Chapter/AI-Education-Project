@@ -62,6 +62,12 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    print(
+        "\n\n\n\nYou are connecting to this database:",
+        app.config["SQLALCHEMY_DATABASE_URI"],
+        "\n\n\n\n",
+    )
+
     # Initialize database connection
     init_db(app)
 

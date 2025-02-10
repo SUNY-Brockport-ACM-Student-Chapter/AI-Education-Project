@@ -19,16 +19,11 @@ Usage:
 - Use `get_db_session()` to obtain a session for database operations.
 """
 
-import os
-
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 from app.config import SQLALCHEMY_DATABASE_URI
 
-# Load environment variables
-load_dotenv()
 
 # Create base class for declarative models
 Base = declarative_base()
