@@ -52,6 +52,10 @@ def create_student_answer(student_id: int, question_id: int):
             student_id, question_id, request.json
         )
         return jsonify({"student_answer": student_answer.to_dict()}), 200
+    except ValueError as e:
+        current_app.logger.error(f"Error creating student answer: {str(e)}")
+        return jsonify({"error": str(e)}), 404
     except Exception as e:
         current_app.logger.error(f"Error creating student answer: {str(e)}")
         return jsonify({"error": "Failed to create student answer"}), 500
+

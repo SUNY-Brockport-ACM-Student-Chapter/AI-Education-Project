@@ -32,6 +32,9 @@ def create_answer(question_id: int):
             ),
             201,
         )
+    except ValueError as e:
+        current_app.logger.error(f"Error creating answer: {str(e)}")
+        return jsonify({"error": str(e)}), 404
     except Exception as e:
         current_app.logger.error(f"Error creating answer: {str(e)}")
         return jsonify({"error": str(e)}), 500

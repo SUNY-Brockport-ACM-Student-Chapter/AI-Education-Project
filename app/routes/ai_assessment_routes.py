@@ -34,6 +34,11 @@ def get_ai_assesment_for_studentAnswer(studentAnswer_id: int):
             return jsonify({"error": "No AI assesments found"}), 404
 
         return jsonify(ai.to_dict()), 200
+    except ValueError as e:
+        current_app.logger.error(
+            f"Error fetching AI assesment for student answer: {str(e)}"
+        )
+        return jsonify({"error": str(e)}), 404
     except Exception as e:
         current_app.logger.error(
             f"Error fetching AI assesment for student answer: {str(e)}"

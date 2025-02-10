@@ -42,6 +42,9 @@ def get_students_for_course(course_id: int):
         students = student_service.get_students_for_course(course_id)
         students_dict = [student.to_dict() for student in students]
         return jsonify({"students": students_dict}), 200
+    except ValueError as e:
+        current_app.logger.error(f"Error fetching students for course: {str(e)}")
+        return jsonify({"error": str(e)}), 404
     except Exception as e:
         current_app.logger.error(f"Error fetching students for course: {str(e)}")
         return jsonify({"error": "Failed to fetch students for course"}), 500
