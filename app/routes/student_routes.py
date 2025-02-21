@@ -1,6 +1,6 @@
-""" 
+"""
 This module contains routes for the student model.
- 
+
 It defines a Flask Blueprint for the student routes and includes functions for
 handling the student routes.
 """

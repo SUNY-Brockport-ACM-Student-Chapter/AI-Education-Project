@@ -32,14 +32,10 @@ def get_active_courses_for_teacher(teacher_id):
             courses_list.append(course.to_dict())
         return jsonify({"courses": courses_list}), 200
     except ValueError as e:
-        current_app.logger.error(
-            f"Error fetching active courses for teacher: {str(e)}"
-        )
+        current_app.logger.error(f"Error fetching active courses for teacher: {str(e)}")
         return jsonify({"error": str(e)}), 404
     except Exception as e:
-        current_app.logger.error(
-            f"Error fetching active courses for teacher: {str(e)}"
-        )
+        current_app.logger.error(f"Error fetching active courses for teacher: {str(e)}")
         return jsonify({"error": "Failed to fetch active courses for teacher"}), 500
 
 

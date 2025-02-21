@@ -19,12 +19,12 @@ Usage:
 - Use `get_db_session()` to obtain a session for database operations.
 """
 
-from sqlalchemy import create_engine, Enum
-from sqlalchemy.orm import declarative_base, sessionmaker
 import enum
 
-from app.config import SQLALCHEMY_DATABASE_URI
+from sqlalchemy import Enum, create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 
+from app.config import SQLALCHEMY_DATABASE_URI
 
 # Create base class for declarative models
 Base = declarative_base()
@@ -59,10 +59,12 @@ def get_db_session():
     """
     return session_local()
 
+
 # Define the enum classes
 class RoleEnum(enum.Enum):
     admin = "admin"
     teacher = "teacher"
+
 
 class EnrollmentStatusEnum(enum.Enum):
     enrolled = "enrolled"

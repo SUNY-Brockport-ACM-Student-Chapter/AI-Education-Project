@@ -1,5 +1,5 @@
 """
-This module contains routes for the answer model. 
+This module contains routes for the answer model.
 """
 
 from flask import Blueprint, current_app, jsonify, request

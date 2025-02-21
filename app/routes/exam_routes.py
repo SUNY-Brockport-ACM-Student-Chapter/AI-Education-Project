@@ -1,5 +1,5 @@
 """
-This module contains routes for the exam model. 
+This module contains routes for the exam model.
 
 It defines a Flask Blueprint for exam-related routes and includes functions for
 exam data processing.

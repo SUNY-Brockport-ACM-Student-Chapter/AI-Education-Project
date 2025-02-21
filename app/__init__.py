@@ -78,7 +78,7 @@ def create_app():
     # The routes version number
     app.config["API_VERSION"] = "v1"
 
-     # Register webhook blueprint
+    # Register webhook blueprint
     app.register_blueprint(webhook_bp, url_prefix="/webhooks")
 
     # Register all other blueprints with API prefix

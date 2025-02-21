@@ -58,4 +58,3 @@ def create_student_answer(student_id: int, question_id: int):
     except Exception as e:
         current_app.logger.error(f"Error creating student answer: {str(e)}")
         return jsonify({"error": "Failed to create student answer"}), 500
-

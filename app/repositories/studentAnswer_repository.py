@@ -2,9 +2,9 @@
 
 from sqlalchemy.orm import Session
 
-from app.models.studentAnswer_model import StudentAnswer
-from app.models.student_model import Student
 from app.models.question_model import Question
+from app.models.student_model import Student
+from app.models.studentAnswer_model import StudentAnswer
 
 
 class StudentAnswerRepository:
@@ -28,7 +28,9 @@ class StudentAnswerRepository:
         student = self.session.query(Student).filter(Student.id == student_id).first()
         if not student:
             raise ValueError("Student not found")
-        question = self.session.query(Question).filter(Question.id == question_id).first()
+        question = (
+            self.session.query(Question).filter(Question.id == question_id).first()
+        )
         if not question:
             raise ValueError("Question not found")
         new_student_answer = StudentAnswer(

@@ -24,7 +24,6 @@ def home():
     return jsonify({"message": "Welcome to the API"}), 200
 
 
-
 @main_bp.route("/health")
 def health_check():
     """
@@ -37,13 +36,16 @@ def health_check():
         dict: A JSON response containing the status of the application.
     """
     current_app.logger.debug("Health check performed")
-    return jsonify(
-        {
-            "status": "healthy",
-            "service": "API",
-            "version": current_app.config.get("VERSION", "1.0.0"),
-        }
-    ), 200
+    return (
+        jsonify(
+            {
+                "status": "healthy",
+                "service": "API",
+                "version": current_app.config.get("VERSION", "1.0.0"),
+            }
+        ),
+        200,
+    )
 
 
 @main_bp.route("/routes")
@@ -63,14 +65,17 @@ def list_routes():
         if rule.endpoint == "static":
             continue
 
-        methods = sorted([method for method in rule.methods if method not in ['HEAD', 'OPTIONS']])
-        routes.append({
+        methods = sorted(
+            [method for method in rule.methods if method not in ["HEAD", "OPTIONS"]]
+        )
+        routes.append(
+            {
                 "endpoint": rule.endpoint,
                 "methods": methods,
                 "url": str(rule),
-                "blueprint": rule.endpoint.split(".")[0]
-                if "." in rule.endpoint
-                else "app",
+                "blueprint": (
+                    rule.endpoint.split(".")[0] if "." in rule.endpoint else "app"
+                ),
             }
         )
 
@@ -78,9 +83,12 @@ def list_routes():
     routes = sorted(routes, key=lambda x: x["url"])
 
     current_app.logger.info("Routes list accessed")
-    return jsonify(
-        {
-            "total_routes": len(routes),
-            "routes": routes,
-        }
-    ), 200
+    return (
+        jsonify(
+            {
+                "total_routes": len(routes),
+                "routes": routes,
+            }
+        ),
+        200,
+    )

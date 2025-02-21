@@ -29,7 +29,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-'''
+"""
 # MySQL connection details
 
 MYSQL_USER = os.getenv("MYSQL_USER")
@@ -43,7 +43,7 @@ SQLALCHEMY_DATABASE_URI = (
     f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
 )
 
-'''
+"""
 
 
 # PostgreSQL connection details
