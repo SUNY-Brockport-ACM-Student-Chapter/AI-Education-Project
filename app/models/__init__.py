@@ -17,5 +17,5 @@ __all__ = [
     "Teacher",
     "Student",
     "StudentAnswer",
-    "AIAssessment",
+    "AiAssessment",
 ]

@@ -19,16 +19,12 @@ Usage:
 - Use `get_db_session()` to obtain a session for database operations.
 """
 
-import os
+import enum
 
-from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from sqlalchemy import Enum, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 from app.config import SQLALCHEMY_DATABASE_URI
-
-# Load environment variables
-load_dotenv()
 
 # Create base class for declarative models
 Base = declarative_base()
@@ -62,3 +58,21 @@ def get_db_session():
         A new session object for database operations.
     """
     return session_local()
+
+
+# Define the enum classes
+class RoleEnum(enum.Enum):
+    """Enumeration defining possible user roles in the system."""
+    ADMIN = "admin"
+    TEACHER = "teacher"
+
+
+class EnrollmentStatusEnum(enum.Enum):
+    """Enumeration defining possible states for course enrollment."""
+    ENROLLED = "enrolled"
+    CANCELLED = "cancelled"
+    PENDING = "pending"
+
+
+role_enum = Enum(RoleEnum, name="role_enum")
+enrollment_status_enum = Enum(EnrollmentStatusEnum, name="enrollment_status_enum")

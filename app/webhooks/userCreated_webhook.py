@@ -18,7 +18,7 @@ student_repository = StudentRepository(db_session)
 student_service = StudentService(student_repository)
 
 
-@webhook_bp.route("/webhooks/user-created", methods=["PUT"])
+@webhook_bp.route("/user-created", methods=["POST"])
 def handle_user_created():
     """process the webhook, verify the signature, extract the user data, and update the student record."""
     try:

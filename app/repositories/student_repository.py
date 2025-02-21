@@ -1,5 +1,7 @@
 # repositories/student_repository.py
 
+import json
+
 from sqlalchemy.orm import Session
 
 from app.models.enrollment_model import Enrollment
@@ -49,3 +51,6 @@ class StudentRepository:
         if not students:
             raise ValueError("No students found")
         return students
+
+    def create_student(self, student_data: json):
+        return student_data

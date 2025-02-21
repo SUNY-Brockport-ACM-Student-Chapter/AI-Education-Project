@@ -6,7 +6,7 @@ from datetime import timezone
 from sqlalchemy import Boolean, Column, DateTime, Integer, String
 from sqlalchemy.orm import relationship
 
-from app.database import Base
+from app.database import Base, role_enum  # Import the enum we created
 
 
 class Teacher(Base):
@@ -20,7 +20,7 @@ class Teacher(Base):
         last_name (str): Teacher's last name, max 32 characters
         email (str): Unique email address, max 120 characters
         clerk_user_id (str): External authentication ID
-        role (integer): role represents a teacher's role: 1 for admin, 0 for teacher
+        role (enum): Role represents a teacher's role: admin or teacher
         is_active (bool): Whether the account is active
         last_login (datetime): Timestamp of last login
         created_at (datetime): Timestamp of when the record was created
@@ -35,7 +35,7 @@ class Teacher(Base):
     last_name = Column(String(32), nullable=True)
     email = Column(String(120), unique=True, nullable=False)
     clerk_user_id = Column(String(255), nullable=False)
-    role = Column(Integer, default=0)
+    role = Column(role_enum, nullable=False, default="teacher")  # Use the proper enum
     is_active = Column(Boolean, default=False)
     last_login = Column(
         DateTime, nullable=False, default=datetime.datetime.now(timezone.utc)
@@ -62,4 +62,5 @@ class Teacher(Base):
             "email": self.email,
             "first_name": self.first_name,
             "last_name": self.last_name,
+            "role": self.role.value if self.role else None,
         }

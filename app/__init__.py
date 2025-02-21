@@ -33,6 +33,7 @@ from flask import Flask
 
 from app.config import SQLALCHEMY_DATABASE_URI
 from app.database import init_db
+from app.webhooks.userCreated_webhook import webhook_bp
 
 from .routes import all_blueprints, main_bp
 
@@ -62,6 +63,12 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    print(
+        "\n\n\n\nYou are connecting to this database:",
+        app.config["SQLALCHEMY_DATABASE_URI"],
+        "\n\n\n\n",
+    )
+
     # Initialize database connection
     init_db(app)
 
@@ -70,6 +77,9 @@ def create_app():
 
     # The routes version number
     app.config["API_VERSION"] = "v1"
+
+    # Register webhook blueprint
+    app.register_blueprint(webhook_bp, url_prefix="/webhooks")
 
     # Register all other blueprints with API prefix
     for blueprint in [bp for bp in all_blueprints if bp != main_bp]:
