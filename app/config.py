@@ -29,21 +29,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-"""
-# MySQL connection details
-
-MYSQL_USER = os.getenv("MYSQL_USER")
-MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
-MYSQL_HOST = os.getenv("MYSQL_HOST")
-MYSQL_DB = os.getenv("MYSQL_DB")
-
-
-
-SQLALCHEMY_DATABASE_URI = (
-    f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
-)
-
-"""
+# Commented out MySQL configuration
+# MYSQL_USER = os.getenv("MYSQL_USER")
+# MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+# MYSQL_HOST = os.getenv("MYSQL_HOST")
+# MYSQL_DB = os.getenv("MYSQL_DB")
+#
+# SQLALCHEMY_DATABASE_URI = (
+#     f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
+# )
 
 
 # PostgreSQL connection details
