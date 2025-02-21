@@ -19,8 +19,9 @@ Usage:
 - Use `get_db_session()` to obtain a session for database operations.
 """
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Enum
 from sqlalchemy.orm import declarative_base, sessionmaker
+import enum
 
 from app.config import SQLALCHEMY_DATABASE_URI
 
@@ -57,3 +58,17 @@ def get_db_session():
         A new session object for database operations.
     """
     return session_local()
+
+# Define the enum classes
+class RoleEnum(enum.Enum):
+    admin = "admin"
+    teacher = "teacher"
+
+class EnrollmentStatusEnum(enum.Enum):
+    enrolled = "enrolled"
+    cancelled = "cancelled"
+    pending = "pending"
+
+
+role_enum = Enum(RoleEnum, name="role_enum")
+enrollment_status_enum = Enum(EnrollmentStatusEnum, name="enrollment_status_enum")

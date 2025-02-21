@@ -2,10 +2,10 @@
 
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 
-from app.database import Base
+from app.database import Base, enrollment_status_enum  # Import the enum we created
 
 
 class Enrollment(Base):
@@ -16,7 +16,7 @@ class Enrollment(Base):
         enrollment_id (int): Primary key, auto-incrementing identifier
         student_id (int): Foreign key referencing the enrolled student
         course_id (int): Foreign key referencing the course
-        status (enum): Current enrollment status ('enrolled', 'cancelled', 'padding')
+        status (enum): Current enrollment status ('enrolled', 'cancelled', 'pending')
         enrollment_date (datetime): When the enrollment occurred
     """
 
@@ -25,7 +25,7 @@ class Enrollment(Base):
     enrollment_id = Column(Integer, primary_key=True, autoincrement=True)
     student_id = Column(Integer, ForeignKey("student.student_id"), nullable=False)
     course_id = Column(Integer, ForeignKey("course.course_id"), nullable=False)
-    status = Column(Enum("enrolled", "cancelled", "padding"), default="enrolled")
+    status = Column(enrollment_status_enum, default="enrolled")  # Use the proper enum
     enrollment_date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     student = relationship("Student", back_populates="enrollment")
     course = relationship("Course", back_populates="enrollment")
