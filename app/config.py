@@ -29,27 +29,33 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-# Commented out MySQL configuration
-# MYSQL_USER = os.getenv("MYSQL_USER")
-# MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
-# MYSQL_HOST = os.getenv("MYSQL_HOST")
-# MYSQL_DB = os.getenv("MYSQL_DB")
-#
-# SQLALCHEMY_DATABASE_URI = (
-#     f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
-# )
+# MySQL connection details
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+MYSQL_HOST = os.getenv("MYSQL_HOST")
+MYSQL_DB = os.getenv("MYSQL_DB")
 
+print(f"Debug - MySQL settings:")
+print(f"User: {MYSQL_USER}")
+print(f"Host: {MYSQL_HOST}")
+print(f"DB: {MYSQL_DB}")
+
+# Construct the MySQL database URI
+SQLALCHEMY_DATABASE_URI = (
+    f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
+    #"mysql+pymysql://root:123abc@127.0.0.1:3306/acm_education"
+)
 
 # PostgreSQL connection details
-PG_HOST = os.getenv("PGHOST")
-PG_DATABASE = os.getenv("PGDATABASE")
-PG_USER = os.getenv("PGUSER")
-PG_PASSWORD = os.getenv("PGPASSWORD")
+#PG_HOST = os.getenv("PGHOST")
+#PG_DATABASE = os.getenv("PGDATABASE")
+#PG_USER = os.getenv("PGUSER")
+#PG_PASSWORD = os.getenv("PGPASSWORD")
 
 # Construct the PostgreSQL database URI
-SQLALCHEMY_DATABASE_URI = (
-    f"postgresql://{PG_USER}:{PG_PASSWORD}@{PG_HOST}/{PG_DATABASE}"
-)
+# SQLALCHEMY_DATABASE_URI = (
+#     f"postgresql://{PG_USER}:{PG_PASSWORD}@{PG_HOST}/{PG_DATABASE}"
+# )
 
 # Disable SQLAlchemy modification tracking for better performance
 SQLALCHEMY_TRACK_MODIFICATIONS = False

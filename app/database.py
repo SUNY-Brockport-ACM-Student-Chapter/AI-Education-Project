@@ -63,15 +63,15 @@ def get_db_session():
 # Define the enum classes
 class RoleEnum(enum.Enum):
     """Enumeration defining possible user roles in the system."""
-    ADMIN = "admin"
-    TEACHER = "teacher"
+    admin = "admin"
+    teacher = "teacher"
 
 
 class EnrollmentStatusEnum(enum.Enum):
     """Enumeration defining possible states for course enrollment."""
-    ENROLLED = "enrolled"
-    CANCELLED = "cancelled"
-    PENDING = "pending"
+    enrolled = "enrolled"
+    cancelled = "cancelled"
+    pending = "pending"
 
 
 role_enum = Enum(RoleEnum, name="role_enum")

@@ -96,7 +96,7 @@ CREATE TABLE Student_Answer (
 );
 
 CREATE TABLE AI_Assessment (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    ai_assessment_id INT AUTO_INCREMENT PRIMARY KEY,
     assessment_text VARCHAR(255) NOT NULL,
     student_answer_id INT(8),
     grade CHAR(1),

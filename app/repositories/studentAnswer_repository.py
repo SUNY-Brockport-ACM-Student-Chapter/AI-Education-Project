@@ -25,11 +25,11 @@ class StudentAnswerRepository:
         return student_answers
 
     def create_student_answer(self, student_id: int, question_id: int, data: dict):
-        student = self.session.query(Student).filter(Student.id == student_id).first()
+        student = self.session.query(Student).filter(Student.student_id == student_id).first()
         if not student:
             raise ValueError("Student not found")
         question = (
-            self.session.query(Question).filter(Question.id == question_id).first()
+            self.session.query(Question).filter(Question.question_id == question_id).first()
         )
         if not question:
             raise ValueError("Question not found")

@@ -23,7 +23,7 @@ class AiAssessment(Base):
 
     __tablename__ = "ai_assessment"
 
-    Id = Column(Integer, primary_key=True, autoincrement=True)
+    ai_assessment_id = Column(Integer, primary_key=True, autoincrement=True)
     assessment_text = Column(String(255))
     student_answer_id = Column(Integer, ForeignKey("student_answer.student_answer_id"))
     grade = Column(String(1))
@@ -36,7 +36,7 @@ class AiAssessment(Base):
 
     def to_dict(self):
         return {
-            "Id": self.Id,
+            "ai_assessment_id": self.ai_assessment_id,
             "assessment_text": self.assessment_text,
             "student_answer_id": self.student_answer_id,
             "grade": self.grade,

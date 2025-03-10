@@ -3,10 +3,10 @@
 import datetime
 from datetime import timezone
 
-from sqlalchemy import Boolean, Column, DateTime, Integer, String
+from sqlalchemy import Boolean, Column, DateTime, Integer, String, Enum
 from sqlalchemy.orm import relationship
 
-from app.database import Base, role_enum  # Import the enum we created
+from app.database import Base, RoleEnum
 
 
 class Teacher(Base):
@@ -35,7 +35,7 @@ class Teacher(Base):
     last_name = Column(String(32), nullable=True)
     email = Column(String(120), unique=True, nullable=False)
     clerk_user_id = Column(String(255), nullable=False)
-    role = Column(role_enum, nullable=False, default="teacher")  # Use the proper enum
+    role = Column(Enum(RoleEnum), nullable=False, default=RoleEnum.teacher)
     is_active = Column(Boolean, default=False)
     last_login = Column(
         DateTime, nullable=False, default=datetime.datetime.now(timezone.utc)
