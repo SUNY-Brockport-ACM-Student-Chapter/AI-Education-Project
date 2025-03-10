@@ -30,6 +30,10 @@ This is a Flask-based web application for managing courses, exams, and providing
 - [Database Schema](app/doc/Schema.sql)
 
 
+## Full documentation
+
+- [Full Documentation](app/doc/BACKEND_DOCUMENTATION.md)
+
 ## Contributing
 
 This is a SUNY Brockport ACM team project. Please refer to the project guidelines for contribution instructions.
