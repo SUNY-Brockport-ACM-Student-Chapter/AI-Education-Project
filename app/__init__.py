@@ -100,6 +100,11 @@ def create_app():
             blueprint, url_prefix=f"/api/{app.config['API_VERSION']}"
         )
 
+    ## Register a testing endpoint
+    @app.route("/test")
+    def test():
+        return "Hello, World!"
+
     @app.teardown_appcontext
     def shutdown_session(exception=None):
         """
