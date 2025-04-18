@@ -23,10 +23,10 @@ class Exam(Base):
         updated_at (datetime): Timestamp of when the record was last updated
     """
 
-    __tablename__ = "exam"
+    __tablename__ = "Exam"
 
     exam_id = Column(Integer, primary_key=True, autoincrement=True)
-    course_id = Column(Integer, ForeignKey("course.course_id"), nullable=False)
+    course_id = Column(Integer, ForeignKey("Course.course_id"), nullable=False)
     exam_name = Column(String(100), nullable=False)
     exam_description = Column(String(255), nullable=False)
     max_attempt = Column(Integer, nullable=False)

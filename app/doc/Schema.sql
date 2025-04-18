@@ -59,6 +59,7 @@ CREATE TABLE Exam (
     exam_description VARCHAR(255),
     start_date DATETIME,
     end_date DATETIME,
+    max_attempt INT(8),
     created_at DATETIME,
     updated_at DATETIME,
     FOREIGN KEY (course_id) REFERENCES Course(course_id)

@@ -20,11 +20,11 @@ class Enrollment(Base):
         enrollment_date (datetime): When the enrollment occurred
     """
 
-    __tablename__ = "enrollment"
+    __tablename__ = "Enrollment"
 
     enrollment_id = Column(Integer, primary_key=True, autoincrement=True)
-    student_id = Column(Integer, ForeignKey("student.student_id"), nullable=False)
-    course_id = Column(Integer, ForeignKey("course.course_id"), nullable=False)
+    student_id = Column(Integer, ForeignKey("Student.student_id"), nullable=False)
+    course_id = Column(Integer, ForeignKey("Course.course_id"), nullable=False)
     status = Column(Enum(EnrollmentStatusEnum), default=EnrollmentStatusEnum.enrolled)
     enrollment_date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     student = relationship("Student", back_populates="enrollment")

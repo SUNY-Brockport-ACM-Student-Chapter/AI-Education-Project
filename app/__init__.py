@@ -29,7 +29,7 @@ Usage:
 import os
 
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, Response, json
 
 from app.config import SQLALCHEMY_DATABASE_URI
 from app.database import init_db
@@ -39,6 +39,14 @@ from .routes import all_blueprints, main_bp
 
 # Load environment variables
 load_dotenv()
+
+
+class PrettyJSONResponse(Response):
+    @classmethod
+    def force_type(cls, rv, environ=None):
+        if isinstance(rv, dict):
+            rv = json.dumps(rv, indent=2, sort_keys=False)
+        return super(PrettyJSONResponse, cls).force_type(rv, environ)
 
 
 def create_app():
@@ -52,12 +60,17 @@ def create_app():
         Flask: The configured Flask application instance.
     """
     app = Flask(__name__)
+    app.response_class = PrettyJSONResponse
 
     # Load configuration
     app.config.from_object("app.config")
 
     # Add a secret key (required for sessions)
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "admin")
+
+    # Configure JSON responses to be pretty-printed
+    app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+    app.config['JSON_SORT_KEYS'] = False
 
     # Database configuration - use environment variables
     app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
@@ -91,12 +104,7 @@ def create_app():
     def shutdown_session(exception=None):
         """
         Closes the database session at the end of the request.
-
-        Args:
-            exception: Optional; an exception that occurred during the request.
         """
-        # Close the session if it exists
-        print(exception)
         if hasattr(app, "session"):
             app.session.close()
 

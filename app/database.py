@@ -46,7 +46,6 @@ def init_db(app):
     Args:
         app: The application instance to attach the session to.
     """
-    Base.metadata.create_all(engine)  # Use the existing engine
     app.session = session_local()  # Use the existing SessionLocal
 
 

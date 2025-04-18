@@ -21,14 +21,14 @@ class AiAssessment(Base):
         grade (str): AI-assigned grade (single character)
     """
 
-    __tablename__ = "ai_assessment"
+    __tablename__ = "AI_Assessment"
 
     ai_assessment_id = Column(Integer, primary_key=True, autoincrement=True)
     assessment_text = Column(String(255))
-    student_answer_id = Column(Integer, ForeignKey("student_answer.student_answer_id"))
+    student_answer_id = Column(Integer, ForeignKey("Student_Answer.student_answer_id"))
     grade = Column(String(1))
 
-    # Add relationship
+    # Update the relationship to use the Python class name
     student_answer = relationship("StudentAnswer", back_populates="ai_assessments")
 
     def __repr__(self):

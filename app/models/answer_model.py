@@ -20,11 +20,11 @@ class Answer(Base):
         updated_at (datetime): Timestamp of when the record was last updated
     """
 
-    __tablename__ = "answer"
+    __tablename__ = "Answer"
 
     answer_id = Column(Integer, primary_key=True, autoincrement=True)
     answer_text = Column(String(255), nullable=False)
-    question_id = Column(Integer, ForeignKey("question.question_id"), nullable=False)
+    question_id = Column(Integer, ForeignKey("Question.question_id"), nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
         DateTime,

@@ -25,7 +25,7 @@ class Student(Base):
         updated_at (datetime): Timestamp of when the record was last updated
     """
 
-    __tablename__ = "student"
+    __tablename__ = "Student"
 
     student_id = Column(Integer, primary_key=True, autoincrement=True)
     clerk_user_id = Column(String(255), unique=True, nullable=False)

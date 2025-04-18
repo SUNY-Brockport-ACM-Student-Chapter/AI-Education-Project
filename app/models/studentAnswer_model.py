@@ -20,12 +20,12 @@ class StudentAnswer(Base):
         answer_stage (int): Indicates the current attempt stage (1 or 2)
     """
 
-    __tablename__ = "student_answer"
+    __tablename__ = "Student_Answer"
 
     student_answer_id = Column(Integer, primary_key=True, autoincrement=True)
-    student_id = Column(Integer, ForeignKey("student.student_id"), nullable=False)  # fk
+    student_id = Column(Integer, ForeignKey("Student.student_id"), nullable=False)  # fk
     question_id = Column(
-        Integer, ForeignKey("question.question_id"), nullable=False
+        Integer, ForeignKey("Question.question_id"), nullable=False
     )  # fk
     answer_text = Column(String(255))
     second_attempt_answer = Column(String(255))

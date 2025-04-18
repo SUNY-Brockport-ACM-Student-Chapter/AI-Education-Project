@@ -23,6 +23,7 @@ Configuration Constants:
 """
 
 import os
+from urllib.parse import quote_plus
 
 from dotenv import load_dotenv
 
@@ -35,15 +36,19 @@ MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
 MYSQL_HOST = os.getenv("MYSQL_HOST")
 MYSQL_DB = os.getenv("MYSQL_DB")
 
+
+
 print(f"Debug - MySQL settings:")
 print(f"User: {MYSQL_USER}")
 print(f"Host: {MYSQL_HOST}")
 print(f"DB: {MYSQL_DB}")
 
 # Construct the MySQL database URI
+# URL encode the password to handle special characters
+encoded_password = quote_plus(MYSQL_PASSWORD)
 SQLALCHEMY_DATABASE_URI = (
-    f"mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
-    #"mysql+pymysql://root:123abc@127.0.0.1:3306/acm_education"
+    f"mysql+pymysql://{MYSQL_USER}:{encoded_password}@{MYSQL_HOST}/{MYSQL_DB}"
+
 )
 
 # PostgreSQL connection details
