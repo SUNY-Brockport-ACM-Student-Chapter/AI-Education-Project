@@ -1,11 +1,13 @@
 """
-Production server script for Windows using Waitress.
+Production server script for Azure deployment.
 """
+import os
 from waitress import serve
 from app import create_app
 
 app = create_app()
 
 if __name__ == "__main__":
-    print("Starting production server on http://localhost:8000")
-    serve(app, host='0.0.0.0', port=8000) 
+    port = int(os.environ.get("PORT", 8000))
+    print(f"Starting production server on port {port}")
+    serve(app, host='0.0.0.0', port=port) 
