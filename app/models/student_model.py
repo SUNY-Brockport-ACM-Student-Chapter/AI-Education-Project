@@ -25,7 +25,7 @@ class Student(Base):
         updated_at (datetime): Timestamp of when the record was last updated
     """
 
-    __tablename__ = "Student"
+    __tablename__ = "student"
 
     student_id = Column(Integer, primary_key=True, autoincrement=True)
     clerk_user_id = Column(String(255), unique=True, nullable=False)
@@ -47,7 +47,7 @@ class Student(Base):
     enrollment = relationship("Enrollment", back_populates="student")
 
     def __repr__(self):
-        return f"<Student(student_id={self.student_id})>"
+        return f"<student(student_id={self.student_id})>"
 
     def to_dict(self):
         return {

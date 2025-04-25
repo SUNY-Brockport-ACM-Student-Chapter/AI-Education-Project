@@ -20,12 +20,12 @@ class StudentAnswer(Base):
         answer_stage (int): Indicates the current attempt stage (1 or 2)
     """
 
-    __tablename__ = "Student_Answer"
+    __tablename__ = "student_answer"
 
     student_answer_id = Column(Integer, primary_key=True, autoincrement=True)
-    student_id = Column(Integer, ForeignKey("Student.student_id"), nullable=False)  # fk
+    student_id = Column(Integer, ForeignKey("student.student_id"), nullable=False)  # fk
     question_id = Column(
-        Integer, ForeignKey("Question.question_id"), nullable=False
+        Integer, ForeignKey("question.question_id"), nullable=False
     )  # fk
     answer_text = Column(String(255))
     second_attempt_answer = Column(String(255))
@@ -33,7 +33,7 @@ class StudentAnswer(Base):
     second_attempt_grade = Column(String(1))
     answer_stage = Column(Integer, nullable=False)
 
-    # Add the relationship to Ai
+    # Add the relationship to AiAssessment
     ai_assessments = relationship("AiAssessment", back_populates="student_answer")
 
     # Define relationships

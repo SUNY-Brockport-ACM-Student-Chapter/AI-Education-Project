@@ -20,10 +20,10 @@ class Question(Base):
         updated_at (datetime): Timestamp of when the record was last updated
     """
 
-    __tablename__ = "Question"
+    __tablename__ = "question"
 
     question_id = Column(Integer, primary_key=True, autoincrement=True)
-    exam_id = Column(Integer, ForeignKey("Exam.exam_id"), nullable=False)
+    exam_id = Column(Integer, ForeignKey("exam.exam_id"), nullable=False)
     question_text = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
@@ -32,15 +32,11 @@ class Question(Base):
         onupdate=lambda: datetime.now(timezone.utc),
     )
     exam = relationship("Exam", back_populates="questions")
-    student_answers = relationship(
-        "StudentAnswer", back_populates="question", cascade="all, delete-orphan"
-    )
-    answers = relationship(
-        "Answer", back_populates="question", cascade="all, delete-orphan"
-    )
+    student_answers = relationship("StudentAnswer", back_populates="question", cascade="all, delete-orphan")
+    answers = relationship("Answer", back_populates="question", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"<Question(question_id={self.question_id})>"
+        return f"<question(question_id={self.question_id})>"
 
     def to_dict(self):
         return {

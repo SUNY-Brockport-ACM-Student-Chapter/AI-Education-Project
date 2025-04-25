@@ -23,6 +23,7 @@ import enum
 
 from sqlalchemy import Enum, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.pool import QueuePool
 
 from app.config import SQLALCHEMY_DATABASE_URI
 
@@ -32,8 +33,15 @@ Base = declarative_base()
 # Database URL configuration
 SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URI
 
-# Create engine
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+# Create engine with connection pooling for better performance
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    poolclass=QueuePool,
+    pool_size=5,
+    max_overflow=10,
+    pool_timeout=30,
+    pool_recycle=1800
+)
 
 # Create SessionLocal class
 session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)

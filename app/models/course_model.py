@@ -26,14 +26,14 @@ class Course(Base):
         updated_at (datetime): Timestamp of when the record was last updated
     """
 
-    __tablename__ = "Course"
+    __tablename__ = "course"
 
     course_id = Column(Integer, primary_key=True, autoincrement=True)
     course_name = Column(String(50), nullable=False)
     course_code = Column(String(12), nullable=False)
     course_description = Column(String(255))
     capacity = Column(Integer)
-    teacher_id = Column(Integer, ForeignKey("Teacher.teacher_id"))  # fks
+    teacher_id = Column(Integer, ForeignKey("teacher.teacher_id"))  # fks
     is_active = Column(Boolean, default=False)
     start_date = Column(DateTime, nullable=False)
     end_date = Column(DateTime, nullable=False)

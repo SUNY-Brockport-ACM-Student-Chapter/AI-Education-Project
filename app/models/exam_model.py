@@ -23,10 +23,10 @@ class Exam(Base):
         updated_at (datetime): Timestamp of when the record was last updated
     """
 
-    __tablename__ = "Exam"
+    __tablename__ = "exam"
 
     exam_id = Column(Integer, primary_key=True, autoincrement=True)
-    course_id = Column(Integer, ForeignKey("Course.course_id"), nullable=False)
+    course_id = Column(Integer, ForeignKey("course.course_id"), nullable=False)
     exam_name = Column(String(100), nullable=False)
     exam_description = Column(String(255), nullable=False)
     max_attempt = Column(Integer, nullable=False)
@@ -40,15 +40,13 @@ class Exam(Base):
     )
 
     course = relationship("Course", back_populates="exams")
-    questions = relationship(
-        "Question", back_populates="exam", cascade="all, delete-orphan"
-    )
+    questions = relationship("Question", back_populates="exam", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"<Exam(exam_name='{self.exam_name}')>"
+        return f"<exam(exam_name='{self.exam_name}')>"
 
     def to_dict(self):
-        """Convert Exam object to dictionary for JSON serialization"""
+        """Convert exam object to dictionary for JSON serialization"""
         return {
             "exam_id": self.exam_id,
             "course_id": self.course_id,

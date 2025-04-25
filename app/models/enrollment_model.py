@@ -20,18 +20,18 @@ class Enrollment(Base):
         enrollment_date (datetime): When the enrollment occurred
     """
 
-    __tablename__ = "Enrollment"
+    __tablename__ = "enrollment"
 
     enrollment_id = Column(Integer, primary_key=True, autoincrement=True)
-    student_id = Column(Integer, ForeignKey("Student.student_id"), nullable=False)
-    course_id = Column(Integer, ForeignKey("Course.course_id"), nullable=False)
+    student_id = Column(Integer, ForeignKey("student.student_id"), nullable=False)
+    course_id = Column(Integer, ForeignKey("course.course_id"), nullable=False)
     status = Column(Enum(EnrollmentStatusEnum), default=EnrollmentStatusEnum.enrolled)
     enrollment_date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     student = relationship("Student", back_populates="enrollment")
     course = relationship("Course", back_populates="enrollment")
 
     def __repr__(self):
-        return f"<Enrollment(student_id={self.student_id}, course_id={self.course_id})>"
+        return f"<enrollment(student_id={self.student_id}, course_id={self.course_id})>"
 
     def to_dict(self):
         return {

@@ -15,24 +15,24 @@ class AiAssessment(Base):
     Represents an AI assessment of a student's answer.
 
     Attributes:
-        ai_id (int): Primary key, auto-incrementing identifier
+        ai_assessment_id (int): Primary key, auto-incrementing identifier
         assessment_text (str): AI's assessment of the answer, max 255 characters
         student_answer_id (int): Foreign key referencing the student's answer
         grade (str): AI-assigned grade (single character)
     """
 
-    __tablename__ = "AI_Assessment"
+    __tablename__ = "ai_assessment"
 
     ai_assessment_id = Column(Integer, primary_key=True, autoincrement=True)
     assessment_text = Column(String(255))
-    student_answer_id = Column(Integer, ForeignKey("Student_Answer.student_answer_id"))
+    student_answer_id = Column(Integer, ForeignKey("student_answer.student_answer_id"))
     grade = Column(String(1))
 
     # Update the relationship to use the Python class name
     student_answer = relationship("StudentAnswer", back_populates="ai_assessments")
 
     def __repr__(self):
-        return f"<AiAssessment(assessment_text={self.assessment_text}, student_answer_id={self.student_answer_id})>"
+        return f"<ai_assessment(assessment_text={self.assessment_text}, student_answer_id={self.student_answer_id})>"
 
     def to_dict(self):
         return {

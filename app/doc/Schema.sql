@@ -203,6 +203,7 @@ CREATE TABLE Exam (
     course_id INT REFERENCES Course(course_id) ON DELETE CASCADE,
     exam_name VARCHAR(100) NOT NULL,
     exam_description VARCHAR(255),
+    max_attempt INT,
     start_date TIMESTAMP,
     end_date TIMESTAMP,
     created_at TIMESTAMP DEFAULT NOW(),

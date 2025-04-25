@@ -27,7 +27,7 @@ class Teacher(Base):
         updated_at (datetime): Timestamp of when the record was last updated
     """
 
-    __tablename__ = "Teacher"
+    __tablename__ = "teacher"
 
     teacher_id = Column(Integer, primary_key=True, autoincrement=True)
     user_name = Column(String(50), unique=True, nullable=False)
@@ -53,7 +53,7 @@ class Teacher(Base):
     )
 
     def __repr__(self):
-        return f"<Teacher(user_name = {self.user_name}, email = {self.email})>"
+        return f"<Teacher(user_name={self.user_name}, email={self.email})>"
 
     def to_dict(self):
         return {
