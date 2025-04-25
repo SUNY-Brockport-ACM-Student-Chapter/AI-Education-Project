@@ -26,8 +26,8 @@ def main():
         logger.info(f"Environment: {os.environ.get('FLASK_ENV', 'production')}")
         logger.info(f"Database URI: {app.config.get('SQLALCHEMY_DATABASE_URI', 'Not configured')}")
         
-        # Start the server
-        serve(app, host='127.0.0.1', port=port)
+        # Start the server - use 0.0.0.0 to accept external connections
+        serve(app, host='0.0.0.0', port=port)
         
     except Exception as e:
         logger.error(f"Failed to start server: {str(e)}", exc_info=True)
