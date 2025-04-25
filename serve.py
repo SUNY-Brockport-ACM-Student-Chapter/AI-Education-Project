@@ -18,7 +18,7 @@ def main():
         # Create the Flask application
         app = create_app()
         
-        # Get port from environment variable or default to 5000
+        # Get port from environment variable (Azure App Service sets this)
         port = int(os.environ.get('PORT', 5000))
         
         # Log startup information
