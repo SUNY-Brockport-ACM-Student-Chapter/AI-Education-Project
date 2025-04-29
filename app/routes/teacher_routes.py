@@ -31,4 +31,6 @@ def get_teacher_by_id(teacher_id: int):
         return jsonify({"error": str(e)}), 400
     except Exception as e:
         current_app.logger.error(f"Error fetching teacher by ID: {str(e)}")
+        if hasattr(db_session, 'rollback'):
+            db_session.rollback()
         return jsonify({"error": "Failed to fetch teacher by ID"}), 500

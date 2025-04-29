@@ -19,6 +19,7 @@ Imports:
   application for routing.
 - main_bp: The main blueprint for the application, typically containing
   the core routes.
+- current_app: The current Flask application context.
 
 Usage:
 - Call the `create_app()` function to create and configure the Flask
@@ -29,7 +30,7 @@ Usage:
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, Response, json
+from flask import Flask, Response, json, current_app
 
 from app.config import SQLALCHEMY_DATABASE_URI
 from app.database import init_db
@@ -111,6 +112,16 @@ def create_app():
         Closes the database session at the end of the request.
         """
         if hasattr(app, "session"):
-            app.session.close()
+            try:
+                if exception:
+                    app.session.rollback()
+                app.session.close()
+            except Exception as e:
+                current_app.logger.error(f"Error during session cleanup: {str(e)}")
+                # Ensure we attempt to close even if rollback fails
+                try:
+                    app.session.close()
+                except:
+                    pass
 
     return app
