@@ -55,10 +55,10 @@ class Section(Base):
         return f"<Section(name='{self.name}', term='{self.term}')>"
 
     def to_dict(self):
-    return {
-        "section_id": self.section_id,
-        "name": self.name,
-        "course_id": self.course_id,
-        "term": self.term,
-        "instructor_id": self.instructor_id
-    }
+        return {
+            "section_id": self.section_id,
+            "name": self.name,
+            "course_id": self.course_id,
+            "term": self.term,
+            "instructor_id": self.instructor_id
+        } 

@@ -1,4 +1,4 @@
-# models/studentAnswer_model.py
+# models/student_answer_model.py
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
@@ -23,10 +23,10 @@ class StudentAnswer(Base):
     __tablename__ = "student_answer"
 
     student_answer_id = Column(Integer, primary_key=True, autoincrement=True)
-    student_id = Column(Integer, ForeignKey("student.student_id"), nullable=False)  # fk
+    student_id = Column(Integer, ForeignKey("student.student_id"), nullable=False)  #ID_REFERENCE
     question_id = Column(
         Integer, ForeignKey("question.question_id"), nullable=False
-    )  # fk
+    )  #ID_REFERENCE
     answer_text = Column(String(255))
     second_attempt_answer = Column(String(255))
     answer_grade = Column(String(1), nullable=False)

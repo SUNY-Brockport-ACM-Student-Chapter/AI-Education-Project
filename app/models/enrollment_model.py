@@ -2,7 +2,7 @@
 
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Enum
 from sqlalchemy.orm import relationship
 
 from app.database import Base, enrollment_status_enum  # Import the enum we created
@@ -25,8 +25,8 @@ class Enrollment(Base):
     enrollment_id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(String(12), ForeignKey("student.student_id"), nullable=False) #ID_REFERENCE
     section_id = Column(String(12), ForeignKey("section.section_id"), nullable=False)
-    # role = Column
-    status = Column(enrollment_status_enum, default="enrolled")  # Use the proper enum
+    role = Column(Enum("student", "ta", "teacher", name="section_role_enum"), nullable=False)
+    status = Column(Enum("enrolled", "pending", "dropped", "banned", name="enrollment_status_enum"), default="enrolled")  # Use the proper enum
     joined_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     dropped_at = Column(DateTime)
     user = relationship("User", back_populates="enrollment")
@@ -43,3 +43,5 @@ class Enrollment(Base):
             "status": self.status,
             "enrollment_date": self.enrollment_date.isoformat(),
         }
+
+ 
