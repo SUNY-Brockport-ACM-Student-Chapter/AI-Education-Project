@@ -21,7 +21,35 @@ teacher_repository = TeacherRepository(db_session)
 teacher_service = TeacherService(teacher_repository)
 
 
-@user_bp.route("/register", methods=["POST"])
+@user_bp.route("/user", methods=["POST"])
+def register_user():
+    """Register a new user."""
+    try:
+        data = request.json
+        if not all(k in data for k in ("username", "password", "role")):
+            current_app.logger.warning("Registration attempt with missing fields")
+            return jsonify({"error": "Missing required fields"}), 400
+        if data["role"] not in ["student", "teacher"]:
+            current_app.logger.warning(
+                f'Registration attempt with invalid role: {data["role"]}'
+            )
+            return jsonify({"error": "Invalid role"}), 400
+
+        new_user = Teacher(
+            username=data["username"],
+            password_hash=generate_password_hash(data["password"]),
+            role=data["role"],
+        )
+        db_session.add(new_user)
+        db_session.commit()
+        current_app.logger.info(f"New user registered: {new_user.username}")
+        return jsonify({"message": "User registered successfully!"}), 201
+    except Exception as e:
+        db_session.rollback()
+        current_app.logger.error(f"Error during user registration: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@user_bp.route("/user/<user_id>", methods=["POST"])
 def register_user():
     """Register a new user."""
     try:

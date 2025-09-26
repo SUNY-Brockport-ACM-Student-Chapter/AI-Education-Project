@@ -15,7 +15,7 @@ class Enrollment(Base):
     Attributes:
         enrollment_id (int): Primary key, auto-incrementing identifier
         student_id (int): Foreign key referencing the enrolled student
-        course_id (int): Foreign key referencing the course
+        section_id (int): Foreign key referencing the course
         status (enum): Current enrollment status ('enrolled', 'cancelled', 'pending')
         enrollment_date (datetime): When the enrollment occurred
     """
@@ -23,21 +23,23 @@ class Enrollment(Base):
     __tablename__ = "enrollment"
 
     enrollment_id = Column(Integer, primary_key=True, autoincrement=True)
-    student_id = Column(Integer, ForeignKey("student.student_id"), nullable=False)
-    course_id = Column(Integer, ForeignKey("course.course_id"), nullable=False)
+    user_id = Column(String(12), ForeignKey("student.student_id"), nullable=False) #ID_REFERENCE
+    section_id = Column(String(12), ForeignKey("section.section_id"), nullable=False)
+    # role = Column
     status = Column(enrollment_status_enum, default="enrolled")  # Use the proper enum
-    enrollment_date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    student = relationship("Student", back_populates="enrollment")
-    course = relationship("Course", back_populates="enrollment")
+    joined_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    dropped_at = Column(DateTime)
+    user = relationship("User", back_populates="enrollment")
+    section = relationship("Section", back_populates="enrollment")
 
     def __repr__(self):
-        return f"<Enrollment(student_id={self.student_id}, course_id={self.course_id})>"
+        return f"<Enrollment(student_id={self.student_id}, section_id={self.section_id})>"
 
     def to_dict(self):
         return {
             "enrollment_id": self.enrollment_id,
             "student_id": self.student_id,
-            "course_id": self.course_id,
+            "section_id": self.section_id,
             "status": self.status,
             "enrollment_date": self.enrollment_date.isoformat(),
         }
