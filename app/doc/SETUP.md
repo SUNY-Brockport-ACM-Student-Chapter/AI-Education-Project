@@ -28,13 +28,6 @@
    PGPASSWORD=your_db_password
 
    # Clerk credentials
-
-
-   # SQL credentials
-   DB_USERNAME=your_db_username
-   DB_PASSWORD=your_db_password
-   DB_HOST=your_db_host
-   DB_NAME=acm_education_db
    ```
 
 
