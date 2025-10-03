@@ -11,7 +11,7 @@ from app.repositories.submission_repository import SubmissionRepository
 from app.services.submission_service import SubmissionService
 
 # Create the blueprint with RESTful prefix
-submission_bp = Blueprint("submission_bp", __name__, url_prefix="/submission")
+submission_bp = Blueprint("submission_bp", __name__)
 
 # Initialize service with repository (MOCK for now)
 db_session = get_db_session()
@@ -19,7 +19,7 @@ submission_repository = SubmissionRepository(db_session)
 submission_service = SubmissionService(submission_repository)
 
 
-@submission_bp.route("/", methods=["POST"])
+@submission_bp.route("/submission", methods=["POST"])
 def create_submission():
     """POST /submission: Create a new submission (start of an attempt)."""
     try:
@@ -38,7 +38,7 @@ def create_submission():
         return jsonify({"error": "Failed to create submission"}), 500
 
 
-@submission_bp.route("/<string:submission_id>", methods=["GET", "PATCH", "DELETE"])
+@submission_bp.route("/submission/<string:submission_id>", methods=["GET", "PATCH", "DELETE"])
 def handle_submission(submission_id: str):
     """Handle GET, PATCH, and DELETE operations for a single Submission."""
     try:

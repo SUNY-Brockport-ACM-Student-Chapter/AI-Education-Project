@@ -10,7 +10,7 @@ from app.repositories.submission_answer_repository import SubmissionAnswerReposi
 from app.services.submission_answer_service import SubmissionAnswerService
 
 # Create the blueprint with RESTful prefix
-submission_answer_bp = Blueprint("submission_answer_bp", __name__, url_prefix="/submission_answer")
+submission_answer_bp = Blueprint("submission_answer_bp", __name__)
 
 # Initialize service with repository
 db_session = get_db_session()
@@ -18,7 +18,7 @@ submission_answer_repository = SubmissionAnswerRepository(db_session)
 submission_answer_service = SubmissionAnswerService(submission_answer_repository)
 
 
-@submission_answer_bp.route("/", methods=["POST"])
+@submission_answer_bp.route("/submission_answer", methods=["POST"])
 def create_submission_answer():
     """Create a new SubmissionAnswer."""
     try:
@@ -37,7 +37,7 @@ def create_submission_answer():
         return jsonify({"error": "Failed to create submission answer"}), 500
 
 
-@submission_answer_bp.route("/<string:answer_id>", methods=["GET", "PATCH", "DELETE"])
+@submission_answer_bp.route("/submission_answer/<string:answer_id>", methods=["GET", "PATCH", "DELETE"])
 def handle_submission_answer(answer_id: str):
     """Handle GET, PATCH, and DELETE operations for a single SubmissionAnswer."""
     try:

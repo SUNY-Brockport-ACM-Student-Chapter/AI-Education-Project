@@ -9,7 +9,7 @@ from app.repositories.enrollment_repository import EnrollmentRepository
 from app.services.enrollment_service import EnrollmentService
 
 # Create the blueprint with RESTful prefix
-enrollment_bp = Blueprint("enrollment_bp", __name__, url_prefix="/enrollment")
+enrollment_bp = Blueprint("enrollment_bp", __name__)
 
 # Initialize service with repository
 db_session = get_db_session()
@@ -17,7 +17,7 @@ enrollment_repository = EnrollmentRepository(db_session)
 enrollment_service = EnrollmentService(enrollment_repository)
 
 
-@enrollment_bp.route("/", methods=["POST"])
+@enrollment_bp.route("/enrollment", methods=["POST"])
 def create_enrollment():
     """POST /enrollment: Create a new enrollment (student into course)."""
     try:
@@ -39,7 +39,7 @@ def create_enrollment():
 
 
 # Endpoint to handle status changes (PUT is appropriate for full resource state replacement/update)
-@enrollment_bp.route("/status/<string:student_id>/<string:course_id>", methods=["PUT"])
+@enrollment_bp.route("/enrollment/status/<string:student_id>/<string:course_id>", methods=["PUT"])
 def change_enrollment_status(student_id: str, course_id: str):
     """PUT /enrollment/status/{student_id}/{course_id}: Change the enrollment status."""
     try:
@@ -69,7 +69,7 @@ def change_enrollment_status(student_id: str, course_id: str):
 
 
 # Assuming an enrollment ID exists for single GET/PATCH/DELETE
-@enrollment_bp.route("/<string:enrollment_id>", methods=["GET", "PATCH", "DELETE"])
+@enrollment_bp.route("/enrollment/<string:enrollment_id>", methods=["GET", "PATCH", "DELETE"])
 def handle_enrollment(enrollment_id: str):
     """Handle GET, PATCH, and DELETE operations for a single Enrollment."""
     try:

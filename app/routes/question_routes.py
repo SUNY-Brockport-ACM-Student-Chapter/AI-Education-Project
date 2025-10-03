@@ -9,7 +9,7 @@ from app.repositories.question_repository import QuestionRepository
 from app.services.question_service import QuestionService
 
 # Create the blueprint with RESTful prefix
-question_bp = Blueprint("question_bp", __name__, url_prefix="/question")
+question_bp = Blueprint("question_bp", __name__)
 
 # Initialize service with repository
 db_session = get_db_session()
@@ -17,7 +17,7 @@ question_repository = QuestionRepository(db_session)
 question_service = QuestionService(question_repository)
 
 
-@question_bp.route("/", methods=["POST"])
+@question_bp.route("/question", methods=["POST"])
 def create_question():
     """POST /question: Create a new question."""
     try:
@@ -37,7 +37,7 @@ def create_question():
         return jsonify({"error": "Failed to create question"}), 500
 
 
-@question_bp.route("/<string:question_id>", methods=["GET", "PATCH", "DELETE"])
+@question_bp.route("/question/<string:question_id>", methods=["GET", "PATCH", "DELETE"])
 def handle_question(question_id: str):
     """Handle GET, PATCH, and DELETE operations for a single Question."""
     try:

@@ -33,7 +33,7 @@ class User(Base):
 
     user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4) #ID_REFERENCE
     email = Column(String(120), unique=True, nullable=False)
-    clerk_id = Column(String(255), nullable=False)
+    clerk_id = Column(String(255), default=None, nullable=True)
     first_name = Column(String(32), nullable=False)
     last_name = Column(String(32), nullable=True)
     is_active = Column(Boolean, default=False)

@@ -20,7 +20,7 @@ answer_service = SubmissionAnswerService(answer_repository)
 
 
 # NOTE: This route is likely incomplete as it doesn't specify the student/submission.
-@answer_bp.route("/create_answer/<string:question_id>", methods=["POST"]) # FIX: Changed to string
+@answer_bp.route("/answer/<string:question_id>", methods=["POST"]) # FIX: Changed to string
 def create_answer(question_id: str): # FIX: Changed type hint
     """Create an answer for a question"""
     try:

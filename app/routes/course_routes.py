@@ -9,7 +9,7 @@ from app.repositories.course_repository import CourseRepository
 from app.services.course_service import CourseService
 
 # Create the blueprint with RESTful prefix
-course_bp = Blueprint("course_bp", __name__, url_prefix="/course")
+course_bp = Blueprint("course_bp", __name__)
 
 # Initialize service with repository
 db_session = get_db_session()
@@ -17,7 +17,7 @@ course_repository = CourseRepository(db_session)
 course_service = CourseService(course_repository)
 
 
-@course_bp.route("/", methods=["POST"])
+@course_bp.route("/course", methods=["POST"])
 def create_course():
     """POST /course: Create a new course."""
     try:
@@ -37,7 +37,7 @@ def create_course():
         return jsonify({"error": "Failed to create course"}), 500
 
 
-@course_bp.route("/<string:course_id>", methods=["GET", "PATCH", "DELETE"])
+@course_bp.route("/course/<string:course_id>", methods=["GET", "PATCH", "DELETE"])
 def handle_course(course_id: str):
     """Handle GET, PATCH, and DELETE operations for a single Course."""
     try:
@@ -67,7 +67,7 @@ def handle_course(course_id: str):
         return jsonify({"error": "Failed to process course request"}), 500
 
 
-@course_bp.route("/", methods=["GET"])
+@course_bp.route("/course", methods=["GET"])
 def get_courses_filtered():
     """GET /course?teacher_id=...&student_id=...: Get a list of courses based on query filters."""
     try:
@@ -94,7 +94,7 @@ def get_courses_filtered():
 
 
 # Dedicated endpoint for status change (using PUT for a full state change on the status field)
-@course_bp.route("/<string:course_id>/status", methods=["PUT"])
+@course_bp.route("/course/<string:course_id>/status", methods=["PUT"])
 def change_course_status(course_id: str):
     """PUT /course/{id}/status: Toggle the status of a course (e.g., active/inactive)."""
     try:
