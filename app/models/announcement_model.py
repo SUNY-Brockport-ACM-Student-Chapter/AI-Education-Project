@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -24,11 +24,11 @@ class Announcement(Base):
 
     __tablename__ = "announcement"
 
-    announcement_id = Column(String(12), primary_key=True) #ID_REFERENCE
-    section_id = Column(String(12), ForeignKey("section.section_id"), nullable=False) #ID_REFERENCE
+    announcement_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
+    section_id = Column(UUID(as_uuid=True), ForeignKey("section.section_id"), nullable=False) #ID_REFERENCE
     title = Column(String, nullable=False)
     body = Column(String, nullable=False)
-    author_id = Column(String(12), ForeignKey("user.user_id"), nullable=True) #ID_REFERENCE
+    author_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=True) #ID_REFERENCE
     pinned = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)

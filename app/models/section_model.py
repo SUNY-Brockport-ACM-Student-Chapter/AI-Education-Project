@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -29,15 +29,15 @@ class Section(Base):
 
     __tablename__ = "section"
 
-    section_id = Column(String(12), primary_key=True) # ID_REFERENCE
-    course_id = Column(String(12), ForeignKey("course.course_id"), nullable=False) #ID_REFERENCE
+    section_id = Column(UUID(as_uuid=True), primary_key=True) # ID_REFERENCE
+    course_id = Column(UUID(as_uuid=True), ForeignKey("course.course_id"), nullable=False) #ID_REFERENCE
     name = Column(String, nullable=False)
     term = Column(String, nullable=False)
     start_at = Column(DateTime)
     end_at = Column(DateTime)
     is_active = Column(Boolean, default=True)
     capacity = Column(Integer, default=0)
-    instructor_id = Column(String(12), ForeignKey("user.user_id"), nullable=False) #ID_REFERENCE
+    instructor_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=False) #ID_REFERENCE
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc)) 
     updated_at = Column(
         DateTime,

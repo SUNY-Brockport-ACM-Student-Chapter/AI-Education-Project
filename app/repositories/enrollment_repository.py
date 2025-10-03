@@ -1,10 +1,9 @@
 # repositories/enrollment_repository.py
-
+import uuid
 from sqlalchemy.orm import Session
-
 from app.models.course_model import Course
 from app.models.enrollment_model import Enrollment
-from app.models.student_model import Student
+from app.models.user_model import User
 
 
 class EnrollmentRepository:
@@ -13,13 +12,13 @@ class EnrollmentRepository:
 
     ### status	ENUM(‘enrolled’, ‘cancelled’, ‘padding’)
     def change_enrollment_status_for_student(
-        self, student_id: int, course_id: int, status: str
+        self, student_id: uuid, course_id: uuid, status: str
     ):
         student = (
-            self.session.query(Student).filter(Student.student_id == student_id).first()
+            self.session.query(User).filter(User.student_id == student_id).first()
         )
         if not student:
-            raise ValueError("Student not found")
+            raise ValueError("User not found")
         course = (
             self.session.query(Course).filter(Course.course_id == course_id).first()
         )
@@ -39,12 +38,12 @@ class EnrollmentRepository:
         self.session.commit()
         return enrollment
 
-    def create_enrollment(self, student_id: int, course_id: int):
+    def create_enrollment(self, student_id: uuid, course_id: uuid):
         student = (
-            self.session.query(Student).filter(Student.student_id == student_id).first()
+            self.session.query(User).filter(User.student_id == student_id).first()
         )
         if not student:
-            raise ValueError("Student not found")
+            raise ValueError("User not found")
         course = (
             self.session.query(Course).filter(Course.course_id == course_id).first()
         )

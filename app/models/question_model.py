@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, Column, DateTime, Enum, ForeignKey, Integer, JSON, String
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -26,8 +26,8 @@ class Question(Base):
 
     __tablename__ = "question"
 
-    question_id = Column(String(12), primary_key=True) #ID_REFERENCE
-    assessment_id = Column(String(12), ForeignKey("assessment.assessment_id"), nullable=False) #ID_REFERENCE
+    question_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
+    assessment_id = Column(UUID(as_uuid=True), ForeignKey("assessment.assessment_id"), nullable=False) #ID_REFERENCE
     kind = Column(Enum("mcq", "multi_select", "true_false", "fib", "short", "long", "code", name="question_kind_enum"), nullable=False)
     text = Column(String, nullable=False)
     points = Column(Integer)

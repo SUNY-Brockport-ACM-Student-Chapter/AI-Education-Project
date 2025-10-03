@@ -1,21 +1,18 @@
-from app.repositories.ai_assessment_repository import AiAssessmentRepository
-from app.repositories.answer_repository import AnswerRepository
+from app.repositories.ai_interaction_repository import AIInteractionRepository
+from app.repositories.submission_answer_repository import SubmissionAnswerRepository
 from app.repositories.course_repository import CourseRepository
 from app.repositories.enrollment_repository import EnrollmentRepository
-from app.repositories.exam_repository import ExamRepository
+from app.repositories.assessment_repository import AssessmentRepository
 from app.repositories.question_repository import QuestionRepository
-from app.repositories.student_repository import StudentRepository
-from app.repositories.studentAnswer_repository import StudentAnswerRepository
-from app.repositories.teacher_repository import TeacherRepository
+from app.repositories.user_repository import UserRepository
 
 __all__ = [
     "AiAssessmentRepository",
     "AnswerRepository",
     "CourseRepository",
     "EnrollmentRepository",
-    "ExamRepository",
+    "AssessmentRepository",
     "QuestionRepository",
     "StudentRepository",
-    "StudentAnswerRepository",
-    "TeacherRepository",
+    "StudentAnswerRepository"
 ]

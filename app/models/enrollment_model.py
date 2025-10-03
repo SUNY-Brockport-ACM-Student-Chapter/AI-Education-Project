@@ -3,6 +3,7 @@
 from datetime import datetime, timezone
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Enum
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from app.database import Base, enrollment_status_enum  # Import the enum we created
@@ -22,9 +23,9 @@ class Enrollment(Base):
 
     __tablename__ = "enrollment"
 
-    enrollment_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(String(12), ForeignKey("student.student_id"), nullable=False) #ID_REFERENCE
-    section_id = Column(String(12), ForeignKey("section.section_id"), nullable=False)
+    enrollment_id = Column(Integer, primary_key=True, autoincrement=True) 
+    user_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=False) #ID_REFERENCE
+    section_id = Column(UUID(as_uuid=True), ForeignKey("section.section_id"), nullable=False)
     role = Column(Enum("student", "ta", "teacher", name="section_role_enum"), nullable=False)
     status = Column(Enum("enrolled", "pending", "dropped", "banned", name="enrollment_status_enum"), default="enrolled")  # Use the proper enum
     joined_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
@@ -33,12 +34,12 @@ class Enrollment(Base):
     section = relationship("Section", back_populates="enrollment")
 
     def __repr__(self):
-        return f"<Enrollment(student_id={self.student_id}, section_id={self.section_id})>"
+        return f"<Enrollment(user_id={self.user_id}, section_id={self.section_id})>"
 
     def to_dict(self):
         return {
             "enrollment_id": self.enrollment_id,
-            "student_id": self.student_id,
+            "user_id": self.user_id,
             "section_id": self.section_id,
             "status": self.status,
             "enrollment_date": self.enrollment_date.isoformat(),

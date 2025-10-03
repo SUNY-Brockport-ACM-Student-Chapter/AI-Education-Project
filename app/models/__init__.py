@@ -8,7 +8,6 @@ from app.models.assessment_model import Assessment
 from app.models.feedback_model import Feedback
 from app.models.question_option_model import QuestionOption
 from app.models.rubric_rating_model import RubricRating
-from app.models.student_answer_model import StudentAnswer
 from app.models.user_model import User
 from app.models.ai_interaction_model import AIInteraction
 from app.models.course_model import Course
@@ -29,7 +28,6 @@ __all__ = [
     "Feedback",
     "QuestionOption",
     "RubricRating",
-    "StudentAnswer",
     "User",
     "AIInteraction",
     "Course",

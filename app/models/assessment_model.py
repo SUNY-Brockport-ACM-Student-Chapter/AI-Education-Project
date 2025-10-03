@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Enum
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -35,8 +35,8 @@ class Assessment(Base):
 
     __tablename__ = "assessment"
 
-    assessment_id = Column(String(12), primary_key=True) #ID_REFERENCE
-    section_id = Column(String(12), ForeignKey("section.section_id"), nullable=False) #ID_REFERENCE
+    assessment_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
+    section_id = Column(UUID(as_uuid=True), ForeignKey("section.section_id"), nullable=False) #ID_REFERENCE
     assessment_type = Column(Enum("assignment", "exam", "quiz", "project", name="assessment_type_enum"), nullable=False)
     name = Column(String, nullable=False)
     description = Column(String)
@@ -49,7 +49,7 @@ class Assessment(Base):
     allow_late = Column(Boolean, default=False)
     published = Column(Boolean, default=False)
     order_index = Column(Integer)
-    rubric_id = Column(String(12), ForeignKey("rubric.rubric_id")) #ID_REFERENCE
+    rubric_id = Column(UUID(as_uuid=True), ForeignKey("rubric.rubric_id")) #ID_REFERENCE
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
         DateTime,

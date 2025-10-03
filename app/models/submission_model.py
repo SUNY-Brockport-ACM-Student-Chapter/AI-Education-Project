@@ -2,6 +2,7 @@
 from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Enum
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -30,14 +31,14 @@ class Submission(Base):
 
     __tablename__ = "submission"
 
-    submission_id = Column(String(12), primary_key=True) #ID_REFERENCE
-    assessment_id = Column(String(12), ForeignKey("assessment.assessment_id"), nullable=False) #ID_REFERENCE
-    user_id = Column(String(12), ForeignKey("user.user_id"), nullable=False) #ID_REFERENCE
+    submission_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
+    assessment_id = Column(UUID(as_uuid=True), ForeignKey("assessment.assessment_id"), nullable=False) #ID_REFERENCE
+    user_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=False) #ID_REFERENCE
     attempt_number = Column(Integer, nullable=False, default=1)
     status = Column(Enum("draft", "submitted", "graded", "retracted", name="submission_status_enum"), nullable=False, default="submitted")
     submitted_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=True)
     graded_at = Column(DateTime, nullable=True)
-    grader_id = Column(String(12), ForeignKey("user.user_id"), nullable=True) #ID_REFERENCE
+    grader_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=True) #ID_REFERENCE
     score = Column(Float, nullable=True)
     late_penalty = Column(Float, nullable=True)
     final = Column(Boolean, default=False, nullable=False)

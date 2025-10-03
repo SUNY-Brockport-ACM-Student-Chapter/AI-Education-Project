@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, String
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -27,9 +27,9 @@ class SubmissionAnswer(Base):
 
     __tablename__ = "submission_answer"
 
-    submission_answer_id = Column(String(12), primary_key=True) #ID_REFERENCE
-    submission_id = Column(String(12), ForeignKey("submission.submission_id"), nullable=False) #ID_REFERENCE
-    question_id = Column(String(12), ForeignKey("question.question_id"), nullable=False) #ID_REFERENCE
+    submission_answer_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
+    submission_id = Column(UUID(as_uuid=True), ForeignKey("submission.submission_id"), nullable=False) #ID_REFERENCE
+    question_id = Column(UUID(as_uuid=True), ForeignKey("question.question_id"), nullable=False) #ID_REFERENCE
     response = Column(String)  # Using String for simplicity, can be more specific like JSON or JSONB
     auto_score = Column(Float)
     is_correct = Column(Boolean)

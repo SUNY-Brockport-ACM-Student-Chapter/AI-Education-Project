@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import Column, DateTime, ForeignKey, String, Enum
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -25,13 +25,13 @@ class Feedback(Base):
 
     __tablename__ = "feedback"
 
-    feedback_id = Column(String(12), primary_key=True) #ID_REFERENCE
+    feedback_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
     channel = Column(Enum("human", "ai", name="feedback_channel_enum"), nullable=False)
     visibility = Column(Enum("private", "public", name="visibility_enum"), nullable=False)
     body = Column(String, nullable=False)
-    author_id = Column(String(12), ForeignKey("user.user_id"), nullable=True) #ID_REFERENCE
-    submission_id = Column(String(12), ForeignKey("submission.submission_id"), nullable=True) #ID_REFERENCE
-    answer_id = Column(String(12), ForeignKey("submission_answer.submission_answer_id"), nullable=True) #ID_REFERENCE
+    author_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=True) #ID_REFERENCE
+    submission_id = Column(UUID(as_uuid=True), ForeignKey("submission.submission_id"), nullable=True) #ID_REFERENCE
+    answer_id = Column(UUID(as_uuid=True), ForeignKey("submission_answer.submission_answer_id"), nullable=True) #ID_REFERENCE
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
 

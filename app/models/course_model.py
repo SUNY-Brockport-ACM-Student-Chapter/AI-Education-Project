@@ -1,10 +1,10 @@
 # models/course_model.py
 
 from datetime import datetime, timezone
-
+import uuid
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -28,12 +28,12 @@ class Course(Base):
 
     __tablename__ = "course"
 
-    course_id = Column(String(12), primary_key=True, autoincrement=True) #ID_REFERENCE
-    code = Column(String(12), nullable=False)
+    course_id = Column(UUID(as_uuid=True), primary_key=True, default = uuid.uuid4) #ID_REFERENCE
+    code = Column(UUID(as_uuid=True), nullable=False)
     title = Column(String(50), nullable=False)
     description = Column(String(255))
     capacity = Column(Integer)
-    created_by = Column(String(12), ForeignKey('user.user_id')) #ID_REFERENCE
+    created_by = Column(UUID(as_uuid=True), ForeignKey('user.user_id')) #ID_REFERENCE
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
         DateTime,

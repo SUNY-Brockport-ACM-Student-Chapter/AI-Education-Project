@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -28,13 +28,13 @@ class FileObject(Base):
 
     __tablename__ = "file_object"
 
-    file_object_id = Column(String(12), primary_key=True) #ID_REFERENCE
-    owner_id = Column(String(12), ForeignKey("user.user_id"), nullable=True) #ID_REFERENCE
-    section_id = Column(String(12), ForeignKey("section.section_id"), nullable=True) #ID_REFERENCE
-    assessment_id = Column(String(12), ForeignKey("assessment.assessment_id"), nullable=True) #ID_REFERENCE
-    submission_id = Column(String(12), ForeignKey("submission.submission_id"), nullable=True) #ID_REFERENCE
-    question_id = Column(String(12), ForeignKey("question.question_id"), nullable=True) #ID_REFERENCE
-    feedback_id = Column(String(12), ForeignKey("feedback.feedback_id"), nullable=True) #ID_REFERENCE
+    file_object_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
+    owner_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=True) #ID_REFERENCE
+    section_id = Column(UUID(as_uuid=True), ForeignKey("section.section_id"), nullable=True) #ID_REFERENCE
+    assessment_id = Column(UUID(as_uuid=True), ForeignKey("assessment.assessment_id"), nullable=True) #ID_REFERENCE
+    submission_id = Column(UUID(as_uuid=True), ForeignKey("submission.submission_id"), nullable=True) #ID_REFERENCE
+    question_id = Column(UUID(as_uuid=True), ForeignKey("question.question_id"), nullable=True) #ID_REFERENCE
+    feedback_id = Column(UUID(as_uuid=True), ForeignKey("feedback.feedback_id"), nullable=True) #ID_REFERENCE
     uri = Column(String, nullable=False)
     file_name = Column(String, nullable=False)
     mime_type = Column(String, nullable=False)

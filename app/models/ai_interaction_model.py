@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, JSON, String
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -27,10 +27,10 @@ class AIInteraction(Base):
 
     __tablename__ = "ai_interaction"
 
-    ai_interaction_id = Column(String(12), primary_key=True) #ID_REFERENCE
-    user_id = Column(String(12), ForeignKey("user.user_id"), nullable=True) #ID_REFERENCE
-    assessment_id = Column(String(12), ForeignKey("assessment.assessment_id"), nullable=True) #ID_REFERENCE
-    submission_id = Column(String(12), ForeignKey("submission.submission_id"), nullable=True) #ID_REFERENCE
+    ai_interaction_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
+    user_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=True) #ID_REFERENCE
+    assessment_id = Column(UUID(as_uuid=True), ForeignKey("assessment.assessment_id"), nullable=True) #ID_REFERENCE
+    submission_id = Column(UUID(as_uuid=True), ForeignKey("submission.submission_id"), nullable=True) #ID_REFERENCE
     purpose = Column(String, nullable=False)
     model = Column(String, nullable=False)
     prompt_tokens = Column(Integer)

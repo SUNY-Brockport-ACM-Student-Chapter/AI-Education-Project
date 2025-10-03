@@ -5,20 +5,20 @@ from flask import Blueprint, jsonify, request
 from svix.webhooks import Webhook, WebhookVerificationError
 
 from app.database import get_db_session
-from app.models.student_model import Student
-from app.repositories.student_repository import StudentRepository
-from app.services.student_service import StudentService
+from app.models.user_model import User
+from app.repositories.user_repository import UserRepository
+from app.services.user_service import UserService
 
 # Create blueprint, register the webhook route.
 webhook_bp = Blueprint("webhook_bp", __name__)
 
 # Initialize service with repository, start the database session.
 db_session = get_db_session()
-student_repository = StudentRepository(db_session)
-student_service = StudentService(student_repository)
+user_repository = UserRepository(db_session)
+student_service = UserService(user_repository)
 
 
-@webhook_bp.route("/user-created", methods=["POST"])
+@webhook_bp.route("/user", methods=["POST"])
 def handle_user_created():
     """process the webhook, verify the signature, extract the user data, and update the student record."""
     try:

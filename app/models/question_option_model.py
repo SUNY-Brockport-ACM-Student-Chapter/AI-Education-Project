@@ -1,7 +1,7 @@
 # models/question_option_model.py
 from sqlalchemy import Boolean, Column, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -21,8 +21,8 @@ class QuestionOption(Base):
 
     __tablename__ = "question_option"
 
-    question_option_id = Column(String(12), primary_key=True) #ID_REFERENCE
-    question_id = Column(String(12), ForeignKey("question.question_id"), nullable=False) #ID_REFERENCE
+    question_option_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
+    question_id = Column(UUID(as_uuid=True), ForeignKey("question.question_id"), nullable=False) #ID_REFERENCE
     label = Column(String)
     text = Column(String, nullable=False)
     value = Column(String)

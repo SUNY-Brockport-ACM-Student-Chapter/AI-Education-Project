@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import Column, DateTime, String
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -22,7 +22,7 @@ class Rubric(Base):
 
     __tablename__ = "rubric"
 
-    rubric_id = Column(String(12), primary_key=True) #ID_REFERENCE
+    rubric_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
     title = Column(String, nullable=False)
     description = Column(String)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))

@@ -1,7 +1,7 @@
 # models/rubric_score_model.py
 from sqlalchemy import Column, Float, ForeignKey, String
 from sqlalchemy.orm import relationship
-
+from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 
@@ -20,10 +20,10 @@ class RubricScore(Base):
 
     __tablename__ = "rubric_score"
 
-    rubric_score_id = Column(String(12), primary_key=True) #ID_REFERENCE
-    submission_id = Column(String(12), ForeignKey("submission.submission_id"), nullable=False) #ID_REFERENCE
-    criterion_id = Column(String(12), ForeignKey("rubric_criterion.rubric_criterion_id"), nullable=False) #ID_REFERENCE
-    rating_id = Column(String(12), ForeignKey("rubric_rating.rubric_rating_id"), nullable=True) #ID_REFERENCE
+    rubric_score_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
+    submission_id = Column(UUID(as_uuid=True), ForeignKey("submission.submission_id"), nullable=False) #ID_REFERENCE
+    criterion_id = Column(UUID(as_uuid=True), ForeignKey("rubric_criterion.rubric_criterion_id"), nullable=False) #ID_REFERENCE
+    rating_id = Column(UUID(as_uuid=True), ForeignKey("rubric_rating.rubric_rating_id"), nullable=True) #ID_REFERENCE
     points_awarded = Column(Float, nullable=False)
     comment = Column(String)
 
