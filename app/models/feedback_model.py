@@ -36,9 +36,9 @@ class Feedback(Base):
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
 
     # Relationships
-    author = relationship("User", back_populates="feedback")
-    submission = relationship("Submission", back_populates="feedback")
+    author = relationship("User", back_populates="feedbacks")
     answer = relationship("SubmissionAnswer", back_populates="feedback")
+    file_objects = relationship("FileObject", back_populates="feedback")
 
     def __repr__(self):
         return f"<Feedback(id='{self.feedback_id}', author_id='{self.author_id}')>"

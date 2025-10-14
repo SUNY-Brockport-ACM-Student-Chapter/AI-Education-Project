@@ -40,6 +40,8 @@ class Question(Base):
     # Relationships
     assessment = relationship("Assessment", back_populates="questions")
     answers = relationship("SubmissionAnswer", back_populates="question")
+    options = relationship("QuestionOption", back_populates="question")
+    file_objects = relationship("FileObject", back_populates="question")
 
     def __repr__(self):
         return f"<Question(id='{self.question_id}', kind='{self.kind}')>"

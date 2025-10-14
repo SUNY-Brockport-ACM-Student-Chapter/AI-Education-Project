@@ -30,8 +30,8 @@ class Enrollment(Base):
     status = Column(Enum("enrolled", "pending", "dropped", "banned", name="enrollment_status_enum"), default="enrolled")  # Use the proper enum
     joined_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     dropped_at = Column(DateTime)
-    user = relationship("User", back_populates="enrollment")
-    section = relationship("Section", back_populates="enrollment")
+    user = relationship("User", back_populates="enrollments")
+    section = relationship("Section", back_populates="enrollments")
 
     def __repr__(self):
         return f"<Enrollment(user_id={self.user_id}, section_id={self.section_id})>"

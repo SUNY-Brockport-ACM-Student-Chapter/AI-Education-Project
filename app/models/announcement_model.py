@@ -35,7 +35,6 @@ class Announcement(Base):
 
     # Relationships
     section = relationship("Section", back_populates="announcements")
-    author = relationship("User", back_populates="announcements")
 
     def __repr__(self):
         return f"<Announcement(id='{self.announcement_id}', title='{self.title}')>"

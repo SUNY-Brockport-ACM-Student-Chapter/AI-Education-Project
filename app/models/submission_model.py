@@ -15,7 +15,7 @@ class Submission(Base):
     Attributes:
         submission_id (str): Primary key, unique identifier for the submission.
         assessment_id (str): Foreign key linking to the assessment.
-        user_id (str): Foreign key linking to the student user.
+        student_id (str): Foreign key linking to the student user.
         attempt_number (int): The attempt number for this submission.
         status (enum): The current status of the submission.
         submitted_at (datetime): The time of submission.
@@ -33,7 +33,7 @@ class Submission(Base):
 
     submission_id = Column(UUID(as_uuid=True), primary_key=True) #ID_REFERENCE
     assessment_id = Column(UUID(as_uuid=True), ForeignKey("assessment.assessment_id"), nullable=False) #ID_REFERENCE
-    user_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=False) #ID_REFERENCE
+    student_id = Column(UUID(as_uuid=True), ForeignKey("user.user_id"), nullable=False) #ID_REFERENCE
     attempt_number = Column(Integer, nullable=False, default=1)
     status = Column(Enum("draft", "submitted", "graded", "retracted", name="submission_status_enum"), nullable=False, default="submitted")
     submitted_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=True)
@@ -48,18 +48,21 @@ class Submission(Base):
 
     # Relationships
     assessment = relationship("Assessment", back_populates="submissions")
-    user = relationship("User", foreign_keys=[user_id], back_populates="submissions")
+    learner = relationship("User", foreign_keys=[student_id], back_populates="submissions")
     grader = relationship("User", foreign_keys=[grader_id], back_populates="graded_submissions")
     rubric_scores = relationship("RubricScore", back_populates="submission")
+    ai_interactions = relationship("AIInteraction", back_populates="submission")
+    file_objects = relationship("FileObject", back_populates="submission")
+    answers = relationship("SubmissionAnswer", back_populates="submission")
 
     def __repr__(self):
-        return f"<Submission(submission_id='{self.submission_id}', user_id='{self.user_id}', assessment_id='{self.assessment_id}')>"
+        return f"<Submission(submission_id='{self.submission_id}', student_id='{self.student_id}', assessment_id='{self.assessment_id}')>"
 
     def to_dict(self):
         return {
             "submission_id": self.submission_id,
             "assessment_id": self.assessment_id,
-            "user_id": self.user_id,
+            "student_id": self.student_id,
             "attempt_number": self.attempt_number,
             "status": self.status,
             "submitted_at": self.submitted_at.isoformat() if self.submitted_at else None,

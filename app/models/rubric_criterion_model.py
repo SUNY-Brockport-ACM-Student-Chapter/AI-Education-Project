@@ -27,6 +27,8 @@ class RubricCriterion(Base):
 
     # Relationships
     rubric = relationship("Rubric", back_populates="criteria")
+    ratings = relationship("RubricRating", back_populates="criterion")
+    scores = relationship("RubricScore", back_populates="criterion")
 
     def __repr__(self):
         return f"<RubricCriterion(name='{self.name}', max_points={self.max_points})>"

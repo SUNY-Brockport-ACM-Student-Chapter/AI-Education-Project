@@ -34,6 +34,7 @@ class Rubric(Base):
 
     # Relationships
     assessments = relationship("Assessment", back_populates="rubric")
+    criteria = relationship("RubricCriterion", back_populates="rubric")
 
     def __repr__(self):
         return f"<Rubric(title='{self.title}')>"

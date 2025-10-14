@@ -3,7 +3,7 @@
 import datetime
 import uuid
 from datetime import timezone
-
+from .submission_model import Submission
 
 from sqlalchemy import Boolean, Column, DateTime, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
@@ -47,10 +47,14 @@ class User(Base):
         onupdate=lambda: datetime.datetime.now(timezone.utc),
     )
 
-    # Add relationship to Course
-    courses = relationship(
-        "Course", back_populates="user", cascade="all, delete-orphan"
-    )
+    # Add relationships
+    courses = relationship("Course", back_populates="user_created_by")
+    sections_taught = relationship("Section", back_populates="instructor")
+    enrollments = relationship("Enrollment", back_populates="user")
+    submissions = relationship("Submission", foreign_keys=[Submission.student_id], back_populates="learner")
+    graded_submissions = relationship("Submission", foreign_keys=[Submission.grader_id], back_populates="grader")
+    feedbacks = relationship("Feedback", back_populates="author")
+    file_objects = relationship("FileObject", back_populates="owner")
 
     def __repr__(self):
         return f"<Teacher(user_name = {self.user_name}, email = {self.email})>"

@@ -61,6 +61,10 @@ class Assessment(Base):
     # Relationships
     section = relationship("Section", back_populates="assessments")
     rubric = relationship("Rubric", back_populates="assessments")
+    questions = relationship("Question", back_populates="assessment")
+    submissions = relationship("Submission", back_populates="assessment")
+    ai_interactions = relationship("AIInteraction", back_populates="assessment")
+    file_objects = relationship("FileObject", back_populates="assessment")
 
     def __repr__(self):
         return f"<Assessment(name='{self.name}', type='{self.type}')>"

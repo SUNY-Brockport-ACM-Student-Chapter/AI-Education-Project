@@ -53,7 +53,6 @@ class UserRepository:
             .all()
         )
         
-        # Assume enrollment.user is the relationship property now.
         users = [section.user for section in sections]
         
         # Deduplicate the list of users efficiently
@@ -71,12 +70,12 @@ class UserRepository:
         return user_data  
 
     def get_user_by_id(self, user_id: uuid):
-        """Get a teacher by their ID"""
+        """Get a user by their ID"""
         user = (
             self.session.query(User).filter(User.user_id == user_id).first()
         )
         if not user:
-            raise ValueError("Teacher not found")
+            raise ValueError("User not found")
         return user
 
     def update_user_by_id(self,user_id, user_data: dict):

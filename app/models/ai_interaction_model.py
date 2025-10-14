@@ -40,7 +40,6 @@ class AIInteraction(Base):
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
     # Relationships
-    user = relationship("User", back_populates="ai_interactions")
     assessment = relationship("Assessment", back_populates="ai_interactions")
     submission = relationship("Submission", back_populates="ai_interactions")
 

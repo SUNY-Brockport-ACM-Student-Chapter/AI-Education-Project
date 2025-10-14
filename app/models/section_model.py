@@ -50,7 +50,10 @@ class Section(Base):
     course = relationship("Course", back_populates="sections")
     instructor = relationship("User", back_populates="sections_taught")
     enrollments = relationship("Enrollment", back_populates="section")
-    announcements = relationship("Announcement", back_populates="section") 
+    announcements = relationship("Announcement", back_populates="section")
+    assessments = relationship("Assessment", back_populates="section")
+    file_objects = relationship("FileObject", back_populates="section")
+
     def __repr__(self):
         return f"<Section(name='{self.name}', term='{self.term}')>"
 

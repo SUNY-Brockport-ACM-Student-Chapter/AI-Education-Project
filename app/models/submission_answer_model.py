@@ -42,6 +42,7 @@ class SubmissionAnswer(Base):
     # Relationships
     submission = relationship("Submission", back_populates="answers")
     question = relationship("Question", back_populates="answers")
+    feedback = relationship("Feedback", back_populates="answer")
 
     def __repr__(self):
         return f"<SubmissionAnswer(id='{self.submission_answer_id}', submission_id='{self.submission_id}')>"
