@@ -20,7 +20,7 @@ class UserService:
         
     def update_user(self, user_id: ID_TYPE, data: dict) -> User:
         """Updates an existing user by their ID."""
-        return self.user_repo.update_user(user_id, data)
+        return self.user_repo.update_user_by_id(user_id, data)
         
     def delete_user(self, user_id: ID_TYPE) -> bool:
         """Deletes a user by their ID."""

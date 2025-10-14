@@ -80,17 +80,19 @@ class UserRepository:
 
     def update_user_by_id(self,user_id, user_data: dict):
         # 1. Fetch the user object
-        user = session.get(User, user_id)
+        user = self.session.get(User, user_id)
         
         if user:
             # 2. Update attributes based on input data
-            for key, value in data.items():
+            for key, value in user_data.items():
                 # Safely update only the attributes provided
                 if hasattr(user, key):
                     setattr(user, key, value)
 
             # 3. Flush to execute the UPDATE statement and trigger the 'onupdate' for 'updated_at'
-            session.flush()
+            self.session.flush()
             # 4. Refresh to load the newly generated 'updated_at' value into the object
-            session.refresh(user)
+            self.session.refresh(user)
+
+        return user
 
